@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid id="tandatangan" columns="5" columnClasses="ui-grid-col-4,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:panelGroup />
+
+        <h:panelGroup />
+        <h:outputText value="Dibuat" />
+        <h:outputText value="Dicek" />
+        <h:outputText value="Disetujui" />
+        <h:panelGroup />
+
+        <h:panelGroup />
+        <h:outputText  rendered="#{controllerPo.item.is_purchasing eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPo.item.is_purchasing eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPo.item.is_purchasing eq null}" />
+        
+        <h:outputText  rendered="#{controllerPo.item.is_checked1 eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPo.item.is_checked1 eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPo.item.is_checked1 eq null}" />
+        
+        <h:outputText  rendered="#{controllerPo.item.is_approve eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPo.item.is_approve eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPo.item.is_approve eq null}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:inputText value="#{controllerPo.item.nama_purchasing}" readonly="true"/>
+        <p:inputText value="#{controllerPo.item.nama_checked1}" readonly="true"/>
+        <p:inputText value="#{controllerPo.item.nama_director}" readonly="true"/>
+        <h:panelGroup />
+    </p:panelGrid>
+    
+</ui:composition>

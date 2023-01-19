@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <div style="text-align: right">
+        <h:commandLink  id="xls">
+            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+            <p:dataExporter type="csv" target="detil" fileName="Bottom Price"/>
+        </h:commandLink>
+    </div>
+    <p:dataTable id="detil" var="item" value="#{controllerPricelist.dataPricelistDetail}"  widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}"  />
+        </p:column>
+        <p:column headerText="Kode Barang" >
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Unit Price" styleClass="rightColumnContent">
+            <h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Satuan" >
+            <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

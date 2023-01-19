@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerBarang.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data Produk</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('DAFTARBARANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <script>
+
+            
+
+            var urlXLS = "/public/Formstokopname.xlsx";
+
+            var executeXLS = function () {
+                window.location.href = urlXLS;
+            };
+
+            
+
+        </script>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar  id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-print" value="Excel Form Stok Opname" onclick="executeXLS()"   />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerBarang.cetakdaftarbarang()}" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Produk</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="singleDT" fileName="productlist"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerBarang.dataBarang}" selectionMode="single" reflow="true"
+                                 selection="#{controllerBarang.item}" rowKey="#{item.id_barang}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column style="width: 40px" >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Material Code" sortBy="#{item.id_barang}" filterBy="#{item.id_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}" filterBy="#{item.nama_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Alias" sortBy="#{item.nama_alias}" filterBy="#{item.nama_alias}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_alias}" />
+                        </p:column>
+                        <p:column headerText="Satuan" sortBy="#{item.satuan_besar}">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" sortBy="#{item.isi_satuan}">
+                            <h:outputText value="#{item.isi_satuan} #{item.satuan_kecil}" />
+                        </p:column>
+                        <p:column headerText="Kategori" sortBy="#{item.kategori_barang}">
+                            <h:outputText value="#{item.kategori_barang}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

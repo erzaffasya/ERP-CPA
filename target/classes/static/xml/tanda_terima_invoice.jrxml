@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tanda_terima_invoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="e7809fb7-8c4c-42c7-8515-2efa98163626">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="shelllogo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT a.nomor,a.tanggal,b.customer,c.nama as create_name,
+array_to_string(array(SELECT i.no_penjualan FROM tanda_terima_invoice_detail i WHERE i.id=a.id ORDER BY i.urut),', ') as no_penjualan,
+array_to_string(array(SELECT j.faktur FROM tanda_terima_invoice_detail i INNER JOIN penjualan j ON i.no_penjualan=j.no_penjualan WHERE i.id=a.id ORDER BY i.urut),', ') as nomor_faktur,
+array_to_string(array(SELECT j.referensi FROM tanda_terima_invoice_detail i INNER JOIN penjualan j ON i.no_penjualan=j.no_penjualan WHERE i.id=a.id ORDER BY i.urut),', ') as no_po,
+array_to_string(array(SELECT j.no_do FROM tanda_terima_invoice_detail i INNER JOIN penjualando j ON i.no_penjualan=j.no_penjualan WHERE i.id=a.id ORDER BY i.urut),', ') as no_do,
+array_to_string(array(SELECT to_char(j.grandtotal,'﻿FM999,999,999,999,999') FROM tanda_terima_invoice_detail i INNER JOIN penjualan j ON i.no_penjualan=j.no_penjualan WHERE i.id=a.id ORDER BY i.urut),' ') as grandtotal
+FROM tanda_terima_invoice a
+INNER JOIN customer b ON a.id_customer=b.id_kontak
+INNER JOIN pegawai c ON a.create_by=c.id_pegawai
+WHERE a.id=$P{id}]]>
+	</queryString>
+	<field name="nomor" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="customer" class="java.lang.String"/>
+	<field name="create_name" class="java.lang.String"/>
+	<field name="no_penjualan" class="java.lang.String"/>
+	<field name="nomor_faktur" class="java.lang.String"/>
+	<field name="no_po" class="java.lang.String"/>
+	<field name="no_do" class="java.lang.String"/>
+	<field name="grandtotal" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102" splitType="Stretch">
+			<staticText>
+				<reportElement x="-1" y="55" width="555" height="20" uuid="fba86265-d1d3-4078-ae81-cc2949ba2e80"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[TANDA TERIMA INVOICE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="146" height="55" uuid="caa8a2b5-8cfb-47b1-a9e0-430a5c7e51f4"/>
+				<imageExpression><![CDATA[$P{shelllogo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="425" y="-1" width="130" height="56" uuid="e59a1bee-3728-41ad-abc7-d8ce799132f2"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="75" width="32" height="20" uuid="c7dc89b1-4892-49f5-81ff-a954deee90de"/>
+				<textElement markup="none"/>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="32" y="75" width="329" height="20" uuid="b45f4b77-8f40-4d2d-8f35-3d9a5a79ae2b"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="324" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="20" uuid="f3d3c47d-d719-4eaf-8350-80b76764007c"/>
+				<text><![CDATA[Sudah Terima Invoice]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="137" y="19" width="329" height="20" uuid="015819ea-16e3-4468-ac9c-66fb02bc7575"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="19" width="111" height="20" uuid="cd7be4e6-252c-41a6-ad9d-7437a42dbc89"/>
+				<textElement markup="none"/>
+				<text><![CDATA[Nama Perusahaan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="38" width="111" height="20" uuid="93b9fecf-aa52-4519-a6ef-1f6decea1c60"/>
+				<textElement markup="none"/>
+				<text><![CDATA[No Invoice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="57" width="111" height="20" uuid="ddac5c35-eaff-40f0-9cab-6344e24d36c0"/>
+				<textElement markup="none"/>
+				<text><![CDATA[No Faktur Pajak]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="76" width="111" height="20" uuid="8c0fb823-df78-44e7-a071-b41139b50f36"/>
+				<textElement markup="none"/>
+				<text><![CDATA[No. Surat Jalan (DO)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="95" width="111" height="20" uuid="b74b8d64-f8ee-4bc4-8839-fb85181347e8"/>
+				<textElement markup="none"/>
+				<text><![CDATA[No. PO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="114" width="111" height="20" uuid="604fe114-1a26-4f06-8d66-568c2b4524ce"/>
+				<textElement markup="none"/>
+				<text><![CDATA[Nilai]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="137" y="39" width="329" height="20" uuid="1c8a8628-c426-4bad-8da4-ec234788f60c"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_penjualan}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="469" y="38" width="83" height="20" uuid="3ac2b751-e8d5-4e38-831a-0cfdf68587a8"/>
+				<textElement textAlignment="Right" markup="none"/>
+				<text><![CDATA[ (ASLI & 1 COPY)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="469" y="57" width="83" height="20" uuid="2115c1ed-4a33-47f6-aaae-2f42eacfcaff"/>
+				<textElement textAlignment="Right" markup="none"/>
+				<text><![CDATA[ (ASLI & 1 COPY)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="469" y="77" width="83" height="20" uuid="eec4f7a7-0125-4ce0-9efe-d3f495c714b6"/>
+				<textElement textAlignment="Right" markup="none"/>
+				<text><![CDATA[ (ASLI)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="469" y="95" width="84" height="20" uuid="eec6df0c-7ada-4b96-90cb-9a468ad1bc3f"/>
+				<textElement textAlignment="Right" markup="none"/>
+				<text><![CDATA[ (COPY)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="137" y="95" width="329" height="20" uuid="742a2044-5717-48be-a439-cb6aba044c02"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_po}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="57" width="329" height="20" uuid="79c64245-99ad-48c6-986b-47408d93c9b5"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomor_faktur}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="76" width="329" height="20" uuid="5ea8ee9a-1f80-476d-8136-e82eb3833897"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_do}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="137" y="114" width="329" height="20" uuid="619acc1f-4c17-4b62-aa2a-a1e214630ebb"/>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grandtotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="148" width="137" height="20" uuid="6596c7b0-d9fc-4f28-8b83-87aeb4554847"/>
+				<textElement textAlignment="Center" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Checked By]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="148" width="220" height="20" uuid="ec421bda-cfb2-4581-8b85-fe65f4585534"/>
+				<textElement textAlignment="Center" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Received By]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="225" width="137" height="20" uuid="98a1975e-15e5-4ff6-8971-2dcc04369b75"/>
+				<textElement textAlignment="Center" markup="none"/>
+				<text><![CDATA[Invoice & Mailing Admin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="225" width="221" height="20" uuid="27129ff7-9752-42c3-ab65-38bb81e1ddcf"/>
+				<textElement textAlignment="Center" markup="none"/>
+				<text><![CDATA[TT/Stempel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="256" width="556" height="28" uuid="65b96d04-78cf-4c6b-b8aa-d186e82a3f87"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Note : Mohon Tanda Terima Dikembalikan kepada PT. Cahaya Pengajaran Abadi dan cantumkan nama lengkap beserta tgl terima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="264" width="281" height="20" uuid="c24edef4-0612-4101-8f78-e7d6215f7c32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[apabila tidak dikembalikan kepada kami,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-2" y="284" width="557" height="20" uuid="c856162c-9d62-45fc-aac2-d87a4dcd3e7f"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[di Fax kembali ke no. 0542-872223 / email : agustina@pengajaran.com     ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="264" width="276" height="20" forecolor="#FF0000" uuid="47b37f6c-137e-4b4a-8f15-4b55199f9584"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ maka PO berikutnya akan ditunda Prosesnya]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="20" width="10" height="20" uuid="23ddb508-f52e-4cb0-bd5c-ed0667d669bd"/>
+				<textElement markup="none"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="40" width="10" height="20" uuid="34a1bee1-ef38-4d4d-8b30-4ad31470cbe6"/>
+				<textElement markup="none"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="60" width="10" height="20" uuid="442afcc4-2f55-49fc-9cd6-5c5b65755414"/>
+				<textElement markup="none"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="75" width="10" height="20" uuid="2c416876-aa0b-416f-b17e-bd14398ae919"/>
+				<textElement markup="none"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="94" width="10" height="20" uuid="b00df843-e4c7-4b68-8d9f-668fd02f5468"/>
+				<textElement markup="none"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="114" width="10" height="20" uuid="c7110326-ce67-4263-9b41-fd1eafbf9eb8"/>
+				<textElement markup="none"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="205" width="136" height="20" uuid="4cbf90c8-9f77-48bf-ab21-094632163018"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{create_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

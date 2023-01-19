@@ -1,0 +1,146 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+    
+    <ui:define name="title">Sales Report</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSalesReport.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SALESREPORT')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerSalesReport.cetak()}" disabled="true"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Sales Report</h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode" style="text-align: center"/>
+                        <p:calendar id="awal" value="#{controllerSalesReport.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerSalesReport.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel for="kantor" value="Kantor/Cabang"/>
+                        <p:selectOneMenu id="kantor" value="#{controllerSalesReport.idKantor}">
+                            <f:selectItem itemLabel="Pilih Kantor" itemValue="" />
+                            <f:selectItems value="#{options.comboKantor}" />
+                            <p:ajax listener="#{controllerSalesReport.onKantorSelect()}" update="gudang"/>
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerSalesReport.idGudang}">
+                            <f:selectItems value="#{controllerSalesReport.comboGudang}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerSalesReport.onLoadList()}"   icon="ui-icon-search" value="Search" update="growl salesReport"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="salesReport" fileName="salesReport"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="salesReport" var="item" value="#{controllerSalesReport.dataPenjualanDetail}" >
+                        <p:column headerText="Invoice Number" style="width: 140px">
+                            <h:outputText value="#{item.no_penjualan}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" style="width: 80px;">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Marketing" style="width: 120px;">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="Customer" style="width: 120px;">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="No. PO" style="width: 120px;">
+                            <h:outputText value="#{item.referensi}" />
+                        </p:column>
+                        <p:column headerText="No. DO" style="width: 120px;">
+                            <h:outputText value="#{item.no_do}" />
+                        </p:column>
+                        <p:column headerText="Faktur" style="width: 120px;">
+                            <h:outputText value="#{item.faktur}" />
+                        </p:column>
+                        <p:column headerText="Material Code" style="width: 80px;">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="barang" style="width: 120px;">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Qty" style="text-align:right; width: 60px">
+                            <h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Satuan" style="width:50px; text-align: center;">
+                             <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="Pack" style="text-align:right; width: 60px">
+                            <h:outputText value="#{item.isi_satuan}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Volume" style="text-align:right; width: 60px">
+                            <h:outputText value="#{item.qty_kecil}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Unit Price" style="width:100px; text-align: right;">
+                            <h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Disc %" style="width:50px; text-align: right;">
+                            <h:outputText id="odiskonpersen" value="#{item.diskonpersen}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Disc (Rp)" style="width:80px; text-align: right;">
+                            <h:outputText id="odiskonrp" value="#{item.diskonrp}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Additional Charge" style="width:80px; text-align: right;">
+                           <h:outputText id="oadditional" value="#{item.additional_charge}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Amount" style="width:100px; text-align: right">
+                            <h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:columnGroup type="footer" >
+                            <p:row>
+                                <p:column colspan="15" style="text-align:right" footerText="Grand Total : " >
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerSalesReport.total}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+
+                                    </f:facet>
+                                </p:column>
+                            </p:row>
+                        </p:columnGroup>
+
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

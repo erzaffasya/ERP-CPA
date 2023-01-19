@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton  actionListener="#{controllerPengguna.extendGudang()}" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" 
+                          value="Tambah Baris" process="@this" update="penggunagudang" />
+    </p:panelGrid>
+
+    <p:dataTable id="penggunagudang" var="item"  value="#{controllerPengguna.dataPenggunaGudang}" editable="true" editMode="cell" widgetVar="gudang" rowIndexVar="ri">
+        <f:facet name="header">Daftar Gudang</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+
+        <p:column headerText="Gudang" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.gudang}" id="ogudang"/></f:facet>
+                <f:facet name="input">
+                    <p:selectOneMenu id="gudang" value="#{item.id_gudang}">
+                        <f:selectItems value="#{options.comboGudang}" />
+                        <p:ajax listener="#{controllerPengguna.onGudangSelected()}" update="ogudang" />
+                    </p:selectOneMenu>
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+
+        <p:column style="width:50px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPengguna.onDeleteGudangClicked(item)}"  update="penggunagudang" />
+            </p:commandButton>
+
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

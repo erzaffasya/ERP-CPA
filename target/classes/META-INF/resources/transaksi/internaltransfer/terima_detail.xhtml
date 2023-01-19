@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerInternalTransfer.dataInternalTransferDetail}" editable="true" editMode="cell" widgetVar="cellCars1" rowIndexVar="ri" tableStyle="table-layout: auto;">
+
+        
+        <p:column >
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang" >
+                <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+
+        <p:column headerText="Kode Barang" >
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Dikirim" styleClass="rightColumnContent">
+            <h:outputText value="#{item.qty}" id="oqty"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Diterima" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.terima}" id="oterima"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="terima" value="#{item.terima}" style="width:96%" required="true" >
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan" styleClass="centerColumnContent">
+            <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+        </p:column>
+        <p:column headerText="Catatan" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.catatan}" /></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="diorder" value="#{item.catatan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Keterangan" >
+            <h:outputText value="#{item.keterangan}" />
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

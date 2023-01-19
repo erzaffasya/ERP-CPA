@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Pemakaian Barang</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Nomor"/>
+        <p:inputText id="nomor" value="#{controllerPemakaian.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerPemakaian.item.tanggal}"  mask="99/99/9999" maxlength="10"  readonly="true"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerPemakaian.item.id_gudang}" disabled="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:textEditor id="keterangan" widgetVar="editor3" value="#{controllerPemakaian.item.keterangan}" height="100" style="margin-bottom:10px"  >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>
+
+</ui:composition>

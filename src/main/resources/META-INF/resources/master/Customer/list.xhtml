@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <f:metadata>
+            <f:viewAction action="#{controllerCustomer.onLoadList()}" />
+        </f:metadata>
+        
+    </ui:define>
+
+    <ui:define name="title">Data</ui:define>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('CUSTOMER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerCustomer.update()}"   icon="ui-icon-update" value="Edit" id="btn-edit" />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerCustomer.item}" target="#{controllerCustomer.item}"/>
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerCustomer.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    
+                    <h1>Daftar Customer</h1>
+                    
+                    <div style="text-align: right">
+                        <h:commandLink  id="pdf">
+                                <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="pdf" target="singleDT" fileName="customerlist" options="#{controllerCustomer.pdfOpt}" preProcessor="#{controllerCustomer.preProcessPDF}"/>
+                        </h:commandLink>
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="singleDT" fileName="customerlist"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:panelGrid id="statusnya" columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Status"/>
+                        <p:selectBooleanCheckbox  value="#{controllerCustomer.status}" style="width: 100%" itemLabel="Aktif" rendered="#{controllerCustomer.status eq true}">    
+                            <p:ajax listener="#{controllerCustomer.onLoadList()}" update="singleDT statusnya"/> 
+                        </p:selectBooleanCheckbox>    
+                        <p:selectBooleanCheckbox  value="#{controllerCustomer.status}" style="width: 100%" itemLabel="Tidak Aktif" rendered="#{controllerCustomer.status eq false}">    
+                            <p:ajax listener="#{controllerCustomer.onLoadList()}" update="singleDT statusnya"/> 
+                        </p:selectBooleanCheckbox>    
+                        
+                    </p:panelGrid>
+                    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerCustomer.dataCustomer}" selectionMode="single" reflow="true" 
+                                 filteredValue="#{controllerCustomer.filteredCustomers}" 
+                                 selection="#{controllerCustomer.item}" rowKey="#{item.id_kontak}" 
+                                 paginator="true" rows="100" paginatorPosition="bottom"
+                                 rowIndexVar="index" tableStyle="table-layout: auto;">
+                        <p:ajax event="rowDblselect" listener="#{controllerCustomer.update()}" global="false" />
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Kode" sortBy="#{item.id_kontak}" filterBy="#{item.id_kontak}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_kontak}" />
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Salesman" sortBy="#{item.nama_marketing}" filterBy="#{item.nama_marketing}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_marketing}" />
+                        </p:column>
+                        <p:column headerText="Email" >
+                            <h:outputText value="#{item.email}" />
+                        </p:column>
+                        <p:column headerText="Telpon" sortBy="#{item.telepon}" filterBy="#{item.telepon}" filterMatchMode="contains">
+                            <h:outputText value="#{item.telepon}" />
+                        </p:column>
+                        
+                        <p:column headerText="NPWP" sortBy="#{item.no_npwp}" filterBy="#{item.no_npwp}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_npwp}" />
+                        </p:column>
+                        <p:column headerText="Alamat NPWP" >
+                            <h:outputText value="#{item.alamat_npwp}" escape="false"/>
+                        </p:column>
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Top" >
+                            <h:outputText value="#{item.top}" />
+                        </p:column>
+                        <p:column headerText="Batas Kredit" >
+                            <h:outputText value="#{item.batas_kredit}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" >
+                            <h:outputText value="Aktif" rendered="#{item.isaktif eq true}"/>
+                            <h:outputText value="Tidak Aktif" rendered="#{item.isaktif eq false}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Customer :" />
+                    <h:outputText value="#{controllerCustomer.item.customer}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerCustomer.delete(controllerCustomer.item.id_kontak)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

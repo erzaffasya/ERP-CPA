@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerThr.item.id_thr}" />
+        <f:viewAction action="#{controllerThr.onLoadView()}" />
+    </f:metadata>
+    <ui:define name="title">THR Karyawan</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+
+        </style>
+    </ui:define>    
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('THRVIEW')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+
+                <h:form id="form" prependId="false">
+                    <script type="text/javascript">
+                        function handleLoginRequest(xhr, status, args) {
+                            if (args.validationFailed || !args.loggedIn) {
+                                PF('dlg').jq.effect("shake", {times: 5}, 100);
+                            } else {
+                                PF('dlg').hide();
+                                $('#loginLink').fadeOut();
+                            }
+                        }
+                    </script>
+                    <p:growl id="growl" showDetail="true" />
+                    <div class="ui-g" >
+                        <div class="ui-g-12" >
+                            <p:toolbar id="tbar">
+                                <f:facet name="left" >
+                                    <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                                    <p:commandButton action="#{controllerThr.getReportData}" value="Export Daftar THR"  ajax="false" />  
+                                    <p:commandButton action="#{controllerThr.getReportPerhitunganThr}" value="Export Perhitungan THR"  ajax="false" />   
+                                </f:facet>
+                            </p:toolbar>
+                            <p:sticky target="tbar" />
+                        </div>
+                    </div>
+                    <div class="ui-fluid">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12">
+                                <div class="card card-w-title">
+                                    <h1>THR Karyawan</h1>
+                                    <ui:include src="formview.xhtml"/>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p:dialog header="Login" widgetVar="dlg" resizable="false" modal="true" visible="true" rendered="#{controllerThr.loggedIn ne true}">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="pinnya" value="PIN" />
+                            <p:password id="pinnya" value="#{controllerThr.pinnya}" required="true" label="pin" />
+                            <f:facet name="footer">
+                                <p:commandButton value="Login" update="growl form" action="#{controllerThr.onLoadView()}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                            </f:facet> 
+                        </h:panelGrid>
+                    </p:dialog>  
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel   value="Nama karywan"/>
+        <p:outputLabel   value="#{controllerCutiKaryawan.item.nama_pegawai}"/>
+        <p:outputLabel for="tipe"  value="Tipe cuti"/>
+        <p:selectOneMenu id="tipe" value="#{controllerCutiKaryawan.item.id_master}" >
+            <f:selectItem itemLabel="Pilih cuti" itemValue=""/>
+            <f:selectItems value="#{controllerCutiKaryawan.comboCutiMaster}" />
+            <p:ajax event="change" listener="#{controllerCutiKaryawan.onTipeCutiSelect()}" update="pnkhusus"/>
+        </p:selectOneMenu >
+    </p:panelGrid>
+    <p:panelGrid columns="2" id="pnkhusus" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup rendered="#{controllerCutiKaryawan.item.id_master eq 4}"/>
+        <p:selectOneMenu id="khusus" value="#{controllerCutiKaryawan.item.id_cuti_sub}" rendered="#{controllerCutiKaryawan.item.id_master eq 4}">
+            <f:selectItems value="#{controllerCutiKaryawan.comboCutiSub}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="waktucuti"  value="Tipe cuti"/>
+        <p:selectOneButton id="waktucuti" value="#{controllerCutiKaryawan.item.waktu_cuti}" required="true">
+            <f:selectItem itemLabel="Satu hari" itemValue="1" />
+            <f:selectItem itemLabel="Beberapa hari" itemValue="2" />
+            <p:ajax event="change" update="pntgl" />
+        </p:selectOneButton>
+    </p:panelGrid>
+    <p:panelGrid columns="3"  columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:calendar id="tanggalawal" value="#{controllerCutiKaryawan.item.tanggal_awal}" showOn="button" required="true" requiredMessage="Tanggal  harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:selectOneMenu id="jenisawal" value="#{controllerCutiKaryawan.item.jenis_awal}">
+            <f:selectItems value="#{controllerCutiKaryawan.comboJenis}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+    <p:panelGrid columns="3" id="pntgl" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup rendered="#{controllerCutiKaryawan.item.waktu_cuti eq '2'}"/>
+        <p:calendar id="tanggalakhir" value="#{controllerCutiKaryawan.item.tanggal_akhir}"  showOn="button" required="true" requiredMessage="Tanggal  harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerCutiKaryawan.item.waktu_cuti eq '2'}"/>
+        <p:selectOneMenu id="jenisakhir" value="#{controllerCutiKaryawan.item.jenis_akhir}" rendered="#{controllerCutiKaryawan.item.waktu_cuti eq '2'}">
+            <f:selectItems value="#{controllerCutiKaryawan.comboJenis}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="telpon"  value="No yang bisa dihubungi"/>
+        <p:inputText id="telpon" value="#{controllerCutiKaryawan.item.telpon}" required="true"/>
+        <p:outputLabel for="alasan"  value="Alasan cuti"/>
+        <p:inputTextarea id="alasan" value="#{controllerCutiKaryawan.item.alasan}" cols="5" rows="4" required="true"/>
+        <p:commandButton id="simpan"
+                         actionListener="#{controllerCutiKaryawan.addMyTimeOff()}"
+                         value="Ajukan" 
+                         ajax="true"
+                         process="@form"
+                         update="@form growl"
+                         icon="fa  fa-floppy-o"
+                         />
+    </p:panelGrid>
+
+</ui:composition>

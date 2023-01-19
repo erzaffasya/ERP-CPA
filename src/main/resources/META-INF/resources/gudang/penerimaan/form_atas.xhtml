@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Penerimaan Barang</ui:define>
+
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="nomor_po" value="PO No."/>
+        <p:autoComplete   id="nomor_po" value="#{poAutoComplete.po}" completeMethod="#{poAutoComplete.completePoSisaContains}"
+                          var="po" itemLabel="#{po.nomor_po}" itemValue="#{po}" converter="#{poConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nomor PO harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerPenerimaanGudang.onPoSelect}" update="detil nm_supplier gudang growl nomor_po tanggal_po"/>
+            <p:column headerText="PO Number" >
+                <h:outputText value="#{po.nomor_po}" />
+            </p:column>
+            <p:column headerText="PO Date">
+                <h:outputText value="#{po.tanggal}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="Vendor" >
+                <h:outputText value="#{po.nama_supplier}" />
+            </p:column>
+            <p:column headerText="Gudang">
+                <div style="text-align:left;"><h:outputText value="#{po.gudang}"/> </div>
+            </p:column>
+        </p:autoComplete>    
+        <p:outputLabel for="tanggal_po" value="Tgl PO"/>
+        <p:inputText id="tanggal_po" value="#{controllerPenerimaanGudang.item.tanggal_po}" readonly="true" >
+            <f:convertDateTime pattern="dd-MM-yyyy"/> 
+        </p:inputText>
+        <p:outputLabel for="nomor" value="No Penerimaan"/>
+        <p:inputText id="nomor" value="#{controllerPenerimaanGudang.item.no_penerimaan}" readonly="true"/>
+
+        <p:outputLabel for="tgl_penerimaan" value="Tgl Penerimaan"/>
+        <p:calendar id="tgl_penerimaan"  value="#{controllerPenerimaanGudang.item.tgl_penerimaan}" required="true" requiredMessage="Tanggal Harus diisi" pattern="dd-MM-yyyy">
+            <p:ajax event="dateSelect" listener="#{controllerPenerimaanGudang.onTglPenerimaanSelect}" update="growl tgl_penerimaan" />
+            <p:ajax event="change" listener="#{controllerPenerimaanGudang.onTglPenerimaanChange}" update="growl tgl_penerimaan" />
+        </p:calendar>
+
+        <p:outputLabel for="dn"  value="Nomor DN"/>
+        <p:inputText id="dn"  value="#{controllerPenerimaanGudang.item.referensi}" required="true" requiredMessage="Nomor DN harus diisi !!"/>
+        <p:outputLabel for="tgldn"  value="Tgl DN"/>
+        <p:calendar id="tgldn"   value="#{controllerPenerimaanGudang.item.tanggal_referensi}" required="true" requiredMessage="Tanggal DN harus diisi !!" pattern="dd-MM-yyyy">
+            <p:ajax event="dateSelect" listener="#{controllerPenerimaanGudang.onTglDNSelect}" update="growl tgldn" />
+            <p:ajax event="change" listener="#{controllerPenerimaanGudang.onTglDNChange}" update="growl tgldn" />
+        </p:calendar>
+        <p:outputLabel  value="Supplier :"/>
+        <p:inputText id="nm_supplier"  value="#{controllerPenerimaanGudang.item.nama_supplier}" readonly="true"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerPenerimaanGudang.item.id_gudang}" disabled="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+    
+
+
+</ui:composition>

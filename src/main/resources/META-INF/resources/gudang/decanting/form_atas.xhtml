@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No Decanting"/>
+        <p:inputText id="nomor" value="#{controllerDecanting.item.no_decanting}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar id="tanggal"  value="#{controllerDecanting.item.tanggal}" required="true" requiredMessage="Tanggal Harus diisi !!!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10">
+            <p:ajax event="dateSelect" listener="#{controllerDecanting.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerDecanting.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel for="referensi" value="No Referesni"/>
+        <p:inputText id="referensi" value="#{controllerDecanting.item.referensi}"  />
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerDecanting.item.id_gudang}" required="true" rendered="#{controllerDecanting.item.id_gudang eq null}">
+            <f:selectItems value="#{options.comboGudangByPegawai}" />
+        </p:selectOneMenu>
+        <p:selectOneMenu id="gudang" value="#{controllerDecanting.item.id_gudang}" required="true" disabled="true" rendered="#{controllerDecanting.item.id_gudang ne null}">
+            <f:selectItems value="#{options.comboGudangByPegawai}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+
+
+</ui:composition>

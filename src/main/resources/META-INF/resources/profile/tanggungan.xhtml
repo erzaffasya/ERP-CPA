@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+            <f:viewAction action="#{controllerHrPegawai.onLoadListTanggungan()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12 ui-lg-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12 ui-lg-12">
+
+                                <div class="ui-g-12 ui-lg-3" style="margin-bottom: 20px;">
+                                    <ui:include src="leftprofile.xhtml"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-lg-9">
+
+                                    <div class="ui-g-12 ui-lg-12">
+                                        <p:dataTable id="detil" var="item" value="#{controllerHrPegawai.dataTanggungan}" rowIndexVar="index" selectionMode="single" reflow="true" 
+                                                     selection="#{controllerHrPegawai.tanggungan}" rowKey="#{item.id}">
+                                            <p:column headerText="Nama">
+                                                <h:outputText value="#{item.nama}" />
+                                            </p:column>
+                                            <p:column headerText="Hubungan">
+                                                <h:outputText value="#{item.nama_hubungan}" />
+                                            </p:column>
+                                            <p:column headerText="Tgl. Lahir">
+                                                <h:outputText value="#{item.tgl_lahir}" >
+                                                    <f:convertDateTime pattern="dd MMMM yyyy" />
+                                                </h:outputText>    
+                                            </p:column>
+                                            <p:column headerText="No. identitas">
+                                                <h:outputText value="#{item.no_identitas}" />
+                                            </p:column>
+                                            <p:column headerText="Status perkawinan">
+                                                <h:outputText value="Belum kawin" rendered="#{item.status_perkawinan eq '1'}"/>
+                                                <h:outputText value="Kawin" rendered="#{item.status_perkawinan eq '2'}"/>
+                                                <h:outputText value="Cerai hidup" rendered="#{item.status_perkawinan eq '3'}"/>
+                                                <h:outputText value="Cerai mati" rendered="#{item.status_perkawinan eq '4'}"/>
+                                            </p:column>
+                                            <p:column headerText="Status bekerja">
+                                                <h:outputText value="Kerja" rendered="#{item.kerja eq true}"/>
+                                                <h:outputText value="Tidak bekerja" rendered="#{item.kerja eq false}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog  widgetVar="dlg3" resizable="false" id="studentDlg"
+                       showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda yakin akan menghapus anggota keluarga atas nama" />
+                    <h:outputText value="#{controllerHrPegawai.tanggungan.nama}" />
+                    <p:commandButton id="deleteButton" actionListener="#{controllerHrPegawai.deleteTanggungan(controllerHrPegawai.tanggungan.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl :form:detil" value="Delete" />
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" />
+
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

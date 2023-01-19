@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerJadwalKerja.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('JADWALKERJA')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah Jadwal Kerja Baru"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Jadwal Kerja</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerJadwalKerja.dataJadwalKerja}" sortBy="#{item.id}" 
+                                 rowIndexVar="index">
+                        <p:column >
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="#{item.nama_kebijakan}" style="font-weight: bold"/>
+                                <div style="text-align: right;"><p:commandButton actionListener="#{controllerJadwalKerja.update(item.id)}"   icon="ui-icon-update" value="Edit" style="text-align: right;"/></div>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="#{item.labeltanggal}" />
+                                <h:outputText value="Jam Kerja" />
+                                <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <h:outputText value="Hari Kerja" />
+                                    <h:outputText value="Jam Kerja" />
+                                    <h:panelGroup/>
+                                    <h:outputText value="Jam Istirahat" />
+                                </p:panelGrid>
+                                <p:repeat value="#{item.listJadwalKerjaWaktu}" var="it" id="detail">
+                                    <p:panelGrid columns="6" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                        <h:outputText value="#{it.nama_waktu}"  />
+                                        <h:outputText value="#{it.time_in}"  rendered="#{it.selected}">
+                                            <f:convertDateTime pattern="HH:mm" />
+                                        </h:outputText>
+                                        <h:outputText value="Libur" rendered="#{!it.selected}"/>
+                                        <h:outputText value="S/d" rendered="#{it.selected}"/>
+                                        <h:panelGroup rendered="#{!it.selected}"/>
+                                        <h:outputText value="#{it.time_out}"  rendered="#{it.selected}">
+                                            <f:convertDateTime pattern="HH:mm" />
+                                        </h:outputText>
+                                        <h:panelGroup rendered="#{!it.selected}"/>
+                                        <h:panelGroup />
+                                        <h:outputText value="#{it.time_break}"  rendered="#{it.selected}">
+                                            <f:convertDateTime pattern="HH:mm" />
+                                        </h:outputText>
+                                        <h:panelGroup rendered="#{!it.selected}"/>
+                                    </p:panelGrid>
+                                </p:repeat>
+                            </p:panelGrid>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

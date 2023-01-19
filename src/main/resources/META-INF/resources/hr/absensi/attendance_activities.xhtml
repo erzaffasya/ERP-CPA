@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{controllerAbsensi.onLoadListPegawai()}" />
+    </f:metadata>
+    <ui:define name="title">Attendance Activities</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('ABSEN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <style type="text/css">
+            .ui-datatable .ui-datatable-data td {
+                background-color: white;
+            }
+
+            
+        </style>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1> Aktivitas Absen #{options.getNamaBulanbyDate(controllerAbsensi.datestart)}</h1>
+                    
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel for="month" value="Periode :" />
+                    <p:datePicker id="month" view="month" value="#{controllerAbsensi.datestart}" pattern="MMM yyyy" yearNavigator="true" yearRange="2000:2030" >
+                        <p:ajax listener="#{controllerAbsensi.onLoadListPegawai()}" process="@this" event="dateSelect" update="form" />
+                    </p:datePicker>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAbsensi.dataPegawai}"  rowKey="#{item.id_pegawai}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column headerText="Nama" sortBy="#{item.nama}" filterBy="#{item.nama}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Jabatan"  sortBy="#{item.jabatan}" filterBy="#{item.jabatan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Departemen" sortBy="#{item.departemen}" filterBy="#{item.departemen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.departemen}" />
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Status Absen" >
+                            <h:outputText value="Posting" rendered="#{item.statuskaryawan eq 'P'}" />
+                            <h:outputText value="Belum diposting" rendered="#{item.statuskaryawan ne 'P'}" />
+                        </p:column>
+                        <p:column width="115">
+                            <p:commandButton actionListener="#{controllerAbsensi.gotoAttendaceClocks(item.id_pegawai,controllerAbsensi.datestart)}"  value="Lihat absensi" update=":form:growl"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

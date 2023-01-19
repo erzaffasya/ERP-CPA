@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerStokOpname.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SETTINGSTOKOPNAME')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+        <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Setting Stok Opname</h1>
+                    <p:dataTable id="tablegudang" var="item" value="#{controllerStokOpname.dataGudang}" tableStyle="table-layout: auto;"> 
+                        <p:column headerText="Id Gudang" sortBy="#{item.id_gudang}" >
+                            <h:outputText value="#{item.id_gudang}" />
+                        </p:column>
+                        <p:column headerText="Nama Gudang" sortBy="#{item.gudang}" >
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Stok" sortBy="#{item.blind}" >
+                            <p:commandButton    rendered="#{item.blind}" value="ON"  icon="fa fa-eye">
+                                <p:ajax  listener="#{controllerStokOpname.blind(item.id_gudang,false)}" update="tablegudang"/>
+                            </p:commandButton>
+                            <p:commandButton    rendered="#{!item.blind}" value="OFF" class="red-btn" icon="fa fa-eye-slash"> 
+                                <p:ajax  listener="#{controllerStokOpname.blind(item.id_gudang,true)}"  update="tablegudang"/>
+                            </p:commandButton>   
+                        </p:column>
+                        <p:column headerText="Stok Opname" sortBy="#{item.stokopname}" >
+                            <p:commandButton rendered="#{!item.stokopname}" value="Mode Off" class="green-btn">
+                                <p:ajax  listener="#{controllerStokOpname.onStokOpname(item.id_gudang,true)}" update="tablegudang growl"/>
+                            </p:commandButton>
+                            <p:commandButton rendered="#{item.stokopname}" value="Mode ON" class="blue-grey-btn">
+                                
+                            </p:commandButton>    
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

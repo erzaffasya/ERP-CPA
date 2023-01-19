@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="nik" value="NIK"/>
+        <p:inputText id="nik" value="#{controllerHrPegawai.item.id_pegawai}" readonly="true"/>
+        <p:outputLabel for="nama" value="Nama Lengkap"/>
+        <p:inputText id="nama" value="#{controllerHrPegawai.item.nama}" readonly="true"/>
+        <p:outputLabel for="jabatan" value="Jabatan"/>
+        <p:inputText id="jabatan" value="#{controllerHrPegawai.item.jabatan}" readonly="true"/>
+        <p:outputLabel for="departemen" value="Departemen"/>
+        <p:inputText id="departemen" value="#{controllerHrPegawai.item.departemen}" readonly="true"/>
+        <p:outputLabel for="kantor" value="Kantor/Cabang"/>
+        <p:inputText id="kantor" value="#{controllerHrPegawai.item.kantor}" readonly="true"/>
+        <p:outputLabel for="hp" value="Hp"/>
+        <p:inputText id="hp" value="#{controllerHrPegawai.item.hp}" readonly="true"/>
+        <p:outputLabel for="email" value="Email"/>
+        <p:inputText id="email" value="#{controllerHrPegawai.item.email}" readonly="true"/>
+        
+    </p:panelGrid>
+</ui:composition>

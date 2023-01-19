@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="id" value="Kode"/>
+        <p:inputText id="id" value="#{controllerSupplier.item.id}" maxlength="6" required="true"/>
+        <p:outputLabel for="isaktif" value="Aktif"/>
+        <p:selectBooleanCheckbox id="isaktif" value="#{controllerSupplier.item.isaktif}" />
+        <p:outputLabel for="supplier" value="Vendor"/>
+        <p:inputText id="supplier" value="#{controllerSupplier.item.supplier}" required="true"/>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="id_kategori_supplier" value="Kategori"/>
+        <p:selectOneMenu id="id_kategori_supplier" value="#{controllerSupplier.item.id_kategori_supplier}">
+            <f:selectItems value="#{options.kategoriSupplier}" />
+        </p:selectOneMenu>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="alamat" value="Alamat"/>
+        <p:textEditor id="alamat" widgetVar="editor1" value="#{controllerSupplier.item.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="npwp" value="NPWP"/>
+        <p:inputText id="npwp" value="#{controllerSupplier.item.npwp}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="alamat_npwp" value="Alamat NPWP"/>
+        <p:textEditor id="alamat_npwp" widgetVar="editor2" value="#{controllerSupplier.item.alamat_npwp}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="telepon" value="Telpon"/>
+        <p:inputText id="telepon" value="#{controllerSupplier.item.telepon}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="fax" value="Fax"/>
+        <p:inputText id="fax" value="#{controllerSupplier.item.fax}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="email" value="Email"/>
+
+        <p:inputText id="email" value="#{controllerSupplier.item.email}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="website" value="Website"/>
+        <p:inputText id="website" value="#{controllerSupplier.item.website}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="batas_kredit" value="Batas Kredir"/>
+
+        <p:inputNumber id="batas_kredit" value="#{controllerSupplier.item.batas_kredit}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="top" value="Term Of Payment"/>
+        <p:inputNumber id="top" value="#{controllerSupplier.item.top}" decimalPlaces="0"/>
+        <p:outputLabel for="top" value="Day"/>
+        <h:panelGroup />
+        <p:outputLabel for="nama_bank" value="Bank"/>
+        <p:textEditor id="nama_bank" widgetVar="editor3" value="#{controllerSupplier.item.bank}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="account" value="Account Hutang" />
+        <p:autoComplete   id="account" value="#{accountAutoComplete.account}" completeMethod="#{accountAutoComplete.completeAccountContains}"
+                          var="account" itemLabel="#{account.account}" itemValue="#{account}" converter="#{accountConverter}"
+                          scrollHeight="250" required="true"    >
+            <p:ajax event="itemSelect" listener="#{controllerSupplier.onAccountSelect}" update="id_account"/>
+            <p:column headerText="Kode" >
+                <h:outputText value="#{account.id_account}" />
+            </p:column>
+            <p:column headerText="Account" >
+                <h:outputText value="#{account.account}" />
+            </p:column>
+
+        </p:autoComplete>   
+        <p:outputLabel id="id_account" value="#{controllerSupplier.item.account_hutang}" /> 
+    </p:panelGrid>
+</ui:composition>

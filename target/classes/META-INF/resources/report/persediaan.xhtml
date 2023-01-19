@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Stok Barang</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerReportStok.item.id_gudang}" />
+        <f:viewAction action="#{controllerReportStok.onLoadListPersediaan()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PERSEDIAAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Stok Barang</h1>
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerReportStok.item.id_gudang}">
+                            <f:selectItems value="#{options.comboGudang}" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerReportStok.search()}"   icon="ui-icon-search" value="Search" update="singleDT"/>
+                    </p:panelGrid>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportStok.dataStokBarangs}"  rowIndexVar="index"
+                                  paginator="true" rows="50" paginatorPosition="bottom">
+                     <p:columnGroup type="header">
+                            <p:row>
+                                <p:column  headerText="No"  style="width:40px;"/>
+                                <p:column  headerText="Material Code" style="width:150px;" />
+                                <p:column  headerText="Product" />
+                                <p:column colspan="2" headerText="Stok Satuan Kecil" style="width:150px;"/>
+                                <p:column colspan="2" headerText="Stok Satuan Besar" style="width:150px;"/>
+                                <p:column  headerText="HPP" />
+                                <p:column  headerText="Total" />
+                            </p:row>
+
+                        </p:columnGroup>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Material Code" sortBy="#{item.id_barang}">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Stok Satuan Kecil" sortBy="#{item.isi_satuan}">
+                            <div style="text-align: right;"><h:outputText value="#{item.stokkecil}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column  sortBy="#{item.satuan_kecil}">
+                            <h:outputText value="#{item.satuan_kecil}" />
+                        </p:column>
+                        <p:column headerText="Stok Satuan Besar" sortBy="#{item.stokbesar}">
+                            <div style="text-align: right;"><h:outputText value="#{item.stokbesar}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column  sortBy="#{item.satuan_besar}">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Kategori" sortBy="#{item.kategori_barang}">
+                            <h:outputText value="#{item.kategori_barang}" />
+                        </p:column>
+                        <p:column headerText="HPP" sortBy="#{item.hpp}">
+                            <div style="text-align: right;"><h:outputText value="#{item.hpp}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.total}">
+                            <div style="text-align: right;"><h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

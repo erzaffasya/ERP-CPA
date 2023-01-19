@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+    <ui:define name="title">Stok Barang</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerReportStok.item.id_gudang}" />
+        <f:viewAction action="#{controllerReportStok.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOKHPP')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Stok Barang HPP</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xlsxstream" target="singleDT" fileName="StokHpp"/>
+                        </h:commandLink>
+                    </div>  
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerReportStok.item.id_gudang}">
+                            <f:selectItems value="#{options.comboGudang}" />
+                            <p:ajax event="change" listener="#{controllerReportStok.onLoadListStokHpp()}" update="singleDT"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportStok.dataStokBarangs}"  rowIndexVar="index"
+                                 paginator="true" rows="50" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column  headerText="No"   rowspan="2"/>
+                                <p:column  headerText="Material Code"  sortBy="#{item.id_barang}" filterBy="#{item.id_barang}" filterMatchMode="contains" rowspan="2"/>
+                                <p:column  headerText="Product" sortBy="#{item.nama_barang}" filterBy="#{item.nama_barang}" filterMatchMode="contains" rowspan="2"/>
+                                <p:column colspan="3" headerText="Satuan Kecil" />
+                                <p:column colspan="3" headerText="Satuan Besar" />
+                                <p:column  headerText="Kategori" sortBy="#{item.kategori_barang}" filterBy="#{item.kategori_barang}" filterMatchMode="contains"  rowspan="2" />
+                            </p:row>
+                            <p:row>
+                                <p:column  headerText="Stok" colspan="2"/>
+                                <p:column  headerText="HPP" />
+                                <p:column  headerText="Stok" colspan="2"/>
+                                <p:column  headerText="HPP" />
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Material Code">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Product">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+
+                        <p:column headerText="Qty"  sortBy="#{item.stok}" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.stok}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Satuan">
+                            <h:outputText value="#{item.satuan_kecil}" />
+                        </p:column>
+                        <p:column headerText="HPP" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.hpp}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Qty"   styleClass="rightColumnContent">
+                            <h:outputText value="#{item.stok / item.isi_satuan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Satuan">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="HPP" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.hpp * item.isi_satuan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Kategori">
+                            <h:outputText value="#{item.kategori_barang}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerThr.item.id_thr}" />
+        <f:viewAction action="#{controllerThr.onLoad()}" />
+    </f:metadata>
+    <ui:define name="title">Edit Pengajuan Insentif Produktivitas</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+
+        </style>
+    </ui:define>    
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PAYROLLTHR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerThr.ubah('D')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerThr.item.status eq 'D'}"
+                                             />
+                            <p:commandButton id="posting"
+                                             actionListener="#{controllerThr.ubah('A')}"
+                                             value="Send" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerThr.item.status eq 'D'}"
+                                             />
+
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Edit Pengajuan Thr Karyawan</h1>
+                            <ui:include src="form.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

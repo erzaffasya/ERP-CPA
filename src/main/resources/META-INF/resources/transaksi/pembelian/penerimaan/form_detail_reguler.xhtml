@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerPenerimaan.extendReguler()}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerPenerimaan.dataPenerimaanDetailReguler}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+
+        <p:column headerText="Nama Barang" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nm_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="nama_barang" value="#{item.nm_barang}" required="true" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Qty" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" >
+                        <p:ajax  listener="#{controllerPenerimaan.hitungTotalReguler(item,ri)}" update="total :formA:tb:totaljumlah :formA:tb:diskon :formA:tb:dpp :formA:tb:ppn  :formA:tb:grandtotal"  />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+       
+        <p:column headerText="Satuan" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_kecil" value="#{item.satuan}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_kecil" value="#{item.satuan}" style="width:96%" readonly="yes"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Unit Price" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="harga" value="#{item.harga}" style="width:96%" label="Harga" >
+                        <p:ajax listener="#{controllerPenerimaan.hitungTotalReguler(item,ri)}" update="total :formA:tb:totaljumlah :formA:tb:diskon :formA:tb:dpp :formA:tb:ppn :formA:tb:grandtotal"  />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Amount" style="width:130px">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input"><p:inputText value="#{item.total}" style="width:96%" readonly="true"/></f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPenerimaan.onDeleteClickedReguler(item)}"  update="detil :formA:tb:totaljumlah :formA:tb:diskon :formA:tb:dpp :formA:tb:ppn  :formA:tb:grandtotal" />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

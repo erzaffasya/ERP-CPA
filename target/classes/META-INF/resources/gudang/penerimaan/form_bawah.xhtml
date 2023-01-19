@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    
+        <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;" rendered="#{controllerPenerimaanGudang.item.status eq null}">
+            <p:outputLabel  value="Nomor Cancel PL"/>
+            <p:inputText id="tglcancel" value="#{controllerPenerimaanGudang.item.no_cancel}" />
+            <p:outputLabel  value="Tanggal Cancel"/>
+            <p:inputText id="tglcancel" value="#{controllerPenerimaanGudang.item.tgl_cancel}" />
+            <p:outputLabel  value="Alasan"/>
+            <p:textEditor id="syarat" widgetVar="editor2" value="#{controllerPenerimaanGudang.item.pesan}" height="100" style="margin-bottom:10px" >
+                <f:facet name="toolbar">
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                </f:facet>
+            </p:textEditor>
+        </p:panelGrid>    
+    <div style="height:50px"></div>
+    <p:outputPanel  rendered="#{controllerPenerimaanGudang.item.create_by ne null}">
+        Dibuat oleh #{controllerPenerimaanGudang.item.create_name} pada tanggal #{controllerPenerimaanGudang.item.create_date}
+    </p:outputPanel>
+    <p:outputPanel  rendered="#{controllerPenerimaanGudang.item.modified_by ne null and controllerPenerimaanGudang.item.status eq true}">
+        diaproved oleh #{controllerPenerimaanGudang.item.modified_name} pada tanggal #{controllerPenerimaanGudang.item.modified_date}
+    </p:outputPanel>
+</ui:composition>

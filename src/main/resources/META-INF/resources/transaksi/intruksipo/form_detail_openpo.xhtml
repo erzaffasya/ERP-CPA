@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerIntruksiPo.dataForecastDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+        <p:columnGroup type="header">
+            <p:row>
+                <p:column rowspan="2" headerText="No"/>
+                <p:column rowspan="2" headerText="Nama Barang"/>
+                <p:column rowspan="2" headerText="Material Code"/>
+                <p:column colspan="3" headerText="Bulan"/>
+                <p:column rowspan="2" headerText="Total"/>
+                <p:column rowspan="2" headerText="Open Po"/>
+                <p:column rowspan="2" headerText="Satuan"/>
+                <p:column rowspan="2" headerText="Delete"/>
+            </p:row>
+            <p:row>
+                <p:column  headerText="#{controllerIntruksiPo.itemForecast.lb1}"/>
+                <p:column  headerText="#{controllerIntruksiPo.itemForecast.lb2}"/>
+                <p:column  headerText="#{controllerIntruksiPo.itemForecast.lb3}"/>
+            </p:row>
+            
+        </p:columnGroup>
+        <p:column style="width: 50px;">
+            <h:outputText value="#{ri + 1}" />
+        </p:column>
+        <p:column >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+        <p:column >
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <h:outputText value="#{item.bulan1}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+           <h:outputText value="#{item.bulan2}"><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <h:outputText value="#{item.bulan3}" id="total"><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <h:outputText value="#{item.total}" id="openpo"><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.openpo}"><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="bulan3" value="#{item.openpo}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="centerColumnContent">
+            <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}"/>
+        </p:column>
+        <p:column >
+            <p:commandLink  value="Hapus" styleClass="centerColumnContent">
+                <p:ajax  listener="#{controllerIntruksiPo.onDeleteClickedForecast(item)}"  update="detil"/>
+            </p:commandLink>
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

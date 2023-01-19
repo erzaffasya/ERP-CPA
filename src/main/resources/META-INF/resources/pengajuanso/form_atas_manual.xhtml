@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid id="panel1" columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. So."/>
+        <p:inputText id="nomor" value="#{controllerSo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl So"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerSo.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="SO Date harus diisi !!" >
+            <p:ajax event="dateSelect" listener="#{controllerSo.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerSo.onTglChange}" update="growl tanggal" />
+        </p:calendar>    
+        <p:outputLabel  value="Customer :"/>
+        <p:inputText  value="#{controllerSo.item.customer}" readonly="true"/>
+
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerSo.item.referensi}" readonly="true"/>
+
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerSo.item.kode_mata_uang}">
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="tgl_ref" value="Tgl PO"/>
+        <p:calendar pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" id="tgl_ref" value="#{controllerSo.item.tgl_ref}" required="true"/>
+
+        <p:outputLabel  value="Gudang"/>
+        <p:inputText  value="#{controllerSo.item.gudang}" readonly="true"/>
+
+        <h:outputText value="Manajemen" />
+        <p:selectBooleanCheckbox id="is_manajemen" value="#{controllerSo.item.is_manajemen}" />
+
+        <p:outputLabel for="kepada" value="Contact Person"/>
+        <p:inputText id="kepada" value="#{controllerSo.item.kepada}"/>
+        <p:outputLabel   value="Salesman" />
+        <p:inputText  value="#{controllerSo.item.salesman}" readonly="true"/>
+        <p:outputLabel for="user" value="dibuat Oleh :"/>
+        <p:inputText id="user" value="#{controllerSo.item.user}" readonly="true"/>
+
+        <p:outputLabel  value="Status"/>
+        <p:inputText id="user" value="Draft" readonly="true" rendered="#{controllerSo.item.status eq 'D'}"/>
+        <p:inputText id="user" value="Send" readonly="true" rendered="#{controllerSo.item.status eq 'S'}"/>
+        <p:inputText id="user" value="Packinglist Draft" readonly="true" rendered="#{controllerSo.item.status eq 'C'}"/>
+        <p:inputText id="user" value="Packinglist Complet" readonly="true" rendered="#{controllerSo.item.status eq 'P'}"/>
+        <p:inputText id="user" value="Cancel" readonly="true" rendered="#{controllerSo.item.status eq 'R'}"/>
+
+        <h:panelGroup/>
+        <h:panelGroup />
+        <h:panelGroup/>
+        <p:staticMessage id="sm"  severity="info" summary="#{controllerSo.item.customer}" detail="#{controllerSo.infoCustomer}" escape="false" rendered="#{controllerSo.infoCustomer ne ''}"/>
+    </p:panelGrid>
+
+
+</ui:composition>

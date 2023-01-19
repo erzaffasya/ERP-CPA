@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="title">Komisi DSR</ui:define>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KOMISIMARKETING')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Komisi DSR PER BARANG</h1>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerKomisiSales.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerKomisiSales.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Marketing "/>
+                        
+                        <p:selectOneMenu id="sls"  value="#{controllerKomisiSales.idSales}" >
+                            <f:selectItems value="#{options.comboMarketingAll}" />
+                        </p:selectOneMenu>    
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerKomisiSales.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="PendapatanMarketing"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerKomisiSales.dataKomisiSales}" >
+                        <p:column headerText="Invoice Number" sortBy="#{item.no_invoice}" style="width: 140px;">
+                            <h:outputText value="#{item.no_invoice}" />
+                        </p:column>
+                        <p:column headerText="Tanggal"  style="width: 80px;">
+                            <h:outputText value="#{item.tanggal_invoice}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Marketing" sortBy="#{item.salesman}" style="width: 120px;">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" style="width: 120px;">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}" style="width: 120px;">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        
+                        <p:column headerText="Qty" style="text-align:right; width: 60px;">
+                            <h:outputText value="#{item.qty}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Satuan" sortBy="#{item.satuan}" style="width: 80px;">
+                            <h:outputText value="#{item.satuan}" />
+                        </p:column>
+                        <p:column headerText="Pack" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.isi_satuan}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Volume" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.volume}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>   
+                        <p:column headerText="Unit Price" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.harga}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>  
+                        <p:column headerText="Total" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.total}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>   
+                        <p:column headerText="Harga BP" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.bottomprice}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>   
+                        <p:column headerText="Top" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.top}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Due Date" sortBy="#{item.due_date}" style="width: 100px;">
+                            <h:outputText value="#{item.due_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Official Receipt" sortBy="#{item.no_pembayaran_piutang}" style="width: 120px;">
+                            <h:outputText value="#{item.no_pembayaran_piutang}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Bayar"  style="width: 100px;">
+                            <h:outputText value="#{item.tanggal_or}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Umur Pembayaran" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.umur_pembayaran}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Total Bayar" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.total_bayar}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Komisi" style="text-align:right; width: 80px;">
+                            <h:outputText value="#{item.komisi}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

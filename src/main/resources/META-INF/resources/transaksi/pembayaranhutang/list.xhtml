@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Daftar Pembayaran Utang</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="awal" value="#{controllerPembayaranHutang.awal}" >
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </f:viewParam>
+        <f:viewParam name="akhir" value="#{controllerPembayaranHutang.akhir}" >
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </f:viewParam>
+        <f:viewParam name="status" value="#{controllerPembayaranHutang.statusap}" />
+            
+        <f:viewAction action="#{controllerPembayaranHutang.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEMBAYARANHUTANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:commandButton actionListener="#{controllerPembayaranHutang.list('A')}" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton actionListener="#{controllerPembayaranHutang.update()}"   icon="ui-icon-update" value="Edit" update="growl" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display " onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPembayaranHutang.item}" target="#{controllerPembayaranHutang.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerPembayaranHutang.update()}"/>
+    <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Pembayaran Hutang</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Pembayaran Hutang"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPembayaranHutang.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPembayaranHutang.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Status "/>
+                        <p:selectOneMenu id="status" value="#{controllerPembayaranHutang.statusap}" >
+                            <f:selectItem itemLabel="All" itemValue="X" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerPembayaranHutang.list('L')}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPembayaranHutang.dataPembayaranHutang}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerPembayaranHutang.item}" rowKey="#{item.no_pembayaran_hutang}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerPembayaranHutang.update()}" global="false" />
+                        <p:column headerText="Bank Voucher" sortBy="#{item.no_pembayaran_hutang}" filterBy="#{item.no_pembayaran_hutang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_pembayaran_hutang}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Supplier" sortBy="#{item.supplier}" filterBy="#{item.supplier}" filterMatchMode="contains">
+                            <h:outputText value="#{item.supplier}" />
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.keterangan}" filterBy="#{item.keterangan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.keterangan}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.total_bayar}" filterBy="#{item.total_bayar}" filterMatchMode="contains" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.total_bayar}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}" />
+                            <h:outputText value="Approve" rendered="#{item.status eq 'A'}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Warning !!!" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Pembayaran Hutang :" rendered="#{controllerPembayaranHutang.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerPembayaranHutang.item.no_pembayaran_hutang}" style="font-weight:bold" rendered="#{controllerPembayaranHutang.item.status eq 'D'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPembayaranHutang.delete(controllerPembayaranHutang.item.no_pembayaran_hutang)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerPembayaranHutang.item.status eq 'D'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerPembayaranHutang.item.status eq 'D'}"/>
+                    
+                    <h:outputText value="Anda tidak boleh menghapus data ini !!!" rendered="#{controllerPembayaranHutang.item.status eq 'A'}"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="Ok" rendered="#{controllerPembayaranHutang.item.status eq 'A'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

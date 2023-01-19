@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:panelGrid rendered="#{controllerPemakaian.item.status ne 'P'}" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerPemakaian.extendGl}" update="jurnal"/>
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="jurnal" var="item" value="#{controllerPemakaian.dataAccGlDetail}" editable="true" editMode="cell" widgetVar="cellCars2" rowIndexVar="ri">
+
+        <f:facet name="header">Jurnal</f:facet>
+
+        <p:column headerText="Code" style="width:150px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_account}" id="oid_account" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="id_account" value="#{accountAutoComplete.account}" completeMethod="#{accAutoComplete.completeAccountL4Contains}"
+                                    var="acc" itemLabel="#{acc.id_account}" itemValue="#{acc}" converter="#{accountConverter}"
+                                    scrollHeight="250" required="true">
+                        <p:ajax event="itemSelect" listener="#{controllerPemakaian.onAccountSelect(item,ri)}" update="oid_account account oaccount account" />
+                        <p:column headerText="Code" >
+                            <h:outputText  value="#{acc.id_account}" />
+                        </p:column>
+                        <p:column headerText="Code Name">
+                            <h:outputText value="#{acc.account}" ></h:outputText>
+                        </p:column>
+                        <p:column headerText="Parent">
+                            <h:outputText value="#{acc.account_parent}" ></h:outputText>
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Account Name" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.account}" id="oaccount"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="account" value="#{item.account}" readonly="true"/>
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Debit" style="width:150px">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.debit}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="debit" value="#{item.debit}" style="width:96%" >
+                        <p:ajax  listener="#{controllerPemakaian.hitungSelisih()}"  update="jurnal :form:tb:selisih" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Credit" style="width:150px">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.credit}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="credit" value="#{item.credit}" style="width:96%" >
+                        <p:ajax  listener="#{controllerPemakaian.hitungSelisih()}"  update="jurnal :form:tb:selisih" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        
+        <p:column style="width:32px" rendered="#{controllerPemakaian.item.status ne 'P'}">
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPemakaian.onDeleteClickedGl(item)}"  update="jurnal :form:tb:selisih" />
+            </p:commandButton>
+        </p:column>
+        <p:columnGroup type="footer">
+            <p:column colspan="2" style="text-align:right" footerText="Totals:" />
+            <p:column id="jmldebit">
+                <f:facet name="footer">
+                    <h:outputText value="#{controllerPemakaian.jumlahDebit}">
+                        <f:convertNumber pattern="#,###.00" />
+                    </h:outputText>
+                </f:facet>
+            </p:column> 
+            <p:column id="jmlcredit" >
+                <f:facet name="footer">
+                    <h:outputText value="#{controllerPemakaian.jumlahKredit}">
+                        <f:convertNumber pattern="#,###.00" />
+                    </h:outputText>
+                </f:facet>
+            </p:column >
+            <p:column  rendered="#{controllerPemakaian.item.status ne 'P'}">
+            </p:column>
+        </p:columnGroup>
+    </p:dataTable>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-9,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+        <p:outputLabel  value="Selisih" style="font-size: 20px; font-weight: bold; "/>
+        <p:outputLabel id="selisih"   value="#{controllerPemakaian.selisih}" style="font-size: 20px; font-weight: bold; ">
+            <f:convertNumber pattern="#,##0.00" />
+        </p:outputLabel>
+    </p:panelGrid>
+</ui:composition>

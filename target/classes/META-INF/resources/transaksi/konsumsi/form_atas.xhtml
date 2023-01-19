@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input Rekonsilasi Konsumsi</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Nomor"/>
+        <p:inputText id="nomor" value="#{controllerKonsumsi.item.no_reff}" required="true"/>
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerKonsumsi.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Tanggal harus diisi !!" />
+        <p:outputLabel for="customer" value="Customer "/>
+        <p:autoComplete   id="customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                          var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Customer Harus diisi !!!"   >
+        </p:autoComplete>   
+        <p:outputLabel for="gudang" value="Gudang "/>
+        <p:selectOneMenu id="gudang" value="#{controllerKonsumsi.item.id_gudang}" required="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="periodeawal" value="Periode"/>
+        <p:calendar pattern="dd/MM/yyyy" id="periodeawal" value="#{controllerKonsumsi.item.periode_awal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Periode Harus diisi !!" />
+        <p:outputLabel for="periodeawal" value="S/d"/>
+        <p:calendar pattern="dd/MM/yyyy" id="periodeakhir" value="#{controllerKonsumsi.item.periode_akhir}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Periode Harus diisi !!" />
+    </p:panelGrid>
+
+</ui:composition>

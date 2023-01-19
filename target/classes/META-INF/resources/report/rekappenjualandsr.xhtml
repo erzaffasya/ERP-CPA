@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">Rekap Penjualan</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSalesReport.onLoadListRekapDsr()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('REKAPPENJUALANDSR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Rekap Penjualan</h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode" style="text-align: center"/>
+                        <p:calendar id="awal" value="#{controllerSalesReport.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerSalesReport.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel for="salesman" value="Sales Engineer"/>
+                        <p:selectOneMenu id="salesman" value="#{controllerSalesReport.idSales}" disabled="true">
+                            <f:selectItems value="#{controllerSalesReport.comboMarketingDepartemen}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerSalesReport.onLoadListRekapDsr()}"   icon="ui-icon-search" value="Search" update="growl salesReport"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="salesReport" fileName="RekapPenjualan"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="salesReport" var="item" value="#{controllerSalesReport.dataPenjualanDetail}" tableStyle="table-layout: auto;" reflow="true">
+                        <p:column headerText="Customer" >
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Invoice No" >
+                            <h:outputText value="#{item.no_penjualan}" />
+                        </p:column>
+                        <p:column headerText="Faktur Pajak" >
+                            <h:outputText value="#{item.faktur}" />
+                        </p:column>
+                        <p:column headerText="Kwitansi" >
+                            <h:outputText value="#{item.no_kwitansi}" />
+                        </p:column>
+                        <p:column headerText="No DO" style="width: 140px">
+                            <h:outputText value="#{item.no_do}" />
+                        </p:column>
+                        <p:column headerText="No PO" >
+                            <h:outputText value="#{item.referensi}" />
+                        </p:column>
+                        <p:column headerText="barang" >
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Qty" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Satuan" styleClass="centerColumnContent">
+                            <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="Liters" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.qty_kecil}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Satuan" styleClass="centerColumnContent">
+                             <h:outputText id="osatuan_besar" value="#{item.satuan_kecil}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="Unit Price" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Amount" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:columnGroup type="footer" >
+                            <p:row>
+                                <p:column colspan="12" styleClass="rightColumnContent" footerText="Grand Total : " >
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerSalesReport.total}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+
+                                    </f:facet>
+                                </p:column>
+                            </p:row>
+                        </p:columnGroup>
+
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

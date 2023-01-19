@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Saldo Awal</ui:define>
+    <f:metadata>
+        <f:viewParam name="tahun" value="#{controllerAccValue.tahun}" />
+        <f:viewAction action="#{controllerAccValue.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('ACCVALUE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerAccValue.add()}"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerAccValue.update()}"   icon="ui-icon-update" value="Edit"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1 >BEGGINING BALANCE ACCOUNT TAHUN #{controllerAccValue.tahun}</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel  value="Tahun"/>
+                        <p:inputText value="#{controllerAccValue.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerAccValue.onLoadList()}"   icon="ui-icon-search" value="Search" update="form"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Saldo Awal"/>
+                        </h:commandLink>
+                    </div>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAccValue.dataAccValue}" selectionMode="single" reflow="true"
+                                 selection="#{controllerAccValue.item}" rowKey="#{item.account}" >
+                        <p:column headerText="Code" sortBy="#{item.account}">    
+                            <h:outputText value="#{item.account}" />
+                        </p:column>
+                        <p:column headerText="Description" sortBy="#{item.nama_account}">
+                            <h:outputText  value="#{item.nama_account}" />
+                        </p:column>
+                        <p:column headerText="Debit" sortBy="#{item.debit}" style="text-align:right;">
+                            <h:outputText  value="#{item.debit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Credit" sortBy="#{item.credit}" style="text-align:right;">
+                            <h:outputText  value="#{item.credit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:columnGroup type="footer" >
+                            <p:row>
+                                <p:column colspan="2" style="text-align:right" footerText="Grand Total : " >
+
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerAccValue.debit}" >
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+                                    </f:facet>
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerAccValue.credit}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+
+                                    </f:facet>
+                                </p:column>
+                            </p:row>
+                        </p:columnGroup>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

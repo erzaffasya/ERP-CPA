@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="master-detail-subreport" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d96dc5d-3292-4a7f-805a-1254daa4615b">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="no_penawaran" class="java.lang.String">
+        <defaultValueExpression><![CDATA[]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT * FROM penawaran_detail
+WHERE no_penawaran = $P{no_penawaran}]]>
+    </queryString>
+    <field name="no_penawaran" class="java.lang.String"/>
+    <field name="urut" class="java.lang.Integer"/>
+    <field name="id_gudang" class="java.lang.String"/>
+    <field name="id_barang" class="java.lang.String"/>
+    <field name="qty" class="java.math.BigDecimal"/>
+    <field name="harga" class="java.math.BigDecimal"/>
+    <field name="total" class="java.math.BigDecimal"/>
+    <field name="harga_asli" class="java.math.BigDecimal"/>
+    <field name="diskon" class="java.math.BigDecimal"/>
+    <field name="id_pajak" class="java.lang.Integer"/>
+    <field name="diskonrp" class="java.math.BigDecimal"/>
+    <field name="diskonpersen" class="java.math.BigDecimal"/>
+    <field name="revisi" class="java.lang.Integer"/>
+    <field name="additional_charge" class="java.math.BigDecimal"/>
+    <field name="jenis_satuan" class="java.lang.Boolean"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <columnHeader>
+        <band height="24" splitType="Stretch">
+            <staticText>
+                <reportElement mode="Opaque" x="13" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#666666" uuid="3ed4f804-5ddb-49f7-936d-3aba21898b13"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[urut]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="113" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#666666" uuid="03c2d0a5-bea3-47b5-9325-c62142db0c03"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[qty]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="213" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#666666" uuid="f142150f-3b91-474b-96b3-3bcbdd2e9742"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[harga]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="313" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#666666" uuid="6ddc89c1-faef-4301-bee9-832b932cb52c"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[harga]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="413" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#666666" uuid="267c7111-bba9-485c-8326-6f4a3446cee8"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[harga_asli]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="24" splitType="Stretch">
+            <textField>
+                <reportElement x="13" y="0" width="100" height="20" uuid="f99992cc-b225-4499-a599-97f67b5739f0"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{urut}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="113" y="0" width="100" height="20" uuid="3f61f77e-ff89-4a3c-8dfe-86bba86ffb13"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="213" y="0" width="100" height="20" uuid="96fa44a5-c701-402e-99b1-d052072d7dd4"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{harga}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="413" y="0" width="100" height="20" uuid="591eb374-7a9a-4ffe-8db6-6aeffe10c973"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{harga_asli}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="313" y="0" width="100" height="20" uuid="13e86f36-28de-484f-8da1-5c347efe1846"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{harga}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

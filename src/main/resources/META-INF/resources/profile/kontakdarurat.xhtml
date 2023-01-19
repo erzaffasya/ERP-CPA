@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.onLoadListKontakDarurat()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <form>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>
+                            <div class="ui-g-12 ui-lg-12">
+
+                                <div class="ui-g-12 ui-lg-3" style="margin-bottom: 20px;">
+                                    <ui:include src="leftprofile.xhtml"/>
+                                </div>
+                                <div class="ui-g-12 ui-lg-9">
+                                    <div class="ui-g-12 ui-lg-12">
+                                        <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataKontakDarurat}" sortBy="#{item.id}"  
+                                                     rowIndexVar="index">
+                                            <p:column >
+                                                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                                    <h:outputText value="#{item.nama}" style="font-weight: bold"/>
+                                                    <div style="text-align: right;">
+                                                        <p:button href="./editkontakdarurat.jsf?id=#{controllerHrPegawai.item.id_pegawai}&amp;idkontak=#{item.id}"   icon="ui-icon-add" value="Ubah kontak darurat" style="width: 100px;"/>                 
+                                                    </div>
+                                                    <h:outputText value="Hubungan" />
+                                                    <h:outputText value="#{item.hubungan}" />
+                                                    <h:outputText value="No telepon" />
+                                                    <h:outputText value="#{item.telpon}" />
+                                                </p:panelGrid>
+                                            </p:column>
+
+                                        </p:dataTable>
+                                    </div>
+                                </div>    
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>    
+    </ui:define>
+</ui:composition>

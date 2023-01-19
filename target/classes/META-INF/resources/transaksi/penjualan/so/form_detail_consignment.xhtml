@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerSo.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerSo.dataSoDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:column headerText="Nama Barang" style="width:400px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                    var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                    scrollHeight="250" required="true">
+                        <p:ajax event="itemSelect" listener="#{controllerSo.onBrgSelect(item,ri)}" update="onama_barang  oid_barang osatuan_besar" />
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{barang.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Material Code" >
+                            <h:outputText value="#{barang.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Satuan" >
+                            <h:outputText value="#{barang.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" >
+                            <h:outputText value="#{barang.isi_satuan} #{barang.satuan_kecil}" />
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Material Code" style="width:100px">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Qty" style="width:70px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Satuan" style="width:70px;">
+            <div style="text-align:center;"> <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText></div>
+        </p:column>
+        <p:column headerText="Delivery Date" style="width:100px;">
+            <p:cellEditor>
+                <f:facet name="output">
+                    <h:outputText id="odelivery_date" value="#{item.delivery_date}" > 
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                    <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{item.delivery_date}"  mask="99/99/9999" maxlength="10"  />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Remark">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText id="oremarkr" value="#{item.remark}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="remark" value="#{item.remark}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerSo.onHapusClicked(item)}"  update="detil" />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

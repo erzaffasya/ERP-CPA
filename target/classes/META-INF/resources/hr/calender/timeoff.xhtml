@@ -1,0 +1,237 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerCutiKaryawan.myLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Aktifitas pengajuan cuti</h1>
+                    <p:panelGrid id="pnnotifikasi" columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+
+                        <p:dataTable id="notifikasi" value="#{controllerCutiKaryawan.dataNotifikasi}" var="nt" 
+                                     selection="#{controllerCutiKaryawan.LSelectedNotifikasi}" rowKey="#{nt.id}" rendered="#{controllerCutiKaryawan.dataNotifikasi.size() > 0}">
+                            <f:facet name="header">
+                                <div style="text-align: left; font-size: 20px;">Notfikasi untuk diselesaikan</div>
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Pilih semua" style="text-align: left; font-size: 20px; ">
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-11,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <h:outputLabel value="#{nt.keterangan}" style="font-size: 16px; "/>
+                                    <p:column>
+                                        <p:commandButton 
+                                            actionListener="#{controllerCutiKaryawan.onDetilSelect(nt.id)}"  
+                                            oncomplete="PF('sidebar5').show()"
+                                            value="Detail" 
+                                            process="@this" 
+                                            update="notifikasi :form:tb  :form:detil :form:judul">
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:panelGrid>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-8,,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <h:outputLabel value="tahun"/>
+                        <p:inputText id="month"  value="#{controllerCutiKaryawan.tahun}"  >
+                            <p:ajax event="keyup" listener="#{controllerCutiKaryawan.myLoadList()}" update=":form:tb:report"/>
+                        </p:inputText>
+                        <h:panelGroup/>
+                        <p:button href="addtimeoff.jsf"  styleClass="teal-btn"  icon="ui-icon-add" value="Ajukan Cuti"/>
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <h:outputLabel value="Jatah Cuti Tahunan"/>
+                        <h:outputLabel value=": #{controllerCutiKaryawan.cutiTahunan.saldo} hari"/>
+                        <h:outputLabel value="Sudah diambil cuti"/>
+                        <h:outputLabel value=": #{controllerCutiKaryawan.cutiTahunan.jumlah} hari"/>
+                        <h:outputLabel value="Saldo Cuti"/>
+                        <h:outputLabel value=": #{controllerCutiKaryawan.cutiTahunan.sisa} hari"/>
+                    </p:panelGrid>
+
+                    <p:tabView id="tb">
+                        <p:tab title="History Cuti">
+                            <p:dataTable id="report" var="item" value="#{controllerCutiKaryawan.dataCuti}" selectionMode="single"  editable="true" editMode="cell"
+                                         selection="#{controllerCutiKaryawan.item}" rowKey="#{item.id}" rowIndexVar="index" tableStyle="table-layout: auto;">
+                                <p:column headerText="NIK"><h:outputText value="#{item.nik}"/></p:column>
+                                <p:column headerText="Nama"><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                                <p:column headerText="Tanggal cuti"><h:outputText value="#{item.tanggal}"></h:outputText></p:column>
+                                <p:column headerText="Tipe cuti"><h:outputText value="#{item.nama_tipe}"/></p:column>
+                                <p:column headerText="Status"><h:outputText value="#{item.keterangan_status}"/></p:column>
+                                <p:column headerText="Catatan" rendered="#{page.myPegawai.id_jabatan_new eq 109 or page.myPegawai.id_jabatan_new eq 120 or page.myPegawai.id_jabatan_new eq 161}">
+                                    <p:cellEditor >
+                                        <f:facet name="output"><h:outputText value="#{item.note}"></h:outputText></f:facet>
+                                        <f:facet name="input" >
+                                            <p:inputText value="#{item.note}" style="width: 100%;">
+                                                <p:ajax listener="#{controllerCutiKaryawan.addNote()}" update="@form"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        actionListener="#{controllerCutiKaryawan.onDetilSelect(item.id)}"  
+                                        oncomplete="PF('sidebar5').show()"
+                                        value="Detail" 
+                                        process="@this" 
+                                        update=":form:tb  :form:detil :form:judul">
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                        <p:tab title="History Persetujuan Cuti" rendered="#{controllerCutiKaryawan.dataOtherCuti.size() > 0}">
+                            <p:dataTable id="report2" var="item" value="#{controllerCutiKaryawan.dataOtherCuti}" selectionMode="single"   editable="true" editMode="cell"
+                                         selection="#{controllerCutiKaryawan.item}" rowKey="#{item.id}" rowIndexVar="index" tableStyle="table-layout: auto;">
+
+                                <p:column headerText="NIK" sortBy="#{item.nik}"  filterBy="#{item.nik}" filterMatchMode="contains"><h:outputText value="#{item.nik}"/></p:column>
+                                <p:column headerText="Nama" sortBy="#{item.nama_pegawai}"  filterBy="#{item.nama_pegawai}" filterMatchMode="contains"><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                                <p:column headerText="Tanggal cuti" sortBy="#{item.tanggal}"  filterBy="#{item.tanggal}" filterMatchMode="contains"><h:outputText value="#{item.tanggal}"></h:outputText></p:column>
+                                <p:column headerText="Tipe cuti" sortBy="#{item.nama_tipe}"  filterBy="#{item.nama_tipe}" filterMatchMode="contains"><h:outputText value="#{item.nama_tipe}"/></p:column>
+                                <p:column headerText="Status" sortBy="#{item.keterangan_status}"  filterBy="#{item.keterangan_status}" filterMatchMode="contains"><h:outputText value="#{item.keterangan_status}"/></p:column>
+                                <p:column headerText="Catatan" rendered="#{page.myPegawai.id_jabatan_new eq 109 or page.myPegawai.id_jabatan_new eq 120 or page.myPegawai.id_jabatan_new eq 161}">
+                                    <p:cellEditor >
+                                        <f:facet name="output"><h:outputText value="#{item.note}"></h:outputText></f:facet>
+                                        <f:facet name="input" >
+                                            <p:inputText value="#{item.note}" style="width: 100%;">
+                                                <p:ajax listener="#{controllerCutiKaryawan.addNote()}" update="@form"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        actionListener="#{controllerCutiKaryawan.onDetilSelect(item.id)}"  
+                                        oncomplete="PF('sidebar5').show()"
+                                        value="Detail" 
+                                        process="@this" 
+                                        update=":form:tb  :form:detil :form:judul">
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+
+                        <p:tab title="History Cuti Lain" rendered="#{controllerCutiKaryawan.dataOtherTimeOff.size() > 0}">
+                            <p:dataTable id="report2" var="item" value="#{controllerCutiKaryawan.dataOtherTimeOff}" selectionMode="single"  editable="true" editMode="cell"
+                                         selection="#{controllerCutiKaryawan.item}" rowKey="#{item.id}" rowIndexVar="index" tableStyle="table-layout: auto;">
+                                <p:column headerText="NIK"><h:outputText value="#{item.nik}"/></p:column>
+                                <p:column headerText="Nama"><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                                <p:column headerText="Tanggal cuti"><h:outputText value="#{item.tanggal}"></h:outputText></p:column>
+                                <p:column headerText="Tipe cuti"><h:outputText value="#{item.nama_tipe}"/></p:column>
+                                <p:column headerText="Status"><h:outputText value="#{item.keterangan_status}"/></p:column>
+                                <p:column headerText="Catatan" rendered="#{page.myPegawai.id_jabatan_new eq 109 or page.myPegawai.id_jabatan_new eq 120 or page.myPegawai.id_jabatan_new eq 161}">
+                                    <p:cellEditor >
+                                        <f:facet name="output"><h:outputText value="#{item.note}"></h:outputText></f:facet>
+                                        <f:facet name="input" >
+                                            <p:inputText value="#{item.note}" style="width: 100%;">
+                                                <p:ajax listener="#{controllerCutiKaryawan.addNote()}" update="@form"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        actionListener="#{controllerCutiKaryawan.onDetilSelect(item.id)}"  
+                                        oncomplete="PF('sidebar5').show()"
+                                        value="Detail" 
+                                        process="@this" 
+                                        update=":form:tb  :form:detil :form:judul">
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+
+                    </p:tabView>
+                </div>
+            </div>
+
+
+            <p:sidebar widgetVar="sidebar5" fullScreen="true" baseZIndex="10000" style="overflow: scroll;">
+
+                <p:panelGrid id="judul" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                    <h:panelGroup/>
+                    <p:panelGrid id="detil" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%; overflow: auto;">
+                        <p:staticMessage severity="info" summary="#{controllerCutiKaryawan.item.keterangan_status}" />
+                        <h1>Pengajuan #{controllerCutiKaryawan.item.nama_cuti}</h1>
+                        <p:outputLabel  value="Untuk"/>
+                        <p:outputLabel id="untuk"  value="#{controllerCutiKaryawan.item.nama_pegawai}"/>
+                        <p:outputLabel  value="Yang mengajukan "/>
+                        <p:outputLabel id="untuk"  value="#{controllerCutiKaryawan.item.create_by_name}"/>
+                        <p:outputLabel  value="Jabatan"/>
+                        <p:outputLabel  value="#{controllerCutiKaryawan.item.jabatan}"/>
+                        <p:outputLabel  value="Tanggal pengajuan"/>
+                        <p:outputLabel  value="#{controllerCutiKaryawan.item.create_date}"><f:convertDateTime pattern="dd MMMM yyyy" /></p:outputLabel>
+                        <p:outputLabel  value="Tanggal cuti"/>
+                        <p:outputLabel  value="#{controllerCutiKaryawan.item.tanggal}"/>
+                        <p:outputLabel  value="No. yang bisa dihubungi"/>
+                        <p:outputLabel  value="#{controllerCutiKaryawan.item.telpon}"/>
+                        <p:outputLabel  value="Keperluan"/>
+                        <p:outputLabel  value="#{controllerCutiKaryawan.item.alasan}"/>
+                        <p:outputLabel  value="Status"/>
+                        <p:outputLabel  value="#{controllerCutiKaryawan.item.keterangan_status}"/>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:dataTable id="tableCutiPersetujuan" value="#{controllerCutiKaryawan.dataCutiPersetujuan}" var="cp">
+                        <f:facet name="header">
+                            <div style="text-align: left; font-size: 20px;">Cuti ini harus disetujui oleh</div>
+                        </f:facet>
+                        <p:column headerText="No" style="width: 10%">
+                            <h:outputLabel value="#{cp.urut}" />
+                        </p:column>
+                        <p:column headerText="Nama" >
+                            <h:outputLabel value="#{cp.nama_pegawai}" />
+                        </p:column>
+                        <p:column headerText="TTD" style="width: 10%">
+                            <h:outputLabel rendered="#{cp.status eq true}"><img src="/img/checked.png" style="width: 30%;"/></h:outputLabel>
+                            <h:outputLabel rendered="#{cp.status eq false}"><img src="/img/unchecked.png" style="width: 30%;"/></h:outputLabel>
+                            <h:outputLabel rendered="#{cp.status eq null}"/>
+                        </p:column>
+                        <p:column headerText="Tanggal" >
+                            <h:outputLabel value="#{cp.tanggal_persetujuan}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputLabel>
+                        </p:column>
+                    </p:dataTable> 
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:panelGrid id="detiltombol" columns="5" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                        <c:if test="#{controllerCutiKaryawan.item.status ne 'R' and controllerCutiKaryawan.item.status ne 'C'}">
+                            <c:if test="#{controllerCutiKaryawan.searchPersetujuan(controllerCutiKaryawan.item.id, page.myPegawai.id_pegawai) eq 1}">
+
+                                <p:commandButton value="Setuju" style="margin-bottom:10px; width: 98%;">
+                                    <p:ajax  listener="#{controllerCutiKaryawan.persetujuanSelect(true)}"  update="growl :form:tb  :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()" />
+                                </p:commandButton>   
+                                <p:commandButton value="Tolak" styleClass="red-btn" style="margin-bottom:10px; width: 98%;" rendered="#{controllerCutiKaryawan.item.status ne 'R'}">
+                                    <p:ajax  listener="#{controllerCutiKaryawan.persetujuanSelect(false)}"  update="growl :form:tb  :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()"/>
+                                </p:commandButton>    
+                            </c:if>
+                        </c:if>      
+                        <p:commandButton style="margin-bottom:10px; width: 98%;" value="Batalkan Cuti" styleClass="red-btn"
+                                         rendered="#{(controllerCutiKaryawan.item.id_pegawai eq page.myPegawai.id_pegawai or controllerCutiKaryawan.item.create_by eq page.myPegawai.id_pegawai) 
+                                                     and controllerCutiKaryawan.statuscancel eq true 
+                                                     and controllerCutiKaryawan.item.status ne 'R' 
+                                                     and controllerCutiKaryawan.item.status ne 'C'}">
+                            <p:ajax  listener="#{controllerCutiKaryawan.declineSelect()}"  update="growl :form:tb "  oncomplete="PF('sidebar5').hide()"/>
+                        </p:commandButton>
+                        <p:commandButton value="Tutup" style="width: 98%;">
+                            <p:ajax   oncomplete="PF('sidebar5').hide()" />
+                        </p:commandButton>    
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:sidebar>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

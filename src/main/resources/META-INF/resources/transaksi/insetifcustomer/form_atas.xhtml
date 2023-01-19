@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Insetif Customer</ui:define>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Nomor."/>
+        <p:inputText id="nomor" value="#{controllerInsentifCustomer.item.nomor}"  readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar id="tanggal"  value="#{controllerInsentifCustomer.item.tanggal}" required="true"/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel  value="Keterangan"/>
+        <p:inputText id="notes"  value="#{controllerInsentifCustomer.item.note}"/>
+    </p:panelGrid>
+</ui:composition>

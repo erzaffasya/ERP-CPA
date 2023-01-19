@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+    <div style="text-align: right">
+        <h:commandLink  id="xls">
+            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+            <p:dataExporter type="xls" target="singleDT" fileName="PendapatanMarketing"/>
+        </h:commandLink>
+    </div>    
+    <p:dataTable id="singleDT" var="item" value="#{controllerInsentifCustomer.dataPembayaranPiutangDetail}" editable="true" reflow="true"  tableStyle="table-layout: auto;" 
+                 editMode="cell" widgetVar="cellCars" rowIndexVar="ri" rowKey="#{item.no_pembayaran_piutang}" selection="#{controllerInsentifCustomer.selectedPembayaranPiutangDetail}" >
+        <p:ajax  event="toggleSelect" oncomplete="teste()" />
+        <p:column selectionMode="multiple" styleClass="centerColumnContent"/>
+        <p:column headerText="Official Receipt" sortBy="#{item.no_pembayaran_piutang}" >
+            <h:outputText value="#{item.no_pembayaran_piutang}" />
+        </p:column>
+        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" >
+            <h:outputText value="#{item.tanggal}" >
+                <f:convertDateTime pattern="dd-MM-yyyy" />
+            </h:outputText>    
+        </p:column>
+        <p:column headerText="Customer" sortBy="#{item.customer}" >
+            <h:outputText value="#{item.customer}" />
+        </p:column>
+        <p:column headerText="Marketing" sortBy="#{item.salesman}" >
+            <h:outputText value="#{item.salesman}" />
+        </p:column>
+        <p:column headerText="Top" >
+            <h:outputText value="#{item.top}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column headerText="Due Date" sortBy="#{item.due_date}" >
+            <h:outputText value="#{item.due_date}" >
+                <f:convertDateTime pattern="dd-MM-yyyy" />
+            </h:outputText>    
+        </p:column>
+        <p:column headerText="Umur Pembayaran" styleClass="rightColumnContent">
+            <h:outputText value="#{item.umur_pembayaran}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column headerText="No. Invoice" sortBy="#{item.no_invoice}" >
+            <h:outputText value="#{item.no_invoice}" />
+        </p:column>
+        <p:column headerText="DPP" styleClass="rightColumnContent">
+            <h:outputText value="#{item.dpp}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="PPN" styleClass="rightColumnContent">
+            <h:outputText value="#{item.ppn}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Total" >
+            <h:outputText value="#{item.jumlah_bayar}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Total" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.insentif}" id="linsentif"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <h:inputText value="#{item.insentif}" id="insentif" />
+                </f:facet>
+            </p:cellEditor>
+            
+        </p:column>
+        <p:column headerText="Notes" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.ket}" id="lnotes" /></f:facet>
+                <f:facet name="input">
+                    <h:inputText value="#{item.ket}" id="notes" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:columnGroup type="footer" >
+            <p:row>
+                <p:column colspan="8"  footerText="Grand Total : " />
+                <p:column >
+                    <f:facet name="footer">
+                        <h:outputText value="#{controllerInsentifCustomer.total_dpp}" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                    </f:facet>
+                </p:column>
+                <p:column  >
+                    <f:facet name="footer">
+                        <h:outputText value="#{controllerInsentifCustomer.total_ppn}" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                    </f:facet>
+                </p:column>
+                <p:column >
+                    <f:facet name="footer">
+                        <h:outputText value="#{controllerInsentifCustomer.total}" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                    </f:facet>
+                </p:column>
+            </p:row>
+        </p:columnGroup>
+
+    </p:dataTable>
+
+
+</ui:composition>

@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPegawaiKpi.id_pegawai}" />
+        <f:viewAction action="#{controllerPegawaiKpi.onLoadListPegawaiKpi()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+        </style>
+
+    </ui:define>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KPIPEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="formA" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPegawaiKpi.tambah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Pegawai</h1>
+
+                    <p:dataTable id="detil" var="item" value="#{controllerPegawaiKpi.dataPegawaiKpi}" sortBy="#{item.id_category}}" expandableRowGroups="true" 
+                                 editable="true"  editMode="cell" widgetVar="cellCars" rowIndexVar="ri" rowKey="#{item.id_indicator}" selection="#{controllerPegawaiKpi.selectedPegawaiKpi}">
+                        <p:ajax event="toggleSelect" update="detil total"/>
+
+                        <p:ajax event="rowSelectCheckbox" update="detil total"/>
+                        <p:ajax event="rowUnselectCheckbox" update="detil total"/>
+                        <p:headerRow>
+                            <p:column colspan="5">
+                                <h:outputText value="#{item.category}" />
+                            </p:column>
+
+                        </p:headerRow>
+                        <p:column selectionMode="multiple"   style="width:16px;text-align:center" />
+                        <p:column headerText="Indicator">
+                            <h:outputText value="#{item.indicator}" />
+                        </p:column>
+                        <p:column headerText="Bukti">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{item.evidence}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{item.evidence}" id="evidence" style="width: 98%;"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Target" styleClass="rightColumnContent">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{item.target}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber value="#{item.target}" id="target" decimalPlaces="0" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Bobot" styleClass="rightColumnContent">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{item.bobot}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber value="#{item.bobot}" id="bobot" decimalPlaces="0" >
+                                        <p:ajax update="detil total"/>
+                                    </p:inputNumber>    
+                                </f:facet>
+                            </p:cellEditor>
+
+                        </p:column>
+
+                        <p:summaryRow>
+                            <p:column colspan="4" style="text-align:right;background-color: white; color: black;">
+                                <h:outputText value="Jumlah :" />
+                            </p:column>
+                            <p:column style="text-align:right;background-color: white; color: black;">
+                                <h:outputText value="#{controllerPegawaiKpi.getAcummulatedValue(item.category)}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                            </p:column>
+                        </p:summaryRow>
+                    </p:dataTable>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;" >
+                        <p:outputLabel  value="Total Bobot :" style="font-weight: bold;"/>
+                        <p:outputLabel id="total"  value="#{controllerPegawaiKpi.total}" style="font-weight: bold;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                    </p:panelGrid>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

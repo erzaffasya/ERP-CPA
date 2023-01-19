@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Forecast</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerForecast.item.id}" />
+        <f:viewAction action="#{controllerForecast.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('FORECAST')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerForecast.cetak()}" />
+                            <p:commandButton action="#{controllerForecast.createXls()}" value="Excel"  ajax="false" icon="fa fa-file-excel-o" />    
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerForecast.ubah('D')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{page.myPegawai.id_jabatan != 13 and controllerForecast.item.status eq 'D'}"/>
+                            <p:commandButton id="send"
+                                             actionListener="#{controllerForecast.ubah('S')}"
+                                             value="Send" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{page.myPegawai.id_jabatan != 13 and controllerForecast.item.status eq 'D'}"/>
+                            <p:commandButton id="Cancel" update=":form:display" 
+                                             onclick="PF('dlg3').show();" 
+                                             icon="fa  fa-close" value="Cancel"
+                                             rendered="#{page.myPegawai.id_jabatan != 13 and controllerForecast.item.status eq 'S' and controllerForecast.item.create_by eq page.myPegawai.id_pegawai }"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Input  Forecast</h1>
+                            <ui:include src="form_atas.xhtml"/>
+                            <ui:include src="form_detail.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel Forecast" widgetVar="dlg3" resizable="false" id="canceldo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <p:editor  id="pesan" widgetVar="editor4" value="#{controllerForecast.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerForecast.ubahStatus('C')}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="@form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

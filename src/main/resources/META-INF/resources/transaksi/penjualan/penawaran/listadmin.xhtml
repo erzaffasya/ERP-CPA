@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Daftar Penawaran</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPenawaran.onLoadListSalesAdmin()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PENAWARAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:button href="./addnewcustomer.jsf"   icon="ui-icon-add" value="Tambah Customer Baru"  />
+                            <p:commandButton actionListener="#{controllerPenawaran.update()}"   icon="ui-icon-update" value="Edit" update="growl" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPenawaran.item}" target="#{controllerPenawaran.item}" />
+                            </p:commandButton>
+                            <p:commandButton actionListener="#{controllerPenawaran.revisiPenawaran()}" icon="ui-icon-update" value="Revisi" update="growl"/>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPenawaran.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Penawaran</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Penawaran"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPenawaran.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPenawaran.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="Status Penawaran"/>
+                        <p:selectOneMenu id="status" value="#{controllerPenawaran.statuspenawaran}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                            <f:selectItem itemLabel="Posting" itemValue="P" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerPenawaran.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                        
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPenawaran.dataPenawaran}" selectionMode="single" reflow="true"
+                                 selection="#{controllerPenawaran.item}" rowKey="#{item.nomor} #{item.revisi}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerPenawaran.update()}" global="false" />
+                        <p:column headerText="No. Penawaran" sortBy="#{item.nomor}" filterBy="#{item.nomor}" filterMatchMode="contains" style="width:320px;">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Revisi" sortBy="#{item.revisi}" filterBy="#{item.revisi}" filterMatchMode="contains" style="width:50px;">
+                            <h:outputText value="#{item.revisi}" />
+                        </p:column>
+                        <p:column headerText="Tgl Penawaran" sortBy="#{item.tanggal}" filterBy="#{item.tanggal}" filterMatchMode="contains" style="width:120px;">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Marketing" sortBy="#{item.salesman}" filterBy="#{item.salesman}" filterMatchMode="contains">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="Dibuat Oleh" sortBy="#{item.createby}" filterBy="#{item.createby}" filterMatchMode="contains">
+                            <h:outputText value="#{item.createby}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.grandtotal}" filterBy="#{item.total}" filterMatchMode="contains" style="width:120px;text-align:right;">
+                            <h:outputText value="#{item.grandtotal}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.statussend}" style="width:120px;">
+                            <h:outputText value="Draft" rendered="#{item.statussend eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.statussend eq 'S'}"/>
+                            <h:outputText value="Approve" rendered="#{item.statussend eq 'A'}"/>
+                            <h:outputText value="Reject" rendered="#{item.statussend eq 'R'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Penawaran" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Penawaran :" rendered="#{controllerPenawaran.item.statussend eq 'D' || controllerPenawaran.item.statussend eq 'S'}"/>
+                    <h:outputText value="#{controllerPenawaran.item.nomor}" style="font-weight:bold" rendered="#{controllerPenawaran.item.statussend eq 'D' || controllerPenawaran.item.statussend eq 'S'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPenawaran.delete(controllerPenawaran.item.nomor)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerPenawaran.item.statussend eq 'D' || controllerPenawaran.item.statussend eq 'S'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerPenawaran.item.statussend eq 'D' || controllerPenawaran.item.statussend eq 'S'}"/>
+                
+                    <h:outputText value="Anda tidak dapat menghapus penawaran ini !!!" rendered="#{controllerPenawaran.item.statussend eq 'A' || controllerPenawaran.item.statussend eq 'R'}"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerPenawaran.item.statussend eq 'A' || controllerPenawaran.item.statussend eq 'R'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

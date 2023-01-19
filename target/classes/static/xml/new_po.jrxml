@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="new_po" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e34a87c-eaf7-4a3f-a6c8-a0708f354641">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/indrayoga/ireport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="shelllogo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from po join supplier on po.id_supplier=supplier.id join gudang on po.id_gudang=gudang.id_gudang where po.id=$P{id}]]>
+	</queryString>
+	<field name="nomor_po" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="id_supplier" class="java.lang.String"/>
+	<field name="kepada" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="kode_user" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="total_ppn" class="java.math.BigDecimal"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="total_discount" class="java.math.BigDecimal"/>
+	<field name="kode_mata_uang" class="java.lang.String"/>
+	<field name="shipto" class="java.lang.String"/>
+	<field name="telpon" class="java.lang.String"/>
+	<field name="hp" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="referensi" class="java.lang.String"/>
+	<field name="tanggal_referensi" class="java.sql.Date"/>
+	<field name="is_ppn" class="java.lang.Boolean"/>
+	<field name="top" class="java.lang.Integer"/>
+	<field name="deliverytime" class="java.lang.String"/>
+	<field name="persendiskon" class="java.math.BigDecimal"/>
+	<field name="jenis" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[1- utama
+2- potongan]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.Boolean"/>
+	<field name="id_gudang" class="java.lang.String"/>
+	<field name="shiptonumber" class="java.lang.String"/>
+	<field name="no_kontrak" class="java.lang.String"/>
+	<field name="id_customer" class="java.lang.String"/>
+	<field name="is_pph" class="java.lang.Boolean"/>
+	<field name="total_pph" class="java.math.BigDecimal"/>
+	<field name="jenis_po" class="java.lang.String"/>
+	<field name="is_purchasing" class="java.lang.Boolean"/>
+	<field name="is_approve" class="java.lang.Boolean"/>
+	<field name="tgl_approve" class="java.sql.Date"/>
+	<field name="tgl_read" class="java.sql.Date"/>
+	<field name="purchasing" class="java.lang.String"/>
+	<field name="director" class="java.lang.String"/>
+	<field name="logistic" class="java.lang.String"/>
+	<field name="head_admin" class="java.lang.String"/>
+	<field name="finance" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="id_intruksi_po" class="java.lang.Integer"/>
+	<field name="no_pp" class="java.lang.String"/>
+	<field name="supplier" class="java.lang.String"/>
+	<field name="npwp" class="java.lang.String"/>
+	<field name="telepon" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="id_kategori_supplier" class="java.lang.Integer"/>
+	<field name="bank" class="java.lang.String"/>
+	<field name="kena_pajak" class="java.lang.Boolean"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="isaktif" class="java.lang.Boolean"/>
+	<field name="batas_kredit" class="java.lang.Integer"/>
+	<field name="alamat_npwp" class="java.lang.String"/>
+	<field name="account_hutang" class="java.lang.Integer"/>
+	<field name="gudang" class="java.lang.String"/>
+	<field name="id_kontak" class="java.lang.String"/>
+	<field name="parent" class="java.lang.String"/>
+	<field name="id_kantor" class="java.lang.String"/>
+	<field name="inisial" class="java.lang.String"/>
+	<field name="account_hpp" class="java.lang.Integer"/>
+	<field name="account_persediaan" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="44" width="148" height="20" uuid="78f31b84-efad-445e-aba8-22dbc93cedf1"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Purchase Order]]></text>
+			</staticText>
+			<image>
+				<reportElement x="460" y="-1" width="94" height="29" uuid="9d9e5cc6-314a-4716-aa63-2a8921fb17f2"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="0" y="0" width="101" height="28" uuid="a1d7f14d-c8c7-4605-9c60-ab01c1756ffa"/>
+				<imageExpression><![CDATA[$P{shelllogo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="81" y="10" width="173" height="20" uuid="04c20f5d-7336-4ce0-a6e9-bd06733d2a2d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[": "+$F{supplier}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="10" width="82" height="20" uuid="51ee2f21-40a1-4592-8623-e5972bdb321f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Nama Supplier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="82" height="20" uuid="32071481-7ee2-4414-9577-b83746f49522"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Gudang]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="81" y="30" width="173" height="20" uuid="f0a8cd3b-a27b-46b8-960a-f2065a990ea0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[": "+$F{gudang}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="254" y="10" width="100" height="20" uuid="b444bbe6-2198-4fb2-9b9f-8728724f1d9a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ PO No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="254" y="30" width="100" height="20" uuid="5d92bcfb-cce8-4bdf-8785-6d7e6dc768a1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ PO Date]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="353" y="10" width="186" height="20" uuid="0e2e20d0-1bda-4461-b4a1-f9da3d4b6de0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[": "+$F{nomor_po}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="353" y="30" width="186" height="20" uuid="93e4ca48-ad27-47b5-a25a-6d7ce04655ac"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[": "+$F{tanggal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement x="2" y="0" width="553" height="61" uuid="2d29bc2f-7212-4262-97f2-d69bb47f667f"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "new_po_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

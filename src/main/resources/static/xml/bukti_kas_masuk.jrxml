@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bukti_kas_masuk" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="8234028e-27d7-4861-bc40-4d9dd253724b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/indrayoga/ireport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nama_perusahaan" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select *,to_char(tanggal,'DD-Mon-YYYY') as tanggal1 from acc_kas left join pegawai on acc_kas.id_pegawai=pegawai.id_pegawai where acc_kas.nomor=$P{nomor}]]>
+	</queryString>
+	<field name="nomor" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="id_jenis_transaksi" class="java.lang.String"/>
+	<field name="id_kantor" class="java.lang.String"/>
+	<field name="uraian" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="id_account" class="java.lang.Integer"/>
+	<field name="id_pegawai" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="kepada" class="java.lang.String"/>
+	<field name="nama" class="java.lang.String"/>
+	<field name="id_jabatan" class="java.lang.Integer"/>
+	<field name="hp" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="tanggal1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="32" width="556" height="47" uuid="40307351-34dc-42fe-a97e-79c2ac286d85"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nama_perusahaan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="143">
+			<staticText>
+				<reportElement x="0" y="49" width="555" height="20" uuid="f447bfbe-2d7a-4469-9023-4fbba850b891"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Dibayarkan Kepada :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="68" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="9136ad63-56f3-4e69-acd8-385dc8795aaa"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kepada}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="86" width="555" height="21" uuid="b1abed00-3cd8-4331-acf7-26e19c4dfe4e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Keterangan]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="106" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="16b50bd7-b43e-4e2a-a790-b30ecf75a00a"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uraian}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement x="0" y="0" width="129" height="34" uuid="eaffd9b3-42e6-4a41-b2f4-5bacc8a091ba"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tanggal : "+$F{tanggal1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="129" y="0" width="295" height="34" uuid="21ad5c6b-e9d0-4f29-adde-21495288cac3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BUKTI KAS MASUK]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="424" y="0" width="131" height="34" uuid="b232d6fb-fb75-4f0e-911e-0cb29d044d53"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="61" uuid="e8b2cac5-9f67-424c-8ce6-1f64e2d6846c"/>
+				<subreportParameter name="nomor">
+					<subreportParameterExpression><![CDATA[$P{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "bukti_kas_keluar_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

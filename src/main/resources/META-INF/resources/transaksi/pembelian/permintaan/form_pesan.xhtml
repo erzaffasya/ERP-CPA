@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <h:form>
+            <p:panelGrid columns="1" columnClasses="ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                <p:outputLabel  value="pesan"/>
+                <p:inputTextarea value="#{controllerPermintaanPembelian.item.pesan}" cols="75" rows="5"/>
+                <p:commandButton icon="ui-icon-search" actionListener="#{controllerPermintaanPembelian.sendPP()}" />
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+
+
+
+</html>

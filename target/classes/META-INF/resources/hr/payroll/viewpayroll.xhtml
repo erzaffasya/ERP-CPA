@@ -1,0 +1,322 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                >
+
+
+    <ui:define name="title">View Payroll</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPayroll.onLoadList()}" />
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('VIEWPAYROLL')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+
+                <h:form id="form" prependId="false">
+                    <script type="text/javascript">
+                        function handleLoginRequest(xhr, status, args) {
+                            if (args.validationFailed || !args.loggedIn) {
+                                PF('dlg').jq.effect("shake", {times: 5}, 100);
+                            } else {
+                                PF('dlg').hide();
+                                $('#loginLink').fadeOut();
+                            }
+                        }
+                    </script>
+                    <p:growl id="growl" showDetail="true" />
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>View Payroll</h1>
+
+                            <p:panelGrid columns="3" id="search" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="bulan" value="Periode"/>
+                                <p:selectOneMenu id="bulan" value="#{controllerPayroll.bulan}">
+                                    <f:selectItems value="#{options.comboBulan}" />
+                                    <p:ajax event="change" listener="#{controllerPayroll.onLoadList()}" update="growl report status"/> 
+                                </p:selectOneMenu>
+                                <p:inputText value="#{controllerPayroll.tahun}" maxlength="4" >
+                                    <p:ajax event="change" listener="#{controllerPayroll.onLoadList()}" update="growl report status"/> 
+                                </p:inputText>
+                            </p:panelGrid>
+
+                            <p:panelGrid id="status" columns="3"  columnClasses="ui-grid-col-1,ui-grid-col-9,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel  value="Status"/>
+                                <p:outputLabel  value="#{controllerPayroll.statusnya}"/>
+                                <p:commandButton 
+                                    id="posting"
+                                    actionListener="#{controllerPayroll.ubah()}" 
+                                    value="Posting Payroll"
+                                    style="width: 98%;"
+                                    icon="ui-icon-save"
+                                    update="report  :form:detil :form:judul :form:status "
+                                    rendered="#{controllerPayroll.item.status ne 'P'}">
+                                </p:commandButton>
+                            </p:panelGrid>
+                            <p:dataTable id="report" var="item" value="#{controllerPayroll.dataPayrollDetail}">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="NIK" sortBy="#{item.nip}" filterBy="#{item.nip}" filterMatchMode="contains"/>
+                                        <p:column headerText="Nama" sortBy="#{item.nama_pegawai}" filterBy="#{item.nama_pegawai}" filterMatchMode="contains"/>
+                                        <p:column headerText="total gaji"/>
+
+                                        <p:column headerText=" "/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <p:column ><h:outputText value="#{item.nip}"/></p:column>
+                                <p:column ><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                                <p:column ><h:outputText value="#{item.thp}"  ><f:convertNumber pattern="#,##0" /></h:outputText></p:column>
+                                <p:column>
+                                    <p:commandLink 
+
+                                        actionListener="#{controllerPayroll.onDetilSelect(item.id,item.id_pegawai)}" 
+                                        onsuccess="PF('sidebar5').show()"
+                                        value="Detail" 
+                                        process="@this" 
+                                        id="dtl"
+                                        update=":form:detil :form:judul">
+                                        <i class="fa  fa-ticket" ></i>
+                                    </p:commandLink>
+                                    &#160;&#160;&#160;
+                                    <p:commandLink 
+                                        ajax="false"
+                                        actionListener="#{controllerPayroll.cetak(item.id,item.id_pegawai)}" 
+                                        value="Cetak" 
+                                        process="@this" 
+                                        id="ctk"
+                                        target="_blank"
+
+                                        >
+                                        <i class="fa  fa-print" ></i>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    <p:dialog header="SILAHKAN MASUKAN PIN ANDA" widgetVar="dlg" resizable="false" modal="true" visible="true" >
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="pinnya" value="PIN" />
+                            <p:password id="pinnya" value="#{controllerPayroll.pinnya}" required="true" label="pin" />
+                            <f:facet name="footer">
+                                <p:commandButton value="Login" update="report growl status" action="#{controllerPayroll.onLoadList()}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                            </f:facet> 
+                        </h:panelGrid>
+                    </p:dialog>  
+                    <p:sidebar widgetVar="sidebar5" fullScreen="true" baseZIndex="500" style="overflow: scroll; background-color: white !important;" rendered="#{controllerPayroll.itemdetail ne null}" >
+
+                        <div class="ui-g-12 shadow-box ui-shadow-1">
+                            <div class="card card-w-title" >
+
+                                <p:panelGrid id="judul" columns="3" columnClasses="ui-grid-col-1,ui-grid-col-10,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                                    <h:panelGroup/>
+                                    <h1>Rincian Gaji #{controllerPayroll.itemdetail.nama_pegawai}</h1>
+
+                                    <h:panelGroup/>
+
+                                    <h:panelGroup/>
+                                    <p:panelGrid id="detil" columns="5" columnClasses="ui-grid-col-4,ui-grid-col-2,ui-grid-col-1,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                                        <p:outputLabel  value="A. GAJI POKOK" style="font-size: 16px; font-weight: bold;"/>
+                                        <p:inputNumber inputStyle="text-align: right" value="#{controllerPayroll.itemdetail.gaji_pokok}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="E. POTONGAN" style="font-size: 16px; font-weight: bold;"/>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="B. TUNJANGAN TETAP" style="font-size: 16px; font-weight: bold;"/>
+                                        <h:panelGroup/>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="01. BPJS - Premi Karyawan" style="margin-left: 30px;"/>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. Insentif Jabatan"/>
+                                        <p:inputNumber inputStyle="text-align: right" value="#{controllerPayroll.itemdetail.tunjangan_jabatan}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp" />
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="a. Jaminan Hari Tua" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.jht_pekerja}" decimalPlaces="0">
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="C. TUNJANGAN TIDAK TETAP" style="font-size: 16px; font-weight: bold;"/>
+                                        <h:panelGroup/>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="b. Jaminan Pensiun" style="margin-left: 70px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.jp_pekerja}" decimalPlaces="0">
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. Over Time [OT]"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.overtime}" decimalPlaces="0">
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="c. Kesehatan" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.bpjs_kes_pekerja}" decimalPlaces="0">
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;02. Insentif Over Job - Non OT"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.insentif_penjualan}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="02. Asuransi komersil" style="margin-left: 20px;"/>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;03. Tj. Uang Makan dan Transport"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.umt}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="a. Prudential" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.prudential}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;04. Insentif Site"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.insentif_kehadiran}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="b. Alianz" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.alianz}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;05. Insentif Produktivitas"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.insentif_produktifitas}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="03. Hutang/cicilan" style="margin-left: 30px;"/>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;06. Insentif Komunikasi"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.tunjangan_komunikasi}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="a. KTA" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.hutang_kta}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;07. THR"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.thr}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="b. Lain-lain" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.hutang_dll}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;07. Insentif Mutasi"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.tunjangan_bbm}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="04. Absensi" style="margin-left: 30px;"/>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="D. LAIN-LAIN" style="font-size: 16px; font-weight: bold;"/>
+                                        <h:panelGroup/>
+                                        <h:panelGroup/>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; a. Unpaid leave (UL)"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.potongan_absensi}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. Komisi penjualan"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.komisi_penjualan}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="05. Pph" style="margin-left: 30px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.pph21_upah}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <h:panelGroup/>
+                                        <h:panelGroup/>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="06. Lain-lain" style="margin-left: 50px;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="0"  decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                        <p:outputLabel  value="Sub.  Total ( A+B+C+D )" style="font-size: 16px; font-weight: bold;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.total_gaji}" decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="Total Potongan" style="font-size: 16px; font-weight: bold;"/>
+                                        <p:inputNumber inputStyle="text-align: right"  value="#{controllerPayroll.itemdetail.total_potongan}"  decimalPlaces="0" >
+                                            <p:ajax listener="#{controllerPayroll.hitungTHP()}" update="thp"/>
+                                        </p:inputNumber>
+
+                                    </p:panelGrid>
+                                    <h:panelGroup/>
+                                    <h:panelGroup/>
+                                    <p:panelGrid id="totalthp" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                                        <p:outputLabel  value="NETT SALLARY" style="font-size: 20px; font-weight: bold; text-align: right;"/>  
+                                        <p:outputLabel id="thp"  value="#{controllerPayroll.itemdetail.thp}" style="font-size: 20px; font-weight: bold; text-align: left;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    </p:panelGrid>
+                                    <h:panelGroup/>
+                                    <h:panelGroup/>
+                                    <p:panelGrid  columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass=" form-group" style="border:0px none; width: 100%">
+
+                                        <p:commandButton 
+                                            actionListener="#{controllerPayroll.ubahDetail()}" 
+                                            value="Simpan"
+                                            style="width: 98%;"
+                                            icon="ui-icon-save"
+                                            process="judul" 
+                                            update="report  :form:detil :form:judul :form:status"
+                                            oncomplete="PF('sidebar5').hide()">
+
+                                        </p:commandButton>
+                                        <p:commandButton 
+                                            icon="fa fa-close"
+                                            value="Batal"
+                                            style="width: 98%;"
+                                            oncomplete="PF('sidebar5').hide()">
+                                        </p:commandButton>
+                                        <p:button outcome="cetakslip.jsf" value="Cetak" style="margin-right:20px;" icon="ui-icon-print"  target="_blank">
+                                            <f:param name="id" value="#{controllerPayroll.itemdetail.id}" />
+                                            <f:param name="idpegawai" value="#{controllerPayroll.itemdetail.id_pegawai}" />
+                                        </p:button>
+
+                                    </p:panelGrid>
+                                </p:panelGrid>
+
+                            </div>
+                        </div>
+
+                    </p:sidebar>
+
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+
+</ui:composition>

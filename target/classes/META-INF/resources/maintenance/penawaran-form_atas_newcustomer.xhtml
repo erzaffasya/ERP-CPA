@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Penawaran</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="nomor" value="No. Penawaran."/>
+        <p:inputText id="nomor" value="#{controllerPenawaran.item.nomor}"  readonly="true"/>
+
+        <p:outputLabel for="tanggal" value="Tgl Penawaran"/>
+        <p:calendar id="tanggal" value="#{controllerPenawaran.item.tanggal}" required="true" requiredMessage="Tanggal Penawaran harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="customer" value="Nama Customer :"/>
+        <p:inputText id="customer" value="#{controllerPenawaran.item.newcustomer}"/>
+        <p:outputLabel  value="Telpon"/>
+        <p:inputText id="telpon" value="#{controllerPenawaran.item.telpon}"/>
+        <p:outputLabel  value="Attention"/>
+        <p:inputText id="attention"  value="#{controllerPenawaran.item.kepada}"   />
+        <p:outputLabel  value="Email"/>
+        <p:inputText id="email" value="#{controllerPenawaran.item.email}"/>
+        <p:outputLabel  value="Hp"/>
+        <p:inputText id="hp" value="#{controllerPenawaran.item.hp}"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerPenawaran.item.id_gudang}" required="true">
+            <f:selectItems value="#{options.comboGudang}" />
+            <p:ajax listener="#{controllerPenawaran.onGudangSelect()}" update="detil" />
+        </p:selectOneMenu>
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerPenawaran.item.kode_mata_uang}" >
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="revisi" value="Revisi"/>
+        <p:inputText id="revisi" value="#{controllerPenawaran.item.revisi}" readonly="true" />
+        <p:outputLabel for="salesman" value="Salesman"/>
+        <p:selectOneMenu id="salesman" value="#{controllerPenawaran.item.id_salesman}"  required="true">
+            <f:selectItems value="#{options.comboMarketingAll}" />
+        </p:selectOneMenu>
+        <p:outputLabel  value="Status Penawaran"/>
+        <p:selectOneMenu id="status" value="#{controllerPenawaran.item.statussend}" >
+            <f:selectItems value="#{controllerPenawaran.comboStatus}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris" rendered="#{!controllerPenawaran.item.status}">
+            <p:ajax  listener="#{controllerPenawaran.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+
+
+</ui:composition>

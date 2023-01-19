@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Tunjangan"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerTunjangan.item.nama}" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid id="pd1" columns="3" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="bagian" value="Bagian dari tunjangan"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="bagian" value="#{controllerTunjangan.item.master}" rendered="#{controllerTunjangan.item.status}" disabled="true">
+            <f:selectItems value="#{controllerTunjangan.comboTunjanganMaster}" />
+        </p:selectOneMenu>
+        <p:selectOneMenu id="bagian2" value="#{controllerTunjangan.item.master}" rendered="#{!controllerTunjangan.item.status}" required="true">
+            <f:selectItems value="#{controllerTunjangan.comboTunjanganMaster}" />
+            <p:ajax listener="#{controllerTunjangan.onMasterSelect()}" update="kepada" event="change"/>
+        </p:selectOneMenu>
+        <p:selectBooleanCheckbox  value="#{controllerTunjangan.item.status}" itemLabel="Tunjangan baru" style="width: 200px">
+            <p:ajax event="change" update="pd1 kepada" listener="#{controllerTunjangan.onStatusSelect()}"/>
+        </p:selectBooleanCheckbox>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="atasan" value="Tunjangan ini dihitung"/>
+        <h:panelGroup/>
+        <p:selectOneButton id="atasan" value="#{controllerTunjangan.item.jenis}">
+            <f:selectItems value="#{controllerTunjangan.comboJenis}" />
+        </p:selectOneButton>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:outputLabel  value="Dengan jumlah"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:inputNumber id="nama" value="#{controllerTunjangan.item.jumlah}" required="true"/>
+        <p:selectBooleanCheckbox  value="#{controllerTunjangan.item.pajak}" itemLabel="Tunjangan ini akan kena pajak" style="width: 300px"/>
+        <h:panelGroup/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="4."/>
+        <p:outputLabel for="kepada" value="Tunjangan ini diberikan kepada"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerTunjangan.masterJabatans}" var="jabatan" effect="bounce"
+                    itemValue="#{jabatan}" itemLabel="#{jabatan.jabatan}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{jabatanConverter}" responsive="true">
+            <f:facet name="sourceCaption">Nama jabatan</f:facet>
+            <f:facet name="targetCaption">Jabatan yang diberikan</f:facet>
+            <p:column style="width:85%;">
+                <h:outputText value="#{jabatan.jabatan}" />
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

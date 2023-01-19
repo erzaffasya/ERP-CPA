@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Area"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerArea.item.nama}" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid id="pd1" columns="3" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="bagian" value="Bagian dari Area"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="bagian" value="#{controllerArea.item.parent}" rendered="#{controllerArea.item.status}" disabled="true">
+            <f:selectItems value="#{controllerArea.comboArea}" />
+        </p:selectOneMenu>
+        <p:selectOneMenu id="bagian2" value="#{controllerArea.item.parent}" rendered="#{!controllerArea.item.status}" required="true">
+            <f:selectItems value="#{controllerArea.comboArea}" />
+        </p:selectOneMenu>
+        <p:selectBooleanCheckbox  value="#{controllerArea.item.status}" itemLabel="Area baru" style="width: 200px">
+            <p:ajax event="change" update="pd1" />
+        </p:selectBooleanCheckbox>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="kode" value="Kode Area"/>
+        <h:panelGroup/>
+        <p:inputText id="kode" value="#{controllerArea.item.kode}" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="4."/>
+        <p:outputLabel for="kepada" value="Area ini terdiri dari kantor"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerArea.masterkantors}" var="kantor" effect="bounce"
+                    itemValue="#{kantor}" itemLabel="#{kantor.nama}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{kantorConverter}" responsive="true">
+            <f:facet name="sourceCaption">Nama kantor</f:facet>
+            <f:facet name="targetCaption">Kantor yang diberikan</f:facet>
+            <p:column style="width:85%;">
+                <h:outputText value="#{kantor.nama}" />
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Jadwal Kerja"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerJadwalKerja.item.nama_kebijakan}" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="startdate" value="Tanggal mulai berlaku"/>
+        <h:panelGroup/>
+        <p:calendar id="startdate"   value="#{controllerJadwalKerja.item.start_date}" required="true"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" style="margin-bottom: 20px;"/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="@next" value="Hari Kerja sebulan"/>
+        <h:panelGroup/>
+        <p:inputNumber id="jmlhari" value="#{controllerJadwalKerja.item.jmlkerja}" decimalPlaces="0" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="4."/>
+        <p:outputLabel  value="Cyle"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:inputNumber value="#{controllerJadwalKerja.item.cycle}" decimalPlaces="0">
+            <p:ajax event="change" update="rpt" listener="#{controllerJadwalKerja.initJadwalKerjaWaktu()}"/>
+        </p:inputNumber>
+        <p:selectOneMenu id="bagian" value="#{controllerJadwalKerja.item.jenis}" >
+            <f:selectItems value="#{controllerJadwalKerja.comboJenis}" />
+            <p:ajax event="change" update="rpt" listener="#{controllerJadwalKerja.initJadwalKerjaWaktu()}"/>
+        </p:selectOneMenu>
+    </p:panelGrid>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="5."/> 
+        <p:outputLabel  value="Batas terlambat"/>
+        <p:outputLabel  value="Batas pulang cepat"/> 
+    </p:panelGrid>
+    
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:inputNumber value="#{controllerJadwalKerja.item.batas_terlambat}" decimalPlaces="0"/>
+        <p:outputLabel  value="Menit"/>
+        <p:inputNumber value="#{controllerJadwalKerja.item.batas_pulang}" decimalPlaces="0"/>
+        <p:outputLabel  value="Menit"/>
+    </p:panelGrid>
+
+    <p:panelGrid id="rpt" columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="6."/>
+        <p:panelGrid  columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-top: ">
+            <p:panelGrid columns="5" columnClasses="ui-grid-col-3,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <h:outputText value="Hari Kerja" />
+                    <h:outputText value="Jam Kerja" />
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <h:outputText value="Jam Istirahat" />
+                </p:panelGrid>
+            <p:repeat value="#{controllerJadwalKerja.dataJadwalKerjaWaktu}" var="item" id="detail">
+                <p:panelGrid columns="6" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:selectBooleanCheckbox  value="#{item.selected}" />
+                    <h:outputText value="#{item.nama_waktu}"  />
+                    <p:calendar id="timein" value="#{item.time_in}"  pattern="HH:mm" mask="99:99" maxlength="5" timeOnly="true"/>
+                    <h:outputText value="S/d" />
+                    <p:calendar id="timeout" value="#{item.time_out}"  pattern="HH:mm" mask="99:99"  maxlength="5" timeOnly="true"/>
+                    <p:calendar id="timebreak" value="#{item.time_break}"  pattern="HH:mm" mask="99:99" maxlength="5" timeOnly="true"/>
+                </p:panelGrid>
+            </p:repeat>
+        </p:panelGrid>    
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="6."/>
+        <p:outputLabel for="kepada" value="JadwalKerja ini diberikan kepada"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerJadwalKerja.pegawai}" var="pegawai" effect="bounce"
+                    itemValue="#{pegawai}" itemLabel="#{pegawai.nama}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{pegawaiConverter}" responsive="true">
+            <f:facet name="sourceCaption">Nama pegawai</f:facet>
+            <f:facet name="targetCaption">Pegawai yang diberikan</f:facet>
+            <p:column style="width:85%;">
+                <h:outputText value="#{pegawai.nama}" />
+
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

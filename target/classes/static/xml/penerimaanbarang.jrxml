@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="penerimaanbarang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="6a462d82-8167-4d80-bafc-1cf2b5afc25d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="no_penerimaan" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/indrayoga/ireport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="shelllogo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select penerimaan_gudang.*,supplier.*,gudang.*,pegawai.nama as nama_tanda_tangan from penerimaan_gudang join supplier on penerimaan_gudang.id_supplier=supplier.id
+join gudang on penerimaan_gudang.id_gudang=gudang.id_gudang
+left join pegawai on gudang.id_kontak=pegawai.id_pegawai
+where no_penerimaan=$P{no_penerimaan}]]>
+	</queryString>
+	<field name="no_penerimaan" class="java.lang.String"/>
+	<field name="tgl_penerimaan" class="java.sql.Date"/>
+	<field name="id_supplier" class="java.lang.String"/>
+	<field name="id_gudang" class="java.lang.String"/>
+	<field name="referensi" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="kode_user" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="nomor_po" class="java.lang.String"/>
+	<field name="tanggal_referensi" class="java.sql.Date"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="status" class="java.lang.Boolean"/>
+	<field name="id" class="java.lang.String"/>
+	<field name="supplier" class="java.lang.String"/>
+	<field name="npwp" class="java.lang.String"/>
+	<field name="telepon" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="id_kategori_supplier" class="java.lang.Integer"/>
+	<field name="bank" class="java.lang.String"/>
+	<field name="kena_pajak" class="java.lang.Boolean"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="isaktif" class="java.lang.Boolean"/>
+	<field name="batas_kredit" class="java.lang.Integer"/>
+	<field name="alamat_npwp" class="java.lang.String"/>
+	<field name="top" class="java.lang.Integer"/>
+	<field name="account_hutang" class="java.lang.Integer"/>
+	<field name="user_input" class="java.lang.String"/>
+	<field name="user_update" class="java.lang.String"/>
+	<field name="input_date" class="java.sql.Timestamp"/>
+	<field name="last_update" class="java.sql.Timestamp"/>
+	<field name="gudang" class="java.lang.String"/>
+	<field name="id_kontak" class="java.lang.String"/>
+	<field name="telpon" class="java.lang.String"/>
+	<field name="parent" class="java.lang.String"/>
+	<field name="shipto" class="java.lang.String"/>
+	<field name="id_kantor" class="java.lang.String"/>
+	<field name="inisial" class="java.lang.String"/>
+	<field name="account_hpp" class="java.lang.Integer"/>
+	<field name="account_persediaan" class="java.lang.Integer"/>
+	<field name="nama_tanda_tangan" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="117" height="52" uuid="de384e82-d85d-484d-9ab8-9a2598f6d9de"/>
+				<imageExpression><![CDATA[$P{shelllogo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="427" y="0" width="128" height="52" uuid="b01ba5bc-8083-4d6f-8cd0-82429299c8f7"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="59" width="555" height="20" uuid="2df5043b-2bd7-4b8e-8e7b-777b5a637af2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Form Penerimaan Barang]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="95" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="20" uuid="33a16adb-b99b-4d05-a045-72406e207eff"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[PO. No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="100" height="20" uuid="6a4efc9a-4561-440b-8591-eb4bd6c243dc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[No Penerimaan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="100" height="20" uuid="92a3ecad-2eea-4bf1-a6a9-01f4138f6f6b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Nomor DN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="100" height="20" uuid="2f314396-32dd-4d36-8ed5-1cd86b2f7c9d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Gudang]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="10" width="159" height="20" uuid="1fcb4e78-9290-44a2-94f5-723023ce0b53"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{nomor_po}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="30" width="159" height="20" uuid="afb2e225-9770-4e4b-9c5f-6cebcb5aa0d3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{no_penerimaan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="50" width="159" height="20" uuid="b24992e8-6b6c-45ca-877f-54c97dcd68ed"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{referensi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="70" width="159" height="20" uuid="80f57998-8754-4d5b-b370-a55f14253b21"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{gudang}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="259" y="10" width="100" height="20" uuid="947aec28-a426-4390-9a17-07041c4cc318"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Supplier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="30" width="100" height="20" uuid="359effea-ce57-4348-85c8-dd141391c520"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Tgl Penerimaan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="50" width="100" height="20" uuid="6561d52a-b4b9-4366-a6d0-44c72276b21b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Tgl DN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="359" y="10" width="196" height="20" uuid="71be1fcc-6367-49b3-b234-79c394bd88b9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{supplier}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="30" width="196" height="20" uuid="321525c3-eab0-472b-8bc6-07256d5063cd"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{tgl_penerimaan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="50" width="196" height="20" uuid="b273dde0-925e-40fe-83f6-0762c9065c32"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[": "+$F{tanggal_referensi}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="61" uuid="14c92668-67a3-4251-96d3-06c1632297da"/>
+				<subreportParameter name="no_penerimaan">
+					<subreportParameterExpression><![CDATA[$P{no_penerimaan}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "penerimaanbarang_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="83" splitType="Stretch">
+			<textField>
+				<reportElement x="382" y="63" width="173" height="20" uuid="373e48c3-2095-4e9c-9852-557cc10a492f"/>
+				<textElement>
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_tanda_tangan}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="382" y="0" width="173" height="20" uuid="9109ad29-27b8-4b0e-8e5a-413d8d8f74d9"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="19" width="173" height="20" uuid="5a7aeb09-dd1b-4a41-a0ea-6379be70e015"/>
+				<text><![CDATA[Penerima]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

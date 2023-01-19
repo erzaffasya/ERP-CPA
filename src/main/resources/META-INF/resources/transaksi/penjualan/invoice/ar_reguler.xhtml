@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Invoice</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPenjualan.item.no_penjualan}" />
+        <f:viewAction action="#{controllerPenjualan.onLoadReguler()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('AR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="listar.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton id="posting"
+                                             actionListener="#{controllerPenjualan.posting('P')}"
+                                             value="Posting" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-check"
+                                             rendered="#{controllerPenjualan.item.status eq 'A'}"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                                    <p:tabView id="tb" >
+                                <p:tab  title="Umum">    
+                                    <ui:include src="ar_atas_reguler.xhtml"/>
+                                    <ui:include src="ar_detail_reguler.xhtml"/>
+                                    <ui:include src="ar_bawah_reguler.xhtml"/>
+                                </p:tab>
+                                <p:tab  title="Jurnal">    
+                                    <ui:include src="form_jurnal.xhtml"/>
+                                </p:tab>
+                            </p:tabView>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

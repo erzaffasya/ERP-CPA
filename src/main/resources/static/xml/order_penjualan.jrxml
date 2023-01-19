@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_penjualan" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" isIgnorePagination="true" uuid="1d4af197-a5c7-4951-bd56-d4312cc6d051">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nama_perusahaan" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT a.*,b.customer,c.gudang,d.nama as salesman FROM SO a
+INNER JOIN CUSTOMER b ON a.id_customer=b.id_kontak
+INNER JOIN gudang c ON a.id_gudang=c.id_gudang
+INNER JOIN pegawai d ON a.id_salesman=d.id_pegawai
+WHERE a.nomor=$P{nomor}]]>
+	</queryString>
+	<field name="nomor" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="id_customer" class="java.lang.String"/>
+	<field name="kepada" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="kode_user" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="total_ppn" class="java.math.BigDecimal"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="total_discount" class="java.math.BigDecimal"/>
+	<field name="id_term" class="java.lang.String"/>
+	<field name="id_salesman" class="java.lang.String"/>
+	<field name="kode_mata_uang" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="tipe_diskon" class="java.lang.String">
+		<fieldDescription><![CDATA[1- persen
+2- nilai diskon dari satuan
+3- nilai diskon dari total]]></fieldDescription>
+	</field>
+	<field name="nilai_harga" class="java.lang.String">
+		<fieldDescription><![CDATA[1- exclusive (belum termasuk pajak)
+2- inclusive  (sudah termasuk pajak)
+
+diambil dari profil organisasi]]></fieldDescription>
+	</field>
+	<field name="id_gudang" class="java.lang.String"/>
+	<field name="dpp" class="java.math.BigDecimal"/>
+	<field name="grandtotal" class="java.math.BigDecimal"/>
+	<field name="telpon" class="java.lang.String"/>
+	<field name="hp" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="certificate" class="java.lang.Boolean"/>
+	<field name="bank" class="java.lang.String"/>
+	<field name="is_ppn" class="java.lang.Boolean"/>
+	<field name="persendiskon" class="java.math.BigDecimal"/>
+	<field name="deliverypoint" class="java.lang.String"/>
+	<field name="syarat" class="java.lang.String"/>
+	<field name="top" class="java.lang.Integer"/>
+	<field name="no_penawaran" class="java.lang.String"/>
+	<field name="referensi" class="java.lang.String"/>
+	<field name="tgl_ref" class="java.sql.Date"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="jenis" class="java.lang.String">
+		<fieldDescription><![CDATA[Jenis berbayar (b) tidak berbayar (g)]]></fieldDescription>
+	</field>
+	<field name="revisi_penawaran" class="java.lang.Integer"/>
+	<field name="pov" class="java.lang.Integer"/>
+	<field name="customer" class="java.lang.String"/>
+	<field name="gudang" class="java.lang.String"/>
+	<field name="salesman" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="54" width="555" height="25" uuid="cb5f8b08-f900-402f-b225-47d52c266051"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDER PENJUALAN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="556" height="47" uuid="782cb1b2-8db7-46cd-b227-20129d0e0f17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nama_perusahaan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="135" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="247" y="33" width="79" height="20" uuid="da457475-6607-45a3-a949-c3714c7ceaaa"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[PO No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="13" width="78" height="20" uuid="031e7dbe-9657-4d82-81f6-b4ec57c8f1b3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[No SO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="13" width="10" height="20" uuid="92bb43d0-c638-42ce-91b2-e7dc9df04b3c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="13" width="10" height="20" uuid="8a03acc8-ebd9-4379-84df-da774231e3a3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="33" width="78" height="20" uuid="1e1101a8-e5a7-4ebf-bd29-d6029bcbc6c0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="334" y="33" width="219" height="20" isPrintWhenDetailOverflows="true" uuid="2a6622db-0096-4ef8-aaf2-635560eb5939"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referensi}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="77" y="33" width="10" height="20" uuid="e757c42d-6820-471a-b02b-8bd3e9168b10"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="326" y="33" width="10" height="20" uuid="2723e17e-a51e-46fd-9702-91117b6dfdd6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="247" y="13" width="79" height="20" uuid="49e732d2-aea1-4276-bb1a-7c35fc9c12c1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Tanggal SO]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="334" y="13" width="219" height="20" uuid="fd7a2ee9-03ed-42c6-91db-ee638f23a7af"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="13" width="162" height="20" uuid="c4876c12-0a9c-427f-94ea-e53f118236dc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement stretchType="RelativeToTallestObject" x="85" y="33" width="162" height="20" uuid="e32fb6e2-ba05-4757-bf6f-a00d9afb0a46"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="326" y="53" width="10" height="20" uuid="46bc76eb-14f7-48ee-add2-147a0ba0780f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement stretchType="RelativeToTallestObject" x="85" y="53" width="162" height="20" uuid="1bd857e0-ca44-4f26-8ab5-ebcb4a303734"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kode_mata_uang}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="247" y="53" width="79" height="20" uuid="7a0ee35f-8417-4e7a-b0ac-6aa560054d99"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Tgl PO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="77" y="53" width="10" height="20" uuid="4eadeaea-cfe4-40c1-b378-76f57f9ec9aa"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="53" width="78" height="20" uuid="e81dcd78-8535-489e-ad2b-51b21fc3e1b8"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Currency]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+				<reportElement x="334" y="53" width="219" height="20" isPrintWhenDetailOverflows="true" uuid="0584f216-f545-4d35-a1fa-36e101a64164"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tgl_ref}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="77" y="73" width="10" height="20" uuid="efb546f9-08e7-4dd0-ab33-0bae32172a0c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="334" y="73" width="219" height="20" isPrintWhenDetailOverflows="true" uuid="b6ce7556-7242-4fa0-a68b-83e74b55acc0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{salesman}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="326" y="73" width="10" height="20" uuid="7e5fede0-5f13-4a34-b375-31f4cccfa1d0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="247" y="73" width="79" height="20" uuid="4f400152-5771-42c7-a7dd-57b2847da615"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Salesman]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="73" width="78" height="20" uuid="c1476995-ff62-43a1-a548-d4f5ae2f4a48"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Gudang]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement stretchType="RelativeToTallestObject" x="85" y="73" width="162" height="20" uuid="cae48e1c-e101-4fcf-86d5-156e218bee67"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gudang}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="77" y="93" width="10" height="42" uuid="93db0d94-bd96-41bb-a9db-73eb1853fa7e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement stretchType="RelativeToTallestObject" x="85" y="93" width="162" height="42" uuid="525edbb9-e040-4c29-823f-c0e923373ef6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{top}+" Hari"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="93" width="78" height="42" uuid="154f6696-f40f-4906-b9e4-25dbf208d2b2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Term Of Payment]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="61" uuid="6ac00013-8f7a-4526-a13c-946e3e9e8c4a"/>
+				<subreportParameter name="nomor">
+					<subreportParameterExpression><![CDATA[$P{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "order_penjualan_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="125" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="89" y="0" width="466" height="59" isPrintWhenDetailOverflows="true" uuid="7b7830e4-de70-4486-b7c2-3fc994fe6569"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$F{deliverypoint}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="0" width="87" height="20" uuid="7b7a96b8-3d74-4db0-9c16-a63606b43c89">
+					<printWhenExpression><![CDATA[$F{deliverypoint}!=""]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Delivery Point]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="59" width="87" height="20" uuid="75331793-874f-4ade-8e92-39214f176804">
+					<printWhenExpression><![CDATA[$F{syarat}!=""]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Syarat]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="89" y="59" width="466" height="59" isPrintWhenDetailOverflows="true" uuid="17b7ad14-8388-48ec-873f-163bb2c9759a"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$F{syarat}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

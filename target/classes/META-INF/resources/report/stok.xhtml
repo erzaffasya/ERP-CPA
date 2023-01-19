@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="title">Stok Barang</ui:define>
+    
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOK')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Stok Barang</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Stok Barang"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerReportStok.item.id_gudang}">
+                            <f:selectItem itemLabel="--Pilih Gudang--" itemValue=""/>
+                            <f:selectItems value="#{options.comboGudang}" />
+                            <p:ajax event="change" listener="#{controllerReportStok.onLoadList()}" update="singleDT growl"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="id_satuan_besar" value="Satuan"/>
+                        <p:selectOneMenu id="id_satuan_besar" value="#{controllerReportStok.item.id_satuan_besar}">
+                            <f:selectItems value="#{options.satuanBesar}" />
+                            <p:ajax event="change" listener="#{controllerReportStok.onLoadList()}" update="singleDT growl"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="id_kategori_barang" value="Kategori"/>
+                        <p:selectOneMenu id="id_kategori_barang" value="#{controllerReportStok.item.id_kategori}">
+                            <f:selectItems value="#{options.kategoriBarang}" />
+                            <p:ajax event="change" listener="#{controllerReportStok.onLoadList()}" update="singleDT growl"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportStok.dataStokBarangs}"  rowIndexVar="index"
+                                 paginator="true" rows="50" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column  headerText="No"  />
+                                <p:column  headerText="Material Code"  sortBy="#{item.id_barang}" filterBy="#{item.id_barang}" filterMatchMode="contains"/>
+                                <p:column  headerText="Product" sortBy="#{item.nama_barang}" filterBy="#{item.nama_barang}" filterMatchMode="contains"/>
+                                <p:column colspan="2" headerText="Stok Satuan Kecil" />
+                                <p:column colspan="2" headerText="Stok Satuan Besar" />
+                                <p:column  headerText="Kategori" />
+                            </p:row>
+
+                        </p:columnGroup>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column  >
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.isi_satuan}" style="text-align: right;">
+                            <h:outputText value="#{item.stokkecil}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.satuan_kecil}">
+                            <h:outputText value="#{item.satuan_kecil}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.stokbesar}" style="text-align: right;">
+                            <h:outputText value="#{item.stokbesar}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.satuan_besar}">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Kategori" sortBy="#{item.kategori_barang}">
+                            <h:outputText value="#{item.kategori_barang}" />
+                        </p:column>
+                        <p:columnGroup type="footer" >
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right" footerText="Grand Total : " >
+
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerReportStok.totalKecil}" >
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+                                    </f:facet>
+                                </p:column>
+                                <p:column  style="text-align:right" footerText="" >
+
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerReportStok.totalBesar}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+
+                                    </f:facet>
+                                </p:column>
+                                <p:column  style="text-align:right" footerText="" colspan="2">
+
+                                </p:column>
+                            </p:row>
+                        </p:columnGroup>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

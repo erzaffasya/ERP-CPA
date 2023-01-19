@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Internal Transfer</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerInternalTransfer.item.nomor}" />
+        <f:viewAction action="#{controllerInternalTransfer.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INTERNALTRANSFER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./listout.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="../internalorder/list.jsf"   icon="ui-icon-add" value="Tambah" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerInternalTransfer.cetak()}" />
+                           <p:commandButton id="simpan"
+                                             actionListener="#{controllerInternalTransfer.ubah('D')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerInternalTransfer.item.pengirim == page.myPegawai.id_pegawai and (controllerInternalTransfer.item.status eq 'D')}"
+                                             />
+                            <p:commandButton id="send"
+                                             actionListener="#{controllerInternalTransfer.ubah('S')}"
+                                             value="Send IT" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerInternalTransfer.item.pengirim == page.myPegawai.id_pegawai and (controllerInternalTransfer.item.status eq 'D')}"
+                                             />
+                            <p:commandButton id="reject" update=":form:display" 
+                                             onclick="PF('dlg3').show();" 
+                                             icon="fa  fa-close" value="Cancel"
+                                             rendered="#{page.myPegawai.id_jabatan_new == 110 and (controllerInternalTransfer.item.status eq 'S' or controllerInternalTransfer.item.status eq 'R')}"
+                                             />
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Edit  InternalTransfer  </h1>
+                            <ui:include src="form_atas.xhtml"/>
+                            <ui:include src="form_detail.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel Internal Transfer" widgetVar="dlg3" resizable="false" id="cancelpl"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-6"  cellpadding="4" style="margin:0 auto;">
+                    <p:outputLabel value="Pesan"/>
+                    <p:editor  id="pesan" widgetVar="editor4" value="#{controllerInternalTransfer.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerInternalTransfer.cancelIT()}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

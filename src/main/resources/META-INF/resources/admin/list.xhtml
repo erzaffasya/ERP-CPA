@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPengguna.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Pengguna/Pegawai</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Pengguna/Pegawai</h1>
+                    <p:dataTable id="tblPegguna" var="item" value="#{controllerPengguna.LPengguna}" selectionMode="single" reflow="true"
+                                 selection="#{controllerPengguna.item}" rowKey="#{item.id_pegawai}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:column headerText="Username" sortBy="#{item.usernamenya}">
+                            <h:outputText value="#{item.usernamenya}" />
+                        </p:column>
+                        <p:column headerText="Nama" sortBy="#{item.nama}">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="NIP" sortBy="#{item.nip}">
+                            <h:outputText value="#{item.nip}" />
+                        </p:column>
+                        <p:column headerText="E-Mail" sortBy="#{item.email}">
+                            <h:outputText value="#{item.email}" />
+                        </p:column>
+                        <p:column headerText="Handphone" sortBy="#{item.handphone}">
+                            <h:outputText value="#{item.handphone}" />
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerPengguna.update()}" process="tblPegguna"  icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update="@([id$=info])" onclick="PF('dlgPgw').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPengguna.item}" target="#{controllerPengguna.item}" />
+                            </p:commandButton>
+                        </f:facet>
+
+                    </p:dataTable>
+                </div>
+            </div>   
+
+            <p:dialog header="Pegawai" widgetVar="dlgPgw" resizable="false" id="pgwDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="info" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Data Pegawai :" />
+                    <h:outputText value="#{controllerPengguna.item.usernamenya} : #{controllerPengguna.item.nama}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPengguna.delete(controllerPengguna.item.id_pegawai)}" onclick="PF('dlgPgw').hide();" 
+                                     update="@([id$=growl])" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlgPgw').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

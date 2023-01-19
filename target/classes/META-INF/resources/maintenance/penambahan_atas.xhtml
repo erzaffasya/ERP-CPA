@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Maintenance  Penambahan Barang</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Nomor"/>
+        <p:inputText id="nomor" value="#{controllerPenambahan.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggalpenerimaan" value="Tanggal"/>
+        <p:calendar  id="tanggalpenerimaan" value="#{controllerPenambahan.item.tanggal}" required="true"    requiredMessage="Tanggal harus diisi !!" pattern="dd-MM-yyyy">
+            <p:ajax event="dateSelect" listener="#{controllerPenambahan.onTglPenambahanSelect}" update="growl tanggalpenerimaan" />
+            <p:ajax event="change" listener="#{controllerPenambahan.onTglPenambahanChange}" update="growl tanggalpenerimaan" />
+        </p:calendar>        
+        <p:outputLabel for="po" value="Nomor PO"/>
+        <p:inputText id="po" value="#{controllerPenambahan.item.po}"/>
+        <p:outputLabel for="dn" value="Nomor DN"/>
+        <p:inputText id="dn" value="#{controllerPenambahan.item.dn}"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:inputText id="gudang" value="#{controllerPenambahan.item.gudang}" readonly="true"/>
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:textEditor id="keterangan" widgetVar="editor3" value="#{controllerPenambahan.item.keterangan}" height="100" style="margin-bottom:10px"  >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        
+    </p:panelGrid>
+
+</ui:composition>

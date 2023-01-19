@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerTunjangan.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah Tunjangan Baru"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Tunjangan</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerTunjangan.dataTunjangan}" sortBy="#{item.nama_master}" expandableRowGroups="true" 
+                                 rowIndexVar="index">
+
+                        <p:headerRow>
+                            <p:column>
+                                <h:outputText value="#{item.nama_master}" />
+                            </p:column>
+                        </p:headerRow>
+                        <p:column >
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="#{item.nama}" style="font-weight: bold"/>
+                                <div style="text-align: right;"><p:commandButton actionListener="#{controllerTunjangan.update(item.id)}"   icon="ui-icon-update" value="Edit" style="text-align: right;"/></div>
+                                <h:outputText value="Tunjangan ini dihitung" />
+                                <h:outputText value="Bulanan" rendered="#{item.jenis eq 'b'}"/>
+                                <h:outputText value="Harian" rendered="#{item.jenis eq 'h'}"/>
+                                <h:outputText value="Jumlah tunjangan" />
+                                <h:outputText value="Rp. #{item.jumlah} per bulan" rendered="#{item.jenis eq 'b'}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                                <h:outputText value="Rp. #{item.jumlah} per hari" rendered="#{item.jenis eq 'h'}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                                <h:panelGroup/>
+                                <h:outputText value="Tunjangan ini akan dikenakan pajak" rendered="#{item.pajak eq true}"/>
+                                <h:outputText value="Tunjangan ini tidak dikenakan pajak" rendered="#{item.pajak eq false}"/>
+                                <h:outputText value="Diberikan Kepada :" />
+                                <h:panelGroup/>
+                                <h:panelGroup/>
+                                <h:outputText value="#{item.jabatan}" escape="false"/>
+                            </p:panelGrid>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

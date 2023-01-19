@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SALARY')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101 or page.myPegawai.id_departemen_new eq 106}">
+                <h:form id="form">
+                    <script type="text/javascript">
+                        function handleLoginRequest(xhr, status, args) {
+                            if (args.validationFailed || !args.loggedIn) {
+                                PF('dlg').jq.effect("shake", {times: 5}, 100);
+                            } else {
+                                PF('dlg').hide();
+                                $('#loginLink').fadeOut();
+                            }
+                        }
+                    </script>
+                    <p:growl id="growl" showDetail="true" />
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Master Gaji Karyawan</h1>
+                            <div style="text-align: right">
+                                <h:commandLink  id="pdf">
+                                    <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                                    <p:dataExporter type="pdf" target="singleDT" fileName="customerlist" />
+                                </h:commandLink>
+                                <h:commandLink  id="xls">
+                                    <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                    <p:dataExporter type="xls" target="singleDT" fileName="customerlist"/>
+                                </h:commandLink>
+                            </div>    
+                            <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataPegawai}"  reflow="true" editable="true" 
+                                         paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+
+                                <p:ajax event="rowEdit" listener="#{controllerHrPegawai.ubahRincianGaji}" update=":form:growl singleDT" />
+                                <p:ajax event="rowEditCancel" listener="#{controllerHrPegawai.onRowCancel}" update=":form:growl singleDT" />
+                                <p:column style="width: 40px">
+                                    <f:facet name="header">
+                                        <h:outputText value="No" />
+                                    </f:facet>
+                                    <h:outputText 
+                                        value="#{index + 1}" />
+                                </p:column>
+                                <p:column headerText="NIK" sortBy="#{item.nip}" filterBy="#{item.nip}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.nip}" />
+                                </p:column>
+                                <p:column headerText="Nama" sortBy="#{item.nama}"  filterBy="#{item.nama}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.nama}" />
+                                </p:column>
+                                <p:column headerText="Jabatan" sortBy="#{item.jabatan}" filterBy="#{item.jabatan}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.jabatan}" />
+                                </p:column>
+                                <p:column headerText="Departemen" sortBy="#{item.departemen}" filterBy="#{item.departemen}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.departemen}" />
+                                </p:column>
+                                <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.kantor}" />
+                                </p:column>
+                                <p:column headerText="Gaji Pokok" style="text-align: right;" sortBy="#{item.gaji_pokok}" filterBy="#{item.gaji_pokok}" filterMatchMode="contains">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText  value="#{item.gaji_pokok}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                        <f:facet name="input"><p:inputNumber id="gajipokok" value="#{item.gaji_pokok}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Insentif Jabatan" style="text-align: right;" sortBy="#{item.tunjangan_jabatan}" filterBy="#{item.tunjangan_jabatan}" filterMatchMode="contains">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText  value="#{item.tunjangan_jabatan}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                        <f:facet name="input"><p:inputNumber id="tunjanganjabatan" value="#{item.tunjangan_jabatan}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="UMT" sortBy="#{item.umt}" style="text-align: right;" filterBy="#{item.umt}" filterMatchMode="contains">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText  value="#{item.umt}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                        <f:facet name="input"><p:inputNumber id="umt" value="#{item.umt}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Insentif Site" style="text-align: right;" sortBy="#{item.insentif_kehadiran}" filterBy="#{item.insentif_kehadiran}" filterMatchMode="contains">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText  value="#{item.insentif_kehadiran}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                        <f:facet name="input"><p:inputNumber id="insentifkehadiran" value="#{item.insentif_kehadiran}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                
+                                    <p:column headerText="Insentif Komunikasi" style="text-align: right;" sortBy="#{item.tunjangan_komunikasi}" filterBy="#{item.tunjangan_komunikasi}" filterMatchMode="contains">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText  value="#{item.tunjangan_komunikasi}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                            <f:facet name="input"><p:inputNumber id="tunjangankomunikasi" value="#{item.tunjangan_komunikasi}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                
+                                    <p:column headerText="Insentif Mutasi" style="text-align: right;" sortBy="#{item.tunjangan_bbm}" filterBy="#{item.tunjangan_bbm}" filterMatchMode="contains">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText  value="#{item.tunjangan_bbm}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                            <f:facet name="input"><p:inputNumber id="tunjanganbbm" value="#{item.tunjangan_bbm}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                        </p:cellEditor>
+
+                                    </p:column>
+                                    <p:column headerText="Insentif produktivitas" style="text-align: right;" sortBy="#{item.insentif_kpi}" filterBy="#{item.insentif_kpi}" filterMatchMode="contains">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText  value="#{item.insentif_kpi}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                            <f:facet name="input"><p:inputNumber id="insentifkpi" value="#{item.insentif_kpi}" style="width:96%" decimalPlaces="0"/></f:facet>
+                                        </p:cellEditor>
+
+                                    </p:column>
+                                
+                                <p:column style="width:35px">
+                                    <p:rowEditor />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    <p:dialog header="Login" widgetVar="dlg" resizable="false" modal="true" visible="true" >
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="pinnya" value="PIN" />
+                            <p:password id="pinnya" value="#{controllerHrPegawai.pinnya}" required="true" label="pin" />
+                            <f:facet name="footer">
+                                <p:commandButton value="Login" update="singleDT growl" action="#{controllerHrPegawai.onLoadListSalary()}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                            </f:facet> 
+                        </h:panelGrid>
+                    </p:dialog>  
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+
+</ui:composition>

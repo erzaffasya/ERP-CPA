@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="penerimaanbarang_detail" language="groovy" pageWidth="595" pageHeight="838" columnWidth="575" leftMargin="0" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dbf14fd0-ed99-4389-885b-a8cb58d58b66">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="no_penerimaan" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from penerimaan_gudang_detail
+join barang on penerimaan_gudang_detail.id_barang=barang.id_barang
+join satuan_kecil on barang.id_satuan_kecil=satuan_kecil.id_satuan_kecil
+where penerimaan_gudang_detail.no_penerimaan=$P{no_penerimaan}]]>
+	</queryString>
+	<field name="no_penerimaan" class="java.lang.String"/>
+	<field name="urut" class="java.lang.Integer"/>
+	<field name="id_barang" class="java.lang.String"/>
+	<field name="qty" class="java.math.BigDecimal"/>
+	<field name="diorder" class="java.math.BigDecimal"/>
+	<field name="batch" class="java.lang.String"/>
+	<field name="nama_barang" class="java.lang.String"/>
+	<field name="id_kategori_barang" class="java.lang.String"/>
+	<field name="id_satuan_besar" class="java.lang.String"/>
+	<field name="id_satuan_kecil" class="java.lang.String"/>
+	<field name="barcode" class="java.lang.String"/>
+	<field name="id_jenis_barang" class="java.lang.String"/>
+	<field name="images" class="java.lang.Object"/>
+	<field name="status" class="java.lang.Boolean"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="nama_alias" class="java.lang.String"/>
+	<field name="isi_satuan" class="java.math.BigDecimal"/>
+	<field name="id_family" class="java.lang.String"/>
+	<field name="penampung" class="java.lang.Boolean"/>
+	<field name="satuan_kecil" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="28" height="20" backcolor="#CCCCCC" uuid="7a32ba79-92e0-4b0c-979d-22aab4df3961"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="28" y="4" width="191" height="20" backcolor="#CCCCCC" uuid="025b14a2-95b2-4eb5-8639-b13e91a9d4dc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="219" y="4" width="91" height="20" backcolor="#CCCCCC" uuid="083a41cf-ffd3-4db9-b1ca-9b1e3b7a690c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kode Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="310" y="4" width="83" height="20" backcolor="#CCCCCC" uuid="56ae385c-848c-49fc-80d6-06a9a26d10d5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Diterima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="393" y="4" width="82" height="20" backcolor="#CCCCCC" uuid="452c1ae3-13ff-4fe3-b673-051ae654c9df"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Satuan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="475" y="4" width="84" height="20" backcolor="#CCCCCC" uuid="a014ba09-ad0a-4e47-873f-83b41e9ce3df"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Batch Number]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="28" height="20" isPrintWhenDetailOverflows="true" uuid="2805baae-bb23-44b5-9516-e47c30ecc396"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{urut}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="28" y="0" width="191" height="20" isPrintWhenDetailOverflows="true" uuid="36b66f33-2184-4720-90b3-4b448c7c44bc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="219" y="0" width="91" height="20" isPrintWhenDetailOverflows="true" uuid="20c951f9-bbfa-4fc3-ab39-1ce1fada07ae"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id_barang}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0">
+				<reportElement stretchType="RelativeToTallestObject" x="310" y="0" width="83" height="20" isPrintWhenDetailOverflows="true" uuid="22724e4e-84eb-43c0-8636-42c97347b611"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="393" y="0" width="82" height="20" isPrintWhenDetailOverflows="true" uuid="bf5bddd1-da58-44fa-aea6-de60e4ca382f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{satuan_kecil}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="475" y="0" width="84" height="20" isPrintWhenDetailOverflows="true" uuid="cbf62c87-0464-44fa-9e1a-b578421740dd"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{batch}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

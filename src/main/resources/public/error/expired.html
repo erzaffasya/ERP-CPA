@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head id="j_idt2">     
+        <title>.:: Ultima ::.</title>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />        
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../javax.faces.resource/fixviewstate.js.jsf?ln=omnifaces&amp;v=1.14"></script>
+
+
+        <link type="text/css" rel="stylesheet" href="../javax.faces.resource/css/default/core.css.jsf?ln=bsf" />
+        <link type="text/css" rel="stylesheet" href="../javax.faces.resource/css/bsf.css.jsf?ln=bsf" />
+        <!--[if lt IE 9]>
+            <script src="../javax.faces.resource/js/respond.js.jsf?ln=bsf"></script>
+        <![endif]-->
+
+        <script type="text/javascript" src="../javax.faces.resource/jsf.js.jsf?ln=javax.faces&amp;stage=Production"></script>
+        <script type="text/javascript" src="../javax.faces.resource/js/tooltip.js.jsf?ln=bsf"></script>
+        <script type="text/javascript" src="../javax.faces.resource/js/bsf.js.jsf?ln=bsf"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+        <script src="https://cdn.jsdelivr.net/jquery.scrollup/2.4.0/jquery.scrollUp.min.js"></script>
+        <link rel="stylesheet" href="../css/style.css" />
+    </head>
+
+    <body>
+        <div class="panel-group" id="j_idt6"><div class="panel panel-default">
+                <div id="j_idt6content" class="panel-collapse collapse in">
+                    <div class="panel-body"><div id="j_idt7" class="container">
+                            <div id="j_idt8" class="jumbotron">
+                                <div id="j_idt9" class="row">
+                                    <img data-toggle="tooltip" data-placement="auto" data-container="body" title="Logo Kemenag" id="j_idt10" 
+                                         src="../img/kemenag.png" style="max-width: 100%; height: auto;" class=" col-md-3 col-lg-3 " draggable="true" />
+                                    <script type='text/javascript'>
+                                        $(function () {
+                                            $('#j_idt10').tooltip({'delay': {show: 0, hide: 0}})
+                                        });
+                                        $('.tooltip').tooltip('destroy');
+                                    </script>
+                                    <div id="j_idt11" class="col-md-9 col-lg-9">  
+                                        <h1>Session Expired, silahkan login ulang</h1>
+                                <br /><br />
+                                <p>
+
+                                </p>
+                                <p><a href="../login.jsf" class="btn btn-warning btn-lg">Login</a>
+                                </p></div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="j_idt6_collapsed" id="j_idt6_collapsed" value="false" />
+        <script>
+            $('#j_idt6content').on('show.bs.collapse', function (event) {
+                document.getElementById('j_idt6_collapsed').value = 'false';
+            });
+        </script>
+        <script>
+            $('#j_idt6content').on('hide.bs.collapse', function (event) {
+                document.getElementById('j_idt6_collapsed').value = 'true';
+            });</script>
+
+        <script type="text/javascript" src="../javax.faces.resource/js/collapse.js.jsf?ln=bsf"></script>
+    </body>
+</html>

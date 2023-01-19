@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerSo.dataSoDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+
+        <p:column headerText="Material Code" style="width:100px">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Order" style="width:100px;">
+            <div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Supplied" style="width:100px;">
+            <div style="text-align:right;"><h:outputText value="#{item.diambil}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="O/S" style="width:100px;">
+            <div style="text-align:right;"><h:outputText value="#{item.sisa}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Satuan" style="width:80px;">
+            <div style="text-align:center;"> <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText></div>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Delivery Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4"  columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. DO."/>
+        <p:inputText id="nomor" value="#{controllerDo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl DO"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerDo.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="DO Date harus diisi !!" >
+            <p:ajax event="dateSelect" listener="#{controllerDo.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerDo.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel for="nomor_pl" value="Picking List No."/>
+        <p:autoComplete   id="nomor_pl" value="#{packinglistAutoComplete.packinglist}" completeMethod="#{packinglistAutoComplete.completePackinglistContains}"
+                          var="au" itemLabel="#{au.nomor}" itemValue="#{au}" converter="#{packinglistConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nomor Pickinglist harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerDo.onPackinglistSelect}" update="detil nomor customer no_po gudang cp telpon alamat keterangan tgl_pl growl tanggal"/>
+            <p:column headerText="Nomor PL" >
+                <h:outputText value="#{au.nomor}" />
+            </p:column>         
+            <p:column headerText="Tgl DO">
+                <h:outputText value="#{au.tanggal}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="Customer" >
+                <h:outputText value="#{au.customer}" />
+            </p:column>
+            <p:column headerText="PO No." >
+                <h:outputText value="#{au.referensi}" />
+            </p:column>
+            <p:column headerText="Gudang" >
+                <h:outputText value="#{au.gudang}" />
+            </p:column>
+        </p:autoComplete>   
+        <p:outputLabel for="tgl_pl" value="Tgl.PL"/>
+        <p:inputText id="tgl_pl" value="#{controllerDo.item.tgl_pl}" readonly="true">
+            <f:convertDateTime pattern="dd/MM/yyyy" />
+        </p:inputText>
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:inputText id="customer" value="#{controllerDo.item.customer}" readonly="true" required="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerDo.item.referensi}" immediate="true" required="true" requiredMessage="Nomor PO Harus diisi !!"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:inputText id="gudang" value="#{controllerDo.item.gudang}" required="true" readonly="true"/>
+        <p:outputLabel for="cp" value="Contact Person"/>
+        <p:inputText id="cp" value="#{controllerDo.item.kepada}" immediate="true"  />
+        <p:outputLabel for="telpon" value="Telpon No."/>
+        <p:inputText id="telpon" value="#{controllerDo.item.telpon}" immediate="true" />
+        <p:outputLabel for="alamat" value="Delivery Addres"/>
+        <p:textEditor id="alamat" widgetVar="editor2" value="#{controllerDo.item.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan alamat disini" required="true">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:textEditor id="keterangan" widgetVar="editor3" value="#{controllerDo.item.keterangan}" height="100" style="margin-bottom:10px"  >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <p:outputLabel for="@next" value="External Tranporter"/>
+        <p:selectBooleanCheckbox  value="#{controllerDo.item.istransporter}" >
+            <p:ajax  event="change" update="driver" /> 
+        </p:selectBooleanCheckbox>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="sipb" value="No. SIPB"/>
+        <p:inputText id="sipb" value="#{controllerDo.item.sipb}"  />
+        <p:outputLabel for="lic_plate" value="Lic Plate"/>
+        <p:inputText id="lic_plate" value="#{controllerDo.item.lic_plate}" />
+        <p:outputLabel for="@next" value="Transporter"/>
+        <p:inputText id="transporter" value="#{controllerDo.item.transporter}"/>
+        <p:outputLabel for="tgl_transporter" value="Transporter Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tgl_transporter" value="#{controllerDo.item.tgl_transporter}"  mask="99/99/9999" maxlength="10"  />
+        <p:outputLabel for="time_transporter" value="Transporter Time"/>
+        <p:inputText id="time_transporter" value="#{controllerDo.item.transporter_time}" />
+        <p:outputLabel for="@next" value="Driver Name"/>
+        <h:panelGroup id="driver">
+            <p:inputText  value="#{controllerDo.item.driver}" rendered="#{controllerDo.item.istransporter == true}"/>
+            <p:selectOneMenu   value="#{controllerDo.item.idtransporter}"  rendered="#{controllerDo.item.istransporter == false}">
+                <f:selectItem itemLabel="Pilih Driver" itemValue=""/>
+                <f:selectItems value="#{options.comboDriver}" />
+            </p:selectOneMenu>
+        </h:panelGroup>
+        <p:outputLabel for="hp" value="Mobile No."/>
+        <p:inputText id="hp" value="#{controllerDo.item.hp}"  />
+        </p:panelGrid>
+    <p:panelGrid columns="6"  columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2,ui-grid-col-2,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="@next" value="Origin"/>
+        <p:selectOneMenu id="origin"  value="#{controllerDo.item.origin}" >
+            <f:selectItem itemLabel="PilihOrigin" itemValue=""/>
+            <f:selectItems value="#{controllerDo.optionOrigin}" />
+            <p:ajax listener="#{controllerDo.changeOrigin()}" update="destination" />
+        </p:selectOneMenu>
+        <p:outputLabel for="@next" value="Destination"/>
+        <p:selectOneMenu id="destination"   value="#{controllerDo.item.destination}" >
+            <f:selectItem itemLabel="PilihDestination" itemValue=""/>
+            <f:selectItems value="#{controllerDo.optionDestination}" />
+            <p:ajax listener="#{controllerDo.changeDestination()}" update="leadtime" />
+        </p:selectOneMenu>
+        <p:outputLabel for="leadtime" value="Lead Time. (Days)"/>
+        <p:inputNumber id="leadtime" value="#{controllerDo.item.leadtime}" decimalPlaces="0" readonly="true"/>
+    </p:panelGrid>
+
+</ui:composition>
+ 

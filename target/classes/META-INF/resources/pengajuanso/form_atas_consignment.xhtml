@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Sales Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. So."/>
+        <p:inputText id="nomor" value="#{controllerSo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl So"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerSo.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="SO Date harus diisi !!" />
+        <p:outputLabel  value="Po Type"/>
+        <p:inputText  value="Consignment" readonly="true"/>
+        <p:outputLabel for="id_customer" value="Customer "/>
+        <p:autoComplete   id="id_customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                        var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                        scrollHeight="250" required="true"  requiredMessage="Nama Customer harus diisi !!!" >
+                        <p:ajax event="itemSelect" listener="#{controllerSo.onCustomerSelect}"/>
+        </p:autoComplete>   
+        <p:outputLabel for="no_po" value="PO No."/>   
+        <p:inputText id="no_po" value="#{controllerSo.item.referensi}" immediate="true" required="true"/>
+
+        <p:outputLabel for="tgl_ref" value="Tgl PO"/>
+        <p:calendar pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" id="tgl_ref" value="#{controllerSo.item.tgl_ref}" required="true"/>
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerSo.item.kode_mata_uang}">
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerSo.item.id_gudang}" required="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+
+
+    </p:panelGrid>
+    
+
+</ui:composition>

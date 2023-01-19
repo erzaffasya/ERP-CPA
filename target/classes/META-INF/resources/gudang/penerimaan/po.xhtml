@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head"></ui:define>
+    <ui:define name="title">Data Purchase Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPo.onLoadListPoGudang()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerPo.viewPo()}"   icon="ui-icon-update" value="View"  id="btn-edit"/>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPo.viewPo()}"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Purchase Order</h1>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPo.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerPo.onLoadListPoGudang()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPo.dataPo}" selectionMode="single" reflow="true" rowIndexVar="index"
+                                 selection="#{controllerPo.item}" rowKey="#{item.nomor_po}" paginator="true" rows="25" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+                        <p:ajax event="rowDblselect" listener="#{controllerPo.viewPo()}" global="false" />
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="PO Number" sortBy="#{item.nomor_po}" >
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column headerText="PO Date" sortBy="#{item.tanggal}" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Supplier" sortBy="#{item.nama_supplier}">
+                            <h:outputText value="#{item.nama_supplier}" />
+                        </p:column>
+                        <p:column headerText="No.Quotation" sortBy="#{item.referensi}">
+                            <h:outputText value="#{item.referensi}" />
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="No. Forecast" sortBy="#{item.no_forcast}">
+                            <h:outputText value="#{item.no_forecast}" />
+                        </p:column>
+                        <p:column headerText="No.IP" sortBy="#{item.no_intruksi_po}">
+                            <h:outputText value="#{item.no_intruksi_po}" />
+                        </p:column>
+                        <p:column headerText="No. PP" sortBy="#{item.no_pp}">
+                            <h:outputText value="#{item.no_pp}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

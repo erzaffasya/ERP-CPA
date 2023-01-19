@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="material_code" value="Material Code"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="material_code" value="#{controllerBarangConsumable.item.material_code}" immediate="true"  />
+        </h:panelGroup>
+
+        <p:outputLabel for="nama_barang" value="Nama Barang"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="nama_barang" value="#{controllerBarangConsumable.item.nama_barang}" immediate="true" />
+        </h:panelGroup>
+        
+    </p:panelGrid>
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+       <p:outputLabel for="id_kategori_barang" value="Kategori Barang"/>
+        <p:selectOneMenu id="id_kategori_barang" value="#{controllerBarangConsumable.item.id_kategori_barang_consumable}">
+            <f:selectItems value="#{optionKategoriBarangConsumable.kategoriBarangConsumable}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="part_number" value="Part Number"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="part_number" value="#{controllerBarangConsumable.item.part_number}" immediate="true"  />
+        </h:panelGroup>
+
+
+        
+   
+        
+
+      
+        <h:panelGroup/>    
+        <h:panelGroup/>
+        <h:panelGroup/>
+    </p:panelGrid> 
+     <p:panelGrid  columns="6" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">     
+        <p:outputLabel for="kemasan" value="Kemasan"/>
+        <p:selectOneMenu id="kemasan" value="#{controllerBarangConsumable.item.kemasan}">
+            <f:selectItems value="#{options.satuanBesar}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="isi_satuan" value="Isi Satuan"/>
+        <p:inputNumber id="isi_satuan" value="#{controllerBarangConsumable.item.isi_satuan}" immediate="true"  />
+
+        <p:selectOneMenu id="id_satuan_kecil" value="#{controllerBarangConsumable.item.id_satuan_kecil}">
+            <f:selectItems value="#{options.satuan}" />
+        </p:selectOneMenu>
+    </p:panelGrid>  
+    <p:panelGrid  columns="6" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">     
+     
+    </p:panelGrid>  
+
+
+</ui:composition>

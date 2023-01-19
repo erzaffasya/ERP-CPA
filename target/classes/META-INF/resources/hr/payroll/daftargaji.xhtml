@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                >
+
+
+    <ui:define name="title">Daftar Gaji</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPayroll.onLoadListDaftarGaji()}" />
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('DAFTARGAJI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+                <h:form id="form" prependId="false">
+                    <script type="text/javascript">
+                        function handleLoginRequest(xhr, status, args) {
+                            if (args.validationFailed || !args.loggedIn) {
+                                PF('dlg').jq.effect("shake", {times: 5}, 100);
+                            } else {
+                                PF('dlg').hide();
+                                $('#loginLink').fadeOut();
+                            }
+                        }
+                    </script>
+                    <p:growl id="growl" showDetail="true" />
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1 id="judul">Daftar Gaji Periode #{options.getNamaBulan(controllerPayroll.bulan)} #{controllerPayroll.tahun}</h1>
+
+                            <p:panelGrid id="panel1" columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="bulan" value="Periode" />
+                                <p:selectOneMenu id="bulan" value="#{controllerPayroll.bulan}" >
+                                    <f:selectItems value="#{options.comboBulan}" />
+                                    <p:ajax event="change" listener="#{controllerPayroll.onLoadListDaftarGaji()}" update="report form" process="panel1"/> 
+                                </p:selectOneMenu>
+                                <p:inputText value="#{controllerPayroll.tahun}" maxlength="4" >
+                                    <p:ajax event="change" listener="#{controllerPayroll.onLoadListDaftarGaji()}" update="report form" process="panel1"/> 
+                                </p:inputText>
+
+                            </p:panelGrid>
+                            <p:panelGrid id="panel1" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                            <p:commandButton action="#{controllerPayroll.getReportData}" value="Export Daftar Gaji"  ajax="false" style="width: 100%"/>                      
+                            <p:commandButton action="#{controllerPayroll.getReportDataRekap}" value="Export Rekap Gaji"  ajax="false" style="width: 100%"/>
+                            <p:commandButton action="#{controllerPayroll.getReportPerhitunganGaji}" value="Export Perhitungan Gaji"  ajax="false" style="width: 100%"/>   
+                            </p:panelGrid>
+                            <p:dataTable id="report" var="item" value="#{controllerPayroll.dataPayrollDetail}"  reflow="true" rowIndexVar="index">
+                                <p:column style="width:50px;">
+                                    <f:facet name="header">
+                                        <h:outputText value="No" />
+                                    </f:facet>
+                                    <h:outputText 
+                                        value="#{index + 1}" />
+                                </p:column>
+                                <p:column headerText="Nama Karyawan"><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                                <p:column headerText="Nama Pemilik Rekening"><h:outputText value="#{item.pemilik_rekening}"/></p:column>
+                                <p:column headerText="Nomor Rekening"><h:outputText value="#{item.nomorrekening}"/></p:column>
+                                <p:column headerText="Gaji (Rp.)" style="text-align: right"><h:outputText value="#{item.thp}"  ><f:convertNumber pattern="#,##0" /></h:outputText></p:column>
+                                <p:columnGroup type="footer" >
+                                    <p:row>
+                                        <p:column colspan="3" style="text-align:right" footerText="Total : " >
+                                        </p:column>
+                                        <p:column style="text-align:right;" >
+                                            <f:facet name="footer">
+                                                <h:outputText value="#{controllerPayroll.total}">
+                                                    <f:convertNumber pattern="#,##0" />
+                                                </h:outputText>
+
+                                            </f:facet>
+                                        </p:column>
+                                    </p:row>
+                                </p:columnGroup>
+                            </p:dataTable>
+                            
+                        </div>
+                    </div>
+                    <p:dialog header="SILAHKAN MASUKAN PIN ANDA" widgetVar="dlg" resizable="false" modal="true" visible="true" rendered="#{controllerPayroll.loggedIn ne true}">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="pinnya" value="PIN" />
+                            <p:password id="pinnya" value="#{controllerPayroll.pinnya}" required="true" label="pin" />
+                            <f:facet name="footer">
+                                <p:commandButton value="Login" update="report growl" action="#{controllerPayroll.onLoadListDaftarGaji()}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                            </f:facet> 
+                        </h:panelGrid>
+                    </p:dialog>  
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,197 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Lembur"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerLembur.item.nama}" required="true" title="Isi dengan nama kebijakan lembur"/>
+        <p:tooltip id="toolTipFocus" for="nama" showEvent="focus" hideEvent="blur" />
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-11" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="2."/>
+        <p:outputLabel  value="Perhitungan Lembur"/>
+        <h:panelGroup/>
+        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+            <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                <p:dataTable id="weekday" var="item" value="#{controllerLembur.dataLemburMultiplierWeekday}" editable="true" editMode="cell" widgetVar="cellWeekday" rowIndexVar="ri">
+                    <f:facet name="header">
+                        Hari Kerja
+                    </f:facet>
+                    <p:column headerText="Jam" >
+
+                        <p:panelGrid columns="4" columnClasses="ui-grid-col-5,ui-grid-col-1,ui-grid-col-5,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                            <p:inputText id="mulai" value="#{item.mulai}" />
+                            <p:outputLabel  value="to"/>
+                            <p:inputText id="end" value="#{item.selesai}" />
+                            <p:outputLabel  value="="/>
+                        </p:panelGrid>
+                    </p:column> 
+                    <p:column headerText="Pengali" >
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-7,ui-grid-col-3,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                            <p:inputText id="multiply" value="#{item.multiply}" />
+                            <h:panelGroup/>
+                            <p:commandButton  icon="fa fa-trash"  >
+                                <p:ajax  listener="#{controllerLembur.onDeleteClickedWeekday(item)}"  update="weekday" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton type="button" styleClass="indigo-btn"   style="margin-bottom:10px; width: 150px" value="Tambah Baris">
+                    <p:ajax  listener="#{controllerLembur.extendWeekday}"  update=":form:weekday" />
+                </p:commandButton>
+            </p:panelGrid>
+            <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                <p:dataTable id="weekend" var="item" value="#{controllerLembur.dataLemburMultiplierWeekend}" editable="true" editMode="cell" widgetVar="cellWeekend" rowIndexVar="ro">
+                    <f:facet name="header">
+                        Hari Libur
+                    </f:facet>
+                    <p:column headerText="Jam" >
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:panelGrid columns="4" columnClasses="ui-grid-col-5,ui-grid-col-1,ui-grid-col-5,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <p:inputText id="omulai1" value="#{item.mulai}" />
+                                    <p:outputLabel  value="to"/>
+                                    <p:inputText id="oend1" value="#{item.selesai}" />
+                                    <p:outputLabel  value="="/>
+                                </p:panelGrid>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:panelGrid columns="4" columnClasses="ui-grid-col-5,ui-grid-col-1,ui-grid-col-5,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <p:inputText id="mulai1" value="#{item.mulai}" />
+                                    <p:outputLabel  value="to"/>
+                                    <p:inputText id="end1" value="#{item.selesai}" />
+                                    <p:outputLabel  value="="/>
+                                </p:panelGrid>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column> 
+                    <p:column headerText="Pengali" >
+                        <p:cellEditor>
+                            <f:facet name="output">
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-7,ui-grid-col-3,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                            <p:inputText id="omultiply" value="#{item.multiply}" />
+                            <h:panelGroup/>
+                            <p:commandButton  icon="fa fa-trash"  >
+                                <p:ajax  listener="#{controllerLembur.onDeleteClickedWeekend(item)}"  update="weekend" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                        </f:facet>        
+                            <f:facet name="input">
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-7,ui-grid-col-3,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                            <p:inputText id="multiply" value="#{item.multiply}" />
+                            <h:panelGroup/>
+                            <p:commandButton  icon="fa fa-trash"  >
+                                <p:ajax  listener="#{controllerLembur.onDeleteClickedWeekend(item)}"  update="weekend" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                        </f:facet>   
+                        </p:cellEditor>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton type="button" styleClass="indigo-btn"   style="margin-bottom:10px; width: 150px" value="Tambah Baris">
+                    <p:ajax  listener="#{controllerLembur.extendWeekend()}"  update="weekend" />
+                </p:commandButton>
+            </p:panelGrid>
+        </p:panelGrid>
+    </p:panelGrid>
+
+    <p:panelGrid id="biaya" columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="2."/>
+        <p:outputLabel  value="Kompensasi lembur"/>
+        <h:panelGroup/>
+        <p:selectOneRadio layout="responsive" columns="2" value="#{controllerLembur.item.kebijakan}">
+            <f:selectItem itemLabel="Standar" itemValue="true" />
+            <f:selectItem itemLabel="Biaya perjam" itemValue="false" />
+            <p:ajax update="biaya" event="valueChange"/>
+        </p:selectOneRadio>
+        <h:panelGroup/>
+        <p:inputText id="kebijakantrue" value="Salari/173" disabled="true" rendered="#{controllerLembur.item.kebijakan eq true}"/>
+        <p:inputText id="kebijakanfalse" value="#{controllerLembur.item.biaya}"  rendered="#{controllerLembur.item.kebijakan eq false}"/>
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" id="prs1" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="4."/>
+        <p:outputLabel  value="Lembur ini harus mendapatkan persetujuan dari"/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="persetujuan1" value="#{controllerLembur.item.persetujuan1}" style="margin-top: 10px;">
+            <f:selectItems value="#{controllerLembur.comboPersetujuan1}" />
+            <p:ajax event="change" update="prs1"/>
+        </p:selectOneMenu>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan1 eq '2'}"/>
+        <p:outputLabel  value="Yakni oleh" rendered="#{controllerLembur.item.persetujuan1 eq '2'}"/>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan1 eq '2'}"/>
+        <p:selectOneMenu id="jabatan1" value="#{controllerLembur.item.jabatan_persetujuan1}" style="margin-top: 10px;" rendered="#{controllerLembur.item.persetujuan1 eq '2'}">
+            <f:selectItems value="#{controllerLembur.combojabatan1}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    <p:panelGrid columns="2" id="prs22" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="5."/>
+        <p:outputLabel  value="Persetujuan kedua"/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="persetujuan2" value="#{controllerLembur.item.persetujuan2}" style="margin-top: 10px;">
+            <f:selectItems value="#{controllerLembur.comboPersetujuan22}" />
+            <p:ajax event="change" update="prs22 prs3 prs4 lbl"/>
+        </p:selectOneMenu>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan2 eq '2'}"/>
+        <p:outputLabel  value="Yakni oleh" rendered="#{controllerLembur.item.persetujuan2 eq '2'}"/>
+        <h:panelGroup/>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan1 eq '2'}"/>
+        <p:selectOneMenu id="jabatan1" value="#{controllerLembur.item.jabatan_persetujuan2}" style="margin-top: 10px;" rendered="#{controllerLembur.item.persetujuan2 eq '2'}">
+            <f:selectItems value="#{controllerLembur.combojabatan1}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    
+    <p:panelGrid columns="2" id="prs3" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+        <p:outputLabel  value="6." rendered="#{controllerLembur.item.persetujuan2 ne '3'}"/>
+        <p:outputLabel  value="Persetujuan ketiga" rendered="#{controllerLembur.item.persetujuan2 ne '3'}"/>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan2 ne '3'}"/>
+        <p:selectOneMenu id="persetujuan3" value="#{controllerLembur.item.persetujuan3}" style="margin-top: 10px;" rendered="#{controllerLembur.item.persetujuan2 ne '3'}">
+            <f:selectItems value="#{controllerLembur.comboPersetujuan3}" />
+            <p:ajax event="change" update="prs3 prs4 lbl"/>
+        </p:selectOneMenu>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan3 eq '2' and controllerLembur.item.persetujuan2 ne '3'}"/>
+        <p:outputLabel  value="Yakni oleh" rendered="#{controllerLembur.item.persetujuan3 eq '2' and controllerLembur.item.persetujuan2 ne '3'}"/>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan3 eq '2' and controllerLembur.item.persetujuan2 ne '3'}"/>
+        <p:selectOneMenu id="jabatan1" value="#{controllerLembur.item.jabatan_persetujuan3}" style="margin-top: 10px;" rendered="#{controllerLembur.item.persetujuan3 eq '2' and controllerLembur.item.persetujuan2 ne '3'}">
+            <f:selectItems value="#{controllerLembur.combojabatan1}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    
+    <p:panelGrid columns="2" id="prs4" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+        <p:outputLabel  value="7." rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <p:outputLabel  value="Persetujuan keempat" rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <p:selectOneMenu id="persetujuan4" value="#{controllerLembur.item.persetujuan4}" style="margin-top: 10px;" rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan3 ne '3'}">
+            <f:selectItems value="#{controllerLembur.comboPersetujuan4}" />
+            <p:ajax event="change" update="prs4"/>
+        </p:selectOneMenu>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan4 eq '2' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <p:outputLabel  value="Yakni oleh" rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan4 eq '2' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <h:panelGroup rendered="#{controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan4 eq '2' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <p:selectOneMenu id="jabatan1" value="#{controllerLembur.item.jabatan_persetujuan4}" style="margin-top: 10px;" rendered="#{controllerLembur.item.persetujuan4 eq '2' and controllerLembur.item.persetujuan3 ne '3' and controllerLembur.item.persetujuan2 ne '3'}">
+            <f:selectItems value="#{controllerLembur.combojabatan1}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    
+    
+    <p:panelGrid id="lbl" columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel   value="6." rendered="#{controllerLembur.item.persetujuan2 eq '3' }"/>
+        <p:outputLabel   value="7." rendered="#{controllerLembur.item.persetujuan3 eq '3' and controllerLembur.item.persetujuan2 ne '3'}"/>
+        <p:outputLabel   value="8." rendered="#{ controllerLembur.item.persetujuan2 ne '3' and controllerLembur.item.persetujuan3 ne '3'}"/>
+        <p:outputLabel for="kepada" value="Lembur ini diberikan kepada"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerLembur.masterJabatans}" var="jabatan" effect="bounce"
+                    itemValue="#{jabatan}" itemLabel="#{jabatan.jabatan}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{jabatanConverter}" responsive="true">
+            <f:facet name="sourceCaption">Nama jabatan</f:facet>
+            <f:facet name="targetCaption">Jabatan yang diberikan</f:facet>
+            <p:column style="width:85%;">
+                <h:outputText value="#{jabatan.jabatan}" />
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

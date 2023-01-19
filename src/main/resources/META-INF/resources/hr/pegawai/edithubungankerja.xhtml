@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadHubunganKerja()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton type="button" value="Cetak" icon="ui-icon-print" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerHrPegawai.ubahHubunganKerja()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" >
+                        <div class="card card-w-title" >
+                            <h1 style="margin-left: 40px;">Edit hubungan kerja</h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="nik" value="Kode"/>
+                                <p:inputText id="nik" value="#{controllerHrPegawai.item.id_pegawai}" required="true"/>
+                                <p:outputLabel for="nip" value="NIK Karyawan"/>
+                                <p:inputMask id="nip" value="#{controllerHrPegawai.item.nip}" required="true" mask="99-9999-99-9999"/>
+                                <p:outputLabel for="absensi" value="No. Absensi"/>
+                                <p:inputNumber id="absensi" value="#{controllerHrPegawai.item.absen}" required="true" decimalPlaces="0"/>
+                                <p:outputLabel for="statuskaryawan" value="Status"/>
+                                <p:selectOneMenu id="statuskaryawan" value="#{controllerHrPegawai.item.statuskaryawan}" required="true">
+                                    <f:selectItem itemLabel="Pilih status karyawan" itemValue="" />
+                                    <f:selectItems value="#{options.comboStatusKaryawan}" />
+
+                                </p:selectOneMenu>
+                                <p:outputLabel for="mulai_bekerja" value="Tanggal bergabung"/>
+                                <p:calendar id="mulai_bekerja" value="#{controllerHrPegawai.item.mulai_bekerja}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="jabatan" value="Jabatan"/>
+                                <p:selectOneMenu id="jabatan" value="#{controllerHrPegawai.item.id_jabatan_new}" required="true">
+                                    <f:selectItems value="#{controllerHrJabatan.comboJabatan}" />
+                                    <p:ajax event="change" listener="#{controllerHrPegawai.onSelectJabatan()}"  update="level golongan"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="level" value="Level"/>
+                                <p:inputText id="level" value="#{controllerHrPegawai.item.level}" readonly="true"/>
+                                <p:outputLabel for="golongan" value="Golongan"/>
+                                <p:inputText id="golongan" value="#{controllerHrPegawai.item.golongan}" readonly="true"/>
+                                <p:outputLabel for="departemen" value="Departemen"/>
+                                <p:selectOneMenu id="departemen" value="#{controllerHrPegawai.item.id_departemen_new}" required="true">
+                                    <f:selectItems value="#{controllerHrDepartemen.comboParent}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="kantor" value="Kantor"/>
+                                <p:selectOneMenu id="kantor" value="#{controllerHrPegawai.item.id_kantor_new}" required="true">
+                                    <f:selectItems value="#{options.comboKantor}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="@next" value="Atasan langsung"/>
+                                <p:autoComplete   id="atasanlangsung" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                                  var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                                  scrollHeight="250"  requiredMessage="Atasan langsung harus diisi !!!"   >
+                                    <p:ajax event="itemSelect" listener="#{controllerHrPegawai.onAtasanSelect}" />
+                                </p:autoComplete>
+                                <p:outputLabel for="@next" value="PTKP"/>
+                                <p:selectOneMenu id="ptkp" value="#{controllerHrPegawai.item.id_ptkp}" required="true" >
+                                    <f:selectItem itemLabel="Pilih PTKP" itemValue=""/>
+                                    <f:selectItems value="#{controllerHrPegawai.comboPtkp}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="@next" value="Pemilik Rekening Bank"/>
+                                <p:inputText id="pemilikrekening" value="#{controllerHrPegawai.item.pemilik_rekening}" />
+                                <p:outputLabel for="@next" value="Nomor Rekening Bank"/>
+                                <p:inputText id="nomorrekening" value="#{controllerHrPegawai.item.nomorrekening}" />
+                            </p:panelGrid>
+
+                            <p:panelGrid id="statusumt" columns="4" columnClasses="ui-grid-col-4,ui-grid-col-1,ui-grid-col-1,ui-grid-col-4" 
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" rendered="#{page.getValueBegawi('umt') eq 'A'}">
+                                <p:outputLabel for="@next" value="Aktifasi UMT"/>
+                                <p:selectBooleanCheckbox id="checkumt"  value="#{controllerHrPegawai.item.statusumt}" >
+                                    <p:ajax update="statusumt"/>
+                                </p:selectBooleanCheckbox>
+                                <p:outputLabel for="@next" value="Tanggal" rendered="#{controllerHrPegawai.item.statusumt eq true}"/>
+                                <p:calendar id="umt" value="#{controllerHrPegawai.item.aktifasiumt}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.item.statusumt eq true}"/>
+                                <h:panelGroup rendered="#{controllerHrPegawai.item.statusumt eq false}"/>
+                                <h:panelGroup rendered="#{controllerHrPegawai.item.statusumt eq false}"/>
+                                <p:outputLabel for="@next" value="Driver pada DO"/>
+                                <p:selectBooleanCheckbox id="isdriver"  value="#{controllerHrPegawai.item.isdriver}"/>
+                            </p:panelGrid>
+                            <p:panelGrid id="statuskehadiran" columns="4" columnClasses="ui-grid-col-4,ui-grid-col-1,ui-grid-col-1,ui-grid-col-4" layout="grid" 
+                                         styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" rendered="#{page.getValueBegawi('insentifkehadiran') eq 'A'}">
+                                <p:outputLabel for="@next" value="Aktifasi Insentif Kehadiran"/>
+                                <p:selectBooleanCheckbox id="checkkehadiran"  value="#{controllerHrPegawai.item.statuskehadiran}" >
+                                    <p:ajax update="statuskehadiran"/>
+                                </p:selectBooleanCheckbox>
+                                <p:outputLabel for="@next" value="Tanggal" rendered="#{controllerHrPegawai.item.statuskehadiran eq true}"/>
+                                <p:calendar id="kehadiran" value="#{controllerHrPegawai.item.aktifasikehadiran}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.item.statuskehadiran eq true}"/>
+                                <h:panelGroup rendered="#{controllerHrPegawai.item.statuskehadiran eq false}"/>
+                                <h:panelGroup rendered="#{controllerHrPegawai.item.statuskehadiran eq false}"/>
+
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

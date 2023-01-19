@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Proposal Payment</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerProposalAp.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAINTENANCEPAYMENTPROPOSAL')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerProposalAp.updateMaintenance()}"   icon="ui-icon-update" value="Edit"  />
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Proposal Payment</h1>
+                    
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerProposalAp.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerProposalAp.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Status "/>
+                        <p:selectOneMenu id="status" value="#{controllerProposalAp.status}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Approve" itemValue="C" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerProposalAp.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerProposalAp.dataAccProposalAp}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerProposalAp.item}" rowKey="#{item.no_proposal}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:column headerText="Proposal No." sortBy="#{item.no_proposal}" style="width:200px;" filterBy="#{item.no_proposal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_proposal}" />
+                        </p:column>
+                        <p:column headerText="Date" sortBy="#{item.tanggal}" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Notes" sortBy="#{item.keterangan}" >
+                            <h:outputText value="#{item.keterangan}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" >
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="Approve" rendered="#{item.status eq 'C'}"/>
+                            <h:outputText value="Old" rendered="#{item.status eq 'O'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

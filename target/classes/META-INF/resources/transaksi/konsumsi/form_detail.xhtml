@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris" >
+            <p:ajax  listener="#{controllerKonsumsi.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerKonsumsi.dataKonsumsiDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:columnGroup type="header">
+            <p:row>
+                <p:column rowspan="2"  headerText="Product"  style="width:300px;" />
+                <p:column rowspan="2"  headerText="Kemasan" style="width:80px;" />
+                <p:column rowspan="2" headerText="Material No." style="width:80px;"/>
+                <p:column colspan="6" headerText="Quantity(Ltr)" />
+                <p:column rowspan="2"  headerText="Remarks" />
+                <p:column rowspan="2"  headerText="" style="width:50px;"/>
+            </p:row>
+            <p:row>
+                <p:column  headerText="Saldo Awal" style="width:80px;"/>
+                <p:column  headerText="Terima" style="width:80px;"/>
+                <p:column  headerText="Pemakaian" style="width:80px;"/>
+                <p:column  headerText="Deviasi" style="width:80px;"/>
+                <p:column  headerText="Saldo Akhir" style="width:80px;"/>
+                <p:column  headerText="Ditagihakan" style="width:80px;"/>
+            </p:row>
+
+        </p:columnGroup>
+        <p:column  style="width:300px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                    var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                    groupBy="#{barangAutoComplete.getBarangGroup(barang)}" scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerKonsumsi.onBarangSelect(item,ri)}" update="onama_barang nama_barang oid_barang  satuan_besar" />
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+                <div style="text-align:center;"><h:outputText value="#{item.satuan_besar}" id="satuan_besar"/></div>
+        </p:column>
+        <p:column  style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_barang}" id="oid_barang"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="id_barang" value="#{item.id_barang}" readonly="true"/>
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.saldo_awal}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="diorder" value="#{item.saldo_awal}" style="width:96%" readonly="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.terima}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="terima" value="#{item.terima}" style="width:96%" readonly="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.pemakaian}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="pemakaian" value="#{item.pemakaian}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.deviasi}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="deviasi" value="#{item.deviasi}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.saldo_akhir}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="saldoakhir" value="#{item.saldo_akhir}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.ditagih}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="pemakaian" value="#{item.ditagih}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:left;"> <h:outputText id="oketerangan" value="#{item.keterangan}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="keterangan" value="#{item.keterangan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerKonsumsi.onDeleteClicked(item)}"  update="detil" />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadListKarir()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <form>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12 ui-lg-12">
+                                
+                                <div class="ui-g-12  ui-lg-3" >
+                                    <ui:include src="leftprofile.xhtml"/>
+                                </div>
+
+                                <div class="ui-g-12  ui-lg-9">    
+                                    <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataKarir}" sortBy="#{item.tanggal_mulai}"  
+                                                 rowIndexVar="index">
+                                        <p:column headerText="Tanggal Efektif" sortBy="#{item.tanggal_mulai}">
+                                            <h:outputText value="#{item.tanggal_mulai}" >
+                                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                                            </h:outputText>    
+                                        </p:column>
+                                        <p:column headerText="Kantor" sortBy="#{item.kantor}">
+                                            <h:outputText value="#{item.kantor}"/>
+                                        </p:column>
+                                        <p:column headerText="Departemen" sortBy="#{item.departemen}">
+                                            <h:outputText value="#{item.departemen}"/>
+                                        </p:column>
+                                        <p:column headerText="Jabatan" sortBy="#{item.jabatan}">
+                                            <h:outputText value="#{item.jabatan}"/>
+                                        </p:column>
+                                        <p:column headerText="Status" sortBy="#{item.statuskaryawan}">
+                                            <h:outputText value="Permanen" rendered="#{item.statuskaryawan eq '1'}"/>
+                                            <h:outputText value="Kontrak" rendered="#{item.statuskaryawan eq '2'}"/>
+                                            <h:outputText value="Probation" rendered="#{item.statuskaryawan eq '3'}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </form>    
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Daftar Packing List</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerKonsumsi.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerKonsumsi.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerKonsumsi.item}" target="#{controllerKonsumsi.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Picking List Gudang #{page.myGudang.gudang}</h1>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerKonsumsi.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerKonsumsi.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerKonsumsi.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerKonsumsi.dataKonsumsi}" selectionMode="single" reflow="true"
+                                 selection="#{controllerKonsumsi.item}" rowKey="#{item.id}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:column headerText="Nomor" sortBy="#{item.no_reff}" style="width:150px;">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" style="width:120px;">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Picking List" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Rekonsilasi Konsumsi Nomor :" rendered="#{controllerKonsumsi.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerKonsumsi.item.no_reff}" style="font-weight:bold" rendered="#{controllerKonsumsi.item.status eq 'D'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerKonsumsi.delete(controllerKonsumsi.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerKonsumsi.item.status eq 'D'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerKonsumsi.item.status eq 'D'}"/>
+                    
+                    <h:outputText style="font-weight:bold; color: red;" value="Anda Tidak Dapat menghapus  Rekonsilasi Konsumsi Nomor : #{controllerKonsumsi.item.no_reff}" rendered="#{controllerKonsumsi.item.status ne 'D'}"/>
+                    <p:commandButton id="odButton" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerKonsumsi.item.status ne 'D'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

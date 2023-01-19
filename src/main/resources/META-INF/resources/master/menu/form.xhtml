@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2"   columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="jenis" value="Jenis"/>
+        <p:selectOneMenu id="jenis" value="#{controllerMenu.item.jenis}" required="true">
+            <f:selectItems value="#{controllerMenu.comboJenis}" />
+            <p:ajax event="change" update="parentnya idnya" listener="#{controllerMenu.jenisChange()}"/>
+        </p:selectOneMenu>
+    </p:panelGrid>
+    <p:panelGrid columns="2" id="parentnya"  columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel id="lparent" for="parent" value="Parent" rendered="#{controllerMenu.item.jenis eq 'D'}" />
+        <p:selectOneMenu id="parent" value="#{controllerMenu.item.parent}" rendered="#{controllerMenu.item.jenis eq 'D'}" required="true">
+            <f:selectItems value="#{controllerMenu.comboParent}"/>
+            <p:ajax event="change" listener="#{controllerMenu.parentChange()}" update="idnya"/>
+        </p:selectOneMenu>
+    </p:panelGrid>   
+    <p:panelGrid columns="2" id="idnya"   columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="idmenu" value="ID"/>
+        <p:inputNumber id="idmenu" value="#{controllerMenu.item.id}" decimalPlaces="0" required="true"/>
+    </p:panelGrid>   
+    <p:panelGrid columns="2"   columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">    
+        <p:outputLabel for="nama" value="Menu"/>
+        <p:inputText id="nama" value="#{controllerMenu.item.name}" required="true"/>
+        <p:outputLabel for="icon" value="Icon"/>
+        <p:inputText id="icon" value="#{controllerMenu.item.icon}" required="true"/>
+        <p:outputLabel for="outcome" value="Outcome"/>
+        <p:inputText id="outcome" value="#{controllerMenu.item.outcome}"/>
+        <p:outputLabel for="urut" value="Urut"/>
+        <p:inputNumber id="urut" value="#{controllerMenu.item.urut}" decimalPlaces="0" required="true"/>
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:inputText id="keterangan" value="#{controllerMenu.item.keterangan}" required="true"/>
+        <p:outputLabel for="roles" value="Roles"/>
+        <p:inputText id="roles" value="#{controllerMenu.item.roles}" required="true"/>
+    </p:panelGrid>
+</ui:composition>

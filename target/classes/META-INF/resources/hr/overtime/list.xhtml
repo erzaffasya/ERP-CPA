@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerLembur.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah Lembur Baru"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Lembur</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerLembur.dataLembur}"  rowIndexVar="index">
+                        <p:column >
+                            <p:panelGrid  columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="#{item.nama}" style="font-weight: bold"/>
+                                <div style="text-align: right;"><p:commandButton actionListener="#{controllerLembur.update(item.id)}"   icon="ui-icon-update" value="Edit" style="text-align: right;"/></div>
+                                
+                                
+                            </p:panelGrid> 
+                            <p:panelGrid  columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="Berlaku untuk :" />
+                                <h:panelGroup/>
+                                <h:panelGroup/>
+                                <h:outputText value="#{item.jabatan}" escape="false"/>
+                            </p:panelGrid>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+
+
+    <ui:define name="title">Bank Voucher</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerAccCso.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('BANKVOUCHER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerAccCso.update()}"   icon="ui-icon-update" value="Edit" update="growl" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display " onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus" >
+                                <f:setPropertyActionListener value="#{controllerAccCso.item}" target="#{controllerAccCso.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerAccCso.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Bank Voucher</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Bank Voucher"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerAccCso.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerAccCso.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerAccCso.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAccCso.dataAccCso}" selectionMode="single" reflow="true"
+                                 selection="#{controllerAccCso.item}" rowKey="#{item.acc_cso_number}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerAccCso.update()}" global="false" />
+                        <p:column headerText="Bank Voucher" sortBy="#{item.acc_cso_number}" filterBy="#{item.acc_cso_number}" filterMatchMode="contains">
+                            <h:outputText value="#{item.acc_cso_number}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.uraian}" filterBy="#{item.uraian}" filterMatchMode="contains">
+                            <h:outputText value="#{item.uraian}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.total}" filterBy="#{item.total}" filterMatchMode="contains" style="text-align:right;">
+                            <h:outputText value="#{item.total}"  >
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Approve" rendered="#{item.status eq 'S'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Bank Voucher Nomor :" rendered="#{controllerAccCso.item.status ne 'S'}"/>
+                    <h:outputText value="#{controllerAccCso.item.acc_cso_number}" style="font-weight:bold" rendered="#{controllerAccCso.item.status ne 'S'}"/>
+                    <p:commandButton id="deleteButton" actionListener="#{controllerAccCso.delete(controllerAccCso.item.acc_cso_number)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerAccCso.item.status ne 'S'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerAccCso.item.status ne 'S'}"/>
+                    <h:outputText value="Anda tidak dapat menghapus data ini !!!" rendered="#{controllerAccCso.item.status eq 'S'}"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerAccCso.item.status eq 'S'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

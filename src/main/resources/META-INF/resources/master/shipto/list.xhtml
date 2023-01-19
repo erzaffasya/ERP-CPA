@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerShipto.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SHIPTO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerShipto.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerShipto.item}" target="#{controllerShipto.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Shipto</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerShipto.dataShipto}" selectionMode="single" selection="#{controllerShipto.item}" 
+                                 rowKey="#{item.id}" paginator="true" rows="10">
+                        <p:column headerText="Id Shipto" sortBy="#{item.shipto}" style="width: 100px;" filterBy="#{item.shipto}" filterMatchMode="contains">
+                            <h:outputText value="#{item.shipto}" />
+                        </p:column>
+                        <p:column headerText="Alamat" sortBy="#{item.alamat}" filterBy="#{item.alamat}" filterMatchMode="contains">
+                            <h:outputText value="#{item.alamat}" escape="false"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Shipto :" />
+                    <h:outputText value="#{controllerShipto.item.shipto}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerShipto.delete(controllerShipto.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

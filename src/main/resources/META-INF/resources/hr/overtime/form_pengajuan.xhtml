@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="nama"  value="Nama karywan"/>
+        <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                          var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nomor SO harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerLemburKaryawan.onPegawaiSelect}" />
+        </p:autoComplete>
+        <p:outputLabel for="tanggal"  value="Tanggal lembur"/>
+        <p:calendar id="tanggal" value="#{controllerLemburKaryawan.item.tanggal}" showOn="button" required="true" requiredMessage="Tanggal  harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        
+    </p:panelGrid>
+   <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="overtimebefore"  value="Lembur sebelum jam kerja"/>
+        <p:inputNumber value="#{controllerLemburKaryawan.item.hour_before}" decimalPlaces="0" id="overtimebefore"/> 
+        <p:outputLabel   value="Jam"/>
+        <p:outputLabel for="overtimeafter"  value="Lembur setelah jam kerja"/>
+        <p:inputNumber  value="#{controllerLemburKaryawan.item.hour_after}" decimalPlaces="0" id="overtimeafter"/> 
+        <p:outputLabel   value="Jam"/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="keterangan"  value="Keterangan"/>
+        <p:inputTextarea id="keterangan" value="#{controllerLemburKaryawan.item.keterangan}" cols="5" rows="4" required="true"/>
+    </p:panelGrid>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:button href="pengajuan.jsf" value="Batalkan" styleClass="blue-grey-btn"/>
+     <p:commandButton id="simpan"
+                                             actionListener="#{controllerLemburKaryawan.tambah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form growl"
+                                             icon="fa  fa-floppy-o"
+                                             />
+    </p:panelGrid>
+    
+</ui:composition>

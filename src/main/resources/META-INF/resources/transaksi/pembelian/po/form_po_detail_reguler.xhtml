@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detilreguler" var="item"  value="#{controllerPo.dataPoDetailReguler}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+
+        <p:column >
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nm_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="nama_barang" value="#{item.nm_barang}" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Qty" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" >
+                        <p:ajax  listener="#{controllerPo.hitungTotalReguler(item,ri)}" update="total totaljumlah diskon dpp ppn grandtotal"  />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Satuan" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_kecil" value="#{item.satuan}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_kecil" value="#{item.satuan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Unit Price" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="harga" value="#{item.harga}" style="width:96%" label="Harga" >
+                        <p:ajax listener="#{controllerPo.hitungTotalReguler(item,ri)}" update="total totaljumlah diskon dpp ppn grandtotal" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Disc %" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText id="odiskonpersen" value="#{item.diskonpersen}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="diskonpersen" value="#{item.diskonpersen}" style="width:96%" label="Harga" >
+                        <p:ajax listener="#{controllerPo.hitungDiskonPersenReguler(item,ri)}" update="total totaljumlah diskon dpp ppn grandtotal diskonrp odiskonrp" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Disc (Rp)" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText id="odiskonrp" value="#{item.diskonrp}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="diskonrp" value="#{item.diskonrp}" style="width:96%" label="Harga" >
+                        <p:ajax listener="#{controllerPo.hitungDiskonRpReguler(item,ri)}" update="total totaljumlah diskon dpp ppn grandtotal odiskonpersen diskonpersen" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Amount" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input"><p:inputText value="#{item.total}" style="width:96%" readonly="true"/></f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPo.onDeleteClickedReguler(item)}"  update="detilreguler totaljumlah diskon dpp ppn grandtotal" />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

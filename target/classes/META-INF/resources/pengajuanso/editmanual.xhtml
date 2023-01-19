@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Sales Order</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerSo.item.nomor}" />
+        <f:viewAction action="#{controllerSo.onLoadPersetujuan()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PENGAJUANSO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Sales Order</h1>
+                            <ui:include src="form_atas_manual.xhtml"/>
+                            <ui:include src="form_detail_manual.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                            <p:panelGrid id="psnpersetujuan" columns="1" columnClasses="ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%" rendered="#{(controllerSo.statusPersetujuan eq null or controllerSo.statusPersetujuan eq false) and controllerSo.item.status eq 'D'}">
+                                <p:outputLabel for="pesanpersetujuan"  value="Alasan Persetujuan"/>
+                                <p:inputText value="#{controllerSo.item.pesanPersetujuan}" id="pesanpersetujuan" required="true" requiredMessage="Alasan Persetujuan harus diisi !!"/>
+                                
+                            </p:panelGrid>
+                            <p:panelGrid id="tombol" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                                <p:commandButton actionListener="#{controllerSo.updatePersetujuan(true)}" value="Approve" update="@form" rendered="#{(controllerSo.statusPersetujuan eq null or controllerSo.statusPersetujuan eq false) and controllerSo.item.status eq 'D'}"/>
+                                <p:commandButton actionListener="#{controllerSo.updatePersetujuan(false)}" value="Reject" update="@form" rendered="#{controllerSo.statusPersetujuan eq null and controllerSo.item.status eq 'D'}"/>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+    
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="month" value="Periode :" />
+        <p:datePicker id="month" view="month" value="#{controllerPayrollOvertime.datestart}" pattern="MMMM yyyy" yearNavigator="true" yearRange="2000:2030" style="width: 100%"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" rendered="#{controllerPenawaran.item.status ne 'A'}">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris" rendered="#{controllerPayrollOvertime.item.status ne 'A'}">
+            <p:ajax  listener="#{controllerPayrollOvertime.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerPayrollOvertime.dataPayrollOvertimeDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+        <p:column headerText="Nama" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama}" id="onama"/></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                      var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                      scrollHeight="250" required="true" requiredMessage="Nama pegawai harus diisi !!!"   >
+                        <p:ajax event="itemSelect" listener="#{controllerPayrollOvertime.onPegawaiSelect(item,ri)}" update="detil nama"/>
+                    </p:autoComplete>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Jumlah Lembur" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.amount}"  ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  value="#{item.amount}" decimalPlaces="0">
+                        <p:ajax listener="#{controllerPayrollOvertime.calculateTotal()}" update="detil"/>
+                    </p:inputNumber> 
+                </f:facet>   
+            </p:cellEditor>
+        </p:column>
+
+        <p:column style="width:32px" rendered="#{controllerPayrollOvertime.item.status ne 'A'}">
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPayrollOvertime.onDeleteClicked(item)}"  update="detil" />
+            </p:commandButton>
+        </p:column>
+        <p:columnGroup type="footer">
+            <p:row>
+                <p:column  style="text-align:right;font-weight: bold;" footerText="Total  : "/>
+                <p:column style="text-align:right;font-weight: bold;" footerText="#{controllerPayrollOvertime.footer}"/>
+                <p:column rendered="#{controllerPayrollOvertime.item.status ne 'A'}"/>
+            </p:row>
+        </p:columnGroup>
+    </p:dataTable>
+
+</ui:composition>

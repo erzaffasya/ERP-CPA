@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vendor</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerCuti.id}" />
+        <f:viewAction action="#{controllerCuti.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('CUTI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerCuti.item}" target="#{controllerCuti.item}" />
+                            </p:commandButton>
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerCuti.ubah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Edit Kebijakan  #{controllerCuti.item.nama_master}</h1>
+                            <ui:include src="form_umum.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus " />
+                    <h:outputText value="#{controllerCuti.item.nama_cuti}  #{controllerCuti.item.nama_cuti}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerCuti.delete(controllerCuti.item.id)}" onclick="PF('dlg3').hide();" 
+                                     value="Delete" update="growl"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

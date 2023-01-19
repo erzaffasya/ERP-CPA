@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="IO No"/>
+        <p:inputText id="nomor" value="#{controllerInternalOrder.item.nomor_io}"  readonly="true"/>
+        <p:outputLabel for="tanggal" value="Date"/>
+        <p:calendar id="tanggal" pattern="dd/MM/yyyy"  value="#{controllerInternalOrder.item.tanggal}" readonly="true"/>
+        <p:outputLabel for="gudangasal" value="Gudang Asal"/>
+        <p:inputText id="gudangasal" value="#{controllerInternalOrder.item.gudang_asal}" readonly="true" /> 
+        <p:outputLabel for="gudangtujuan" value="Gudang Tujuan"/>
+        <p:inputText id="gudangtujuan" value="#{controllerInternalOrder.item.gudang_tujuan}" readonly="true" /> 
+        <p:outputLabel for="nomorip" value="Nomor IP"/>
+        <p:inputText id="nomorip" value="#{controllerInternalOrder.item.nomor_ip}"  readonly="true"/>
+        <p:outputLabel for="tanggalip" value="Tangal IP"/>
+        <p:calendar id="tanggalip" pattern="dd/MM/yyyy"  value="#{controllerInternalOrder.item.tanggal_ip}" readonly=""/>
+    </p:panelGrid>
+
+</ui:composition>

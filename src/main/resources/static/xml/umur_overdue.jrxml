@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daftaroverdue" language="groovy" pageWidth="902" pageHeight="595" orientation="Landscape" columnWidth="862" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="62979068-53dc-4eb3-b255-51782ddba4da">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="logo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="shelllogo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nama_perusahaan" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT a.*, b.customer,e.nama as cabang, c.referensi as nomor_po,(SELECT CURRENT_DATE - due_date FROM acc_ar_faktur WHERE ar_number=a.ar_number) as umur,
+(SELECT a.total-a.bayar as sumtotal FROM acc_ar_faktur a1 WHERE a1.total - a1.bayar > 0 AND a1.customer_code=a.customer_code AND CURRENT_DATE - a1.due_date <=10 AND a1.ar_number=a.ar_number) as periode0,
+(SELECT a.total-a.bayar as sumtotal FROM acc_ar_faktur a1 WHERE a1.total - a1.bayar > 0 AND a1.customer_code=a.customer_code AND CURRENT_DATE - a1.due_date >=1 AND CURRENT_DATE - a1.due_date <= 30 AND a1.ar_number=a.ar_number) as periode1,
+(SELECT a.total-a.bayar as sumtotal FROM acc_ar_faktur a1 WHERE a1.total - a1.bayar > 0 AND a1.customer_code=a.customer_code AND CURRENT_DATE - a1.due_date >=31 AND CURRENT_DATE - a1.due_date <= 60 AND a1.ar_number=a.ar_number) as periode2,
+(SELECT a.total-a.bayar as sumtotal FROM acc_ar_faktur a1 WHERE a1.total - a1.bayar > 0 AND a1.customer_code=a.customer_code AND CURRENT_DATE - a1.due_date >=61 AND CURRENT_DATE - a1.due_date <= 90 AND a1.ar_number=a.ar_number) as periode3,
+(SELECT a.total-a.bayar as sumtotal FROM acc_ar_faktur a1 WHERE a1.total - a1.bayar > 0 AND a1.customer_code=a.customer_code AND CURRENT_DATE - a1.due_date >=91 AND CURRENT_DATE - a1.due_date <= 120 AND a1.ar_number=a.ar_number) as periode4,
+(SELECT a.total-a.bayar as sumtotal FROM acc_ar_faktur a1 WHERE a1.total - a1.bayar > 0 AND a1.customer_code=a.customer_code AND CURRENT_DATE - a1.due_date >=120 AND a1.ar_number=a.ar_number) as periode5
+ FROM acc_ar_faktur a LEFT JOIN customer b ON a.customer_code = b.id_kontak LEFT JOIN penjualan c ON a.no_invoice = c.no_penjualan LEFT JOIN gudang d ON c.id_gudang = d.id_gudang LEFT JOIN internal_kantor_cabang e ON d.id_kantor=e.id_kantor_cabang
+WHERE a.total - a.bayar > 0 ORDER BY a.due_date]]>
+	</queryString>
+	<field name="ar_number" class="java.lang.String"/>
+	<field name="ar_date" class="java.sql.Date"/>
+	<field name="customer_code" class="java.lang.String"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="due_date" class="java.sql.Date"/>
+	<field name="notes" class="java.lang.String"/>
+	<field name="reff" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="no_invoice" class="java.lang.String"/>
+	<field name="invoice_date" class="java.sql.Date"/>
+	<field name="no_do" class="java.lang.String"/>
+	<field name="no_po" class="java.lang.String"/>
+	<field name="ppn" class="java.math.BigDecimal"/>
+	<field name="pph" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="top" class="java.lang.Integer"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="bayar" class="java.math.BigDecimal"/>
+	<field name="tgl_terimainvoice" class="java.sql.Date"/>
+	<field name="customer" class="java.lang.String"/>
+	<field name="cabang" class="java.lang.String"/>
+	<field name="nomor_po" class="java.lang.String"/>
+	<field name="umur" class="java.lang.Integer"/>
+	<field name="periode0" class="java.math.BigDecimal"/>
+	<field name="periode1" class="java.math.BigDecimal"/>
+	<field name="periode2" class="java.math.BigDecimal"/>
+	<field name="periode3" class="java.math.BigDecimal"/>
+	<field name="periode4" class="java.math.BigDecimal"/>
+	<field name="periode5" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="136" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="116" width="863" height="20" uuid="7914a8d5-5c41-427d-8653-ef5dd5cbac62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DAFTAR OVERDUE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="-1" y="2" width="123" height="55" uuid="36b5fff5-f96f-42dd-8139-20565d19beb5"/>
+				<imageExpression><![CDATA[$P{shelllogo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="739" y="2" width="123" height="55" uuid="bbf80077-1d08-4e95-8ad5-dd966572dd91"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="-1" y="69" width="864" height="47" uuid="d04f6803-1d0b-4887-a080-29a0bd71f0db"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nama_perusahaan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="7" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="514" y="41" width="87" height="20" backcolor="#CCCCCC" uuid="cdd5262d-0ce0-4308-b31a-02cf5677a4a1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[31-60 Days	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="688" y="41" width="87" height="20" backcolor="#CCCCCC" uuid="31f01adf-2bdc-4f50-a26d-a0edfa9e8755"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[91-120 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="264" y="41" width="102" height="20" backcolor="#CCCCCC" uuid="2f931083-ed08-456d-9643-7d9be3fd45ce"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="601" y="41" width="87" height="20" backcolor="#CCCCCC" uuid="1d5411f7-7087-443d-93b6-3f0e8a91a4ce"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[61-90 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="775" y="41" width="87" height="20" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="3ab27354-6ef5-4298-92dc-4d60b8da2112"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[> 120 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="427" y="41" width="87" height="20" backcolor="#CCCCCC" uuid="4b9370eb-bd81-40c5-b122-a12c794d232c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[1-30 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="122" y="41" width="142" height="20" backcolor="#CCCCCC" uuid="fe273b6f-efd1-4600-9de1-04d4223cd9d1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="34" y="41" width="88" height="20" backcolor="#CCCCCC" uuid="bc9294ce-d0cf-4339-bd3d-b563691fee78"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="41" width="34" height="20" backcolor="#CCCCCC" uuid="bdba860a-d2ee-493a-ae66-54de23c8c9f0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="366" y="41" width="61" height="20" backcolor="#CCCCCC" uuid="38dcb19e-42e2-4f58-b1a6-6346abe3536d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[<= 0 Days]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="688" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="a1c28d34-384a-450f-8e84-71e15ef7195d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{periode4}!=null)?$F{periode4}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="514" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="30614598-17a7-4c91-88ba-5fb68e34e82e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{periode2}!=null)?$F{periode2}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="34" y="0" width="88" height="20" isPrintWhenDetailOverflows="true" uuid="7b92f145-f1b3-4285-9593-9c569032731a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="427" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="63394ba1-0874-4ebe-9e7e-a86b91f2bb44"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{periode1}!=null)?$F{periode1}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="601" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="b4a1db11-0ed2-44be-9ac0-60156feb90bc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{periode3}!=null)?$F{periode3}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+				<reportElement stretchType="RelativeToTallestObject" x="122" y="0" width="142" height="20" isPrintWhenDetailOverflows="true" uuid="473b2736-bd52-419b-a1de-e6cd84bb1be6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="264" y="0" width="102" height="20" isPrintWhenDetailOverflows="true" uuid="1a4cce30-ed36-4bba-86b9-767334d18879"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="775" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="2ba23176-ed37-4b99-a184-b4fc935ea70b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{periode5}!=null)?$F{periode5}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="34" height="20" isPrintWhenDetailOverflows="true" uuid="f3c7cc7a-4ba3-4b09-8e2b-dc500e5b1758"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="366" y="0" width="61" height="20" isPrintWhenDetailOverflows="true" uuid="09ac74de-5fe8-4b27-878f-9fcd3973ec05"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{periode0}!=null)?$F{periode0}:""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

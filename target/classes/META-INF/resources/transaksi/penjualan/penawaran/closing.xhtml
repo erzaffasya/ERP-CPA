@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Penawaran Harga</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPenawaran.item.id_lama}" />
+        <f:viewParam name="revisi" value="#{controllerPenawaran.item.revisi}" />
+        <f:viewAction action="#{controllerPenawaran.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah Penawaran" icon="ui-icon-plus" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPenawaran.kirimpesan()}"
+                                             value="Send Quotation" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{!controllerPenawaran.item.status}"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h1>Form Input  Penawaran</h1>
+                            </p:panelGrid>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+                                <p:outputLabel for="nomor" value="No. Penawaran."/>
+                                <p:inputText id="nomor" value="#{controllerPenawaran.item.nomor}" immediate="true" required="true" requiredMessage="Nomor Penawaran Harus diisi !!" readonly="true"/>
+                                <p:outputLabel  value="Tgl Penawaran"/>
+                                <p:inputText readonly="true" id="tanggal" value="#{controllerPenawaran.item.tanggal}"><f:convertDateTime pattern="dd-MM-yyyy" /></p:inputText>
+                                <p:outputLabel for="id_customer" value="Nama Customer :"/>
+                                <p:inputText id="id_customer" value="#{controllerPenawaran.item.customer}" readonly="true" />
+                                <p:outputLabel  value="Total Penawaran"/>
+                                <p:inputNumber id="grantotal" value="#{controllerPenawaran.item.grandtotal}" readonly="true"/>
+                                <p:outputLabel for="gudang" value="Gudang"/>
+                                <p:selectOneMenu id="gudang" value="#{controllerPenawaran.item.id_gudang}" disabled="true">
+                                    <f:selectItems value="#{options.comboGudang}" />
+                                    <p:ajax listener="#{controllerPenawaran.onGudangSelect}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+                                <p:selectOneMenu id="kode_mata_uang" value="#{controllerPenawaran.item.kode_mata_uang}" disabled="true">
+                                    <f:selectItems value="#{options.mataUang}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="revisi" value="Revisi"/>
+                                <p:inputText id="revisi" value="#{controllerPenawaran.item.revisi}" readonly="true" />
+                                <p:outputLabel for="salesman" value="Salesman"/>
+                                <p:selectOneMenu id="salesman" value="#{controllerPenawaran.item.id_salesman}" disabled="true">
+                                    <f:selectItems value="#{options.comboMarketing}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel  value="Pesan"/>
+                                <p:textEditor id="alamat" widgetVar="editor4" value="#{controllerPenawaran.item.pesan}" height="200" style="margin-bottom:10px" placeholder="Masukan pesan disini" />
+                            </p:panelGrid>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

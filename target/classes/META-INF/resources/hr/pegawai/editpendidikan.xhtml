@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Riwayat Pendidikan</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewParam name="idpendidikan" value="#{controllerHrPegawai.pendidikan.id}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadPendidikan()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Ubah riwayat pendidikan</h1>
+                            <ui:include src="formpendidikan.xhtml"/>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:panelGroup/>
+                                <p:inputText value="#{controllerHrPegawai.item.id_pegawai}" id="hiddenfield" type="hidden" />
+                                <p:inputText value="#{controllerHrPegawai.pendidikan.id}" id="hiddenfield2" type="hidden" />
+                                <p:commandButton id="simpan"
+                                                 actionListener="#{controllerHrPegawai.ubahPendidikan()}"
+                                                 value="Simpan" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form growl"
+                                                 icon="fa  fa-floppy-o"
+                                                 />
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

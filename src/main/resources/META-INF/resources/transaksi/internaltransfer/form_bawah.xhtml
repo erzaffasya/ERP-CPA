@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                 style="border:0px none; background-color:transparent; text-align: left;" 
+                 rendered="#{controllerInternalTransfer.item.status eq 'C' or controllerInternalTransfer.item.status eq 'X'}">
+        <p:outputLabel  value="Nomor Cancel IT"/>
+        <p:inputText id="tglcancel" value="#{controllerInternalTransfer.item.no_cancel}" />
+        <p:outputLabel  value="Tanggal Cancel"/>
+        <p:calendar id="tglcancel" value="#{controllerInternalTransfer.item.tgl_cancel}" pattern="dd-MM-yyyy"/>
+        <p:outputLabel  value="Alasan"/>
+        <p:textEditor id="syarat" widgetVar="editor2" value="#{controllerInternalTransfer.item.pesan}" height="100" style="margin-bottom:10px" >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>    
+    <div style="height:50px"></div>
+    <p:outputPanel  >
+        Dibuat oleh #{controllerInternalTransfer.item.nama_pengirim}   #{controllerInternalTransfer.item.create_date}
+    </p:outputPanel>
+    <p:outputPanel  rendered="#{controllerInternalTransfer.item.status ne 'D'}">
+        tanggal Approve #{controllerInternalTransfer.item.modified_date}
+    </p:outputPanel>
+
+</ui:composition>

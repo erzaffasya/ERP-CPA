@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{ri + 1}" />
+                        </p:column>
+                        <p:column headerText="Nomor" sortBy="#{item.nomor}"  filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}"  filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Tgl.Dibuat" sortBy="#{item.create_date}"  filterBy="#{item.create_date}" filterMatchMode="contains">
+                            <h:outputText value="#{item.create_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Tgl.Upload" sortBy="#{item.upload_date}"  filterBy="#{item.upload_date}" filterMatchMode="contains">
+                            <h:outputText value="#{item.upload_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Tgl.Approve" sortBy="#{item.approved_date}"  filterBy="#{item.approved_date}" filterMatchMode="contains">
+                            <h:outputText value="#{item.approved_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Upload" rendered="#{item.status eq 'U'}"/>
+                            <h:outputText value="Approve" rendered="#{item.status eq 'A'}"/>
+                            <h:outputText value="Posting" rendered="#{item.status eq 'P'}"/>
+                        </p:column>
+  
+</ui:composition>

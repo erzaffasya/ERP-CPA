@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Proposal Payment</ui:define>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Proposal No."/>
+        <p:inputText id="nomor" value="#{controllerProposalAp.item.no_proposal}"  readonly="true"/>
+        <p:outputLabel for="tanggal" value="Proposal Date"/>
+        <p:calendar id="tanggal"  value="#{controllerProposalAp.item.tanggal}" required="true"/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel  value="Notes"/>
+        <p:inputText id="notes"  value="#{controllerProposalAp.item.keterangan}"/>
+    </p:panelGrid>
+</ui:composition>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="official_receipt" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" isIgnorePagination="true" uuid="9a09020e-7670-4ac3-b583-b356cb83d796">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="46"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/indrayoga/ireport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nama_perusahaan" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from pembayaran_piutang
+join customer on pembayaran_piutang.id_customer=customer.id_kontak
+join account on pembayaran_piutang.account_bayar=account.id_account
+where pembayaran_piutang.no_pembayaran_piutang=$P{nomor}]]>
+	</queryString>
+	<field name="no_pembayaran_piutang" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="id_customer" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="kode_user" class="java.lang.String"/>
+	<field name="total_tagihan" class="java.math.BigDecimal"/>
+	<field name="total_discount" class="java.math.BigDecimal"/>
+	<field name="total_bayar" class="java.math.BigDecimal"/>
+	<field name="total_denda" class="java.math.BigDecimal"/>
+	<field name="is_app" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="id_kantor" class="java.lang.String"/>
+	<field name="account_bayar" class="java.lang.Integer"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="id_kontak" class="java.lang.String"/>
+	<field name="customer" class="java.lang.String"/>
+	<field name="no_npwp" class="java.lang.String"/>
+	<field name="telepon" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="alamat_penagihan" class="java.lang.String"/>
+	<field name="id_kategori_customer" class="java.lang.Integer"/>
+	<field name="nama_bank" class="java.lang.String"/>
+	<field name="no_rekening" class="java.lang.String"/>
+	<field name="pemegang_rekening" class="java.lang.String"/>
+	<field name="kena_pajak" class="java.lang.Boolean"/>
+	<field name="isaktif" class="java.lang.Boolean"/>
+	<field name="batas_kredit" class="java.math.BigDecimal"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="alamat_npwp" class="java.lang.String"/>
+	<field name="id_sektor" class="java.lang.String"/>
+	<field name="top" class="java.lang.Integer"/>
+	<field name="id_account" class="java.lang.Integer"/>
+	<field name="tipe_account" class="java.lang.Boolean"/>
+	<field name="pembayaran" class="java.lang.Boolean"/>
+	<field name="account" class="java.lang.String"/>
+	<field name="parent" class="java.lang.Integer"/>
+	<field name="kantor" class="java.lang.String"/>
+	<field name="aktif" class="java.lang.Boolean"/>
+	<field name="level" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="118" splitType="Stretch">
+			<staticText>
+				<reportElement x="174" y="90" width="208" height="28" uuid="b03105b2-9a6d-453a-8ed9-fffcfdf3b5ef"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OFFICIAL RECEIPT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="43" width="556" height="47" uuid="0452c731-1111-4132-a8dd-585d1b93b93e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nama_perusahaan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<textField>
+				<reportElement x="105" y="0" width="151" height="20" uuid="bf90bfc0-8301-4f32-8e9d-06671134eeea"/>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="ce088d16-34a3-4b0d-8150-dab1c186cfa6"/>
+				<text><![CDATA[Nama Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="100" height="20" uuid="fb36e713-af2e-4991-9cbe-6997002d3b98"/>
+				<text><![CDATA[Code Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="38" width="100" height="20" uuid="ac369af1-a001-4c6b-b56b-90cd8f492239"/>
+				<text><![CDATA[Kas/Bank]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="0" width="7" height="20" uuid="0792cbf3-f5e0-43ef-894a-d15128f27e84"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="19" width="7" height="20" uuid="3b7869eb-9bd3-48c0-b0cc-62ace0036383"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="38" width="7" height="20" uuid="e8ffc5fb-3346-4a12-9b97-378042f63ecd"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="19" width="151" height="20" uuid="18158f90-e685-4335-9a2c-1b3c6937a83c"/>
+				<textFieldExpression><![CDATA[$F{id_customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="105" y="38" width="151" height="20" uuid="c8255c8e-80ac-4ff3-9b8f-83dd9f3aed60"/>
+				<textFieldExpression><![CDATA[$F{account}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="271" y="19" width="77" height="20" uuid="fe08443b-95c0-44d4-8ddc-74f2a606b226"/>
+				<text><![CDATA[No OR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="0" width="77" height="20" uuid="182c1e0c-ff20-424a-acc1-daed66afb795"/>
+				<text><![CDATA[Tanggal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="0" width="7" height="20" uuid="4333c0c5-485e-46c7-bfb5-1d74227e837a"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="19" width="7" height="20" uuid="98d1f8aa-f66f-4422-aa7f-ff09cbac13b0"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="353" y="0" width="202" height="20" uuid="98f4d0b8-6803-4e0f-bfb9-e0825084d542"/>
+				<textFieldExpression><![CDATA[$F{tanggal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="353" y="19" width="202" height="20" uuid="58bb6798-9d08-43f1-870f-9bcc6089b159"/>
+				<textFieldExpression><![CDATA[$F{no_pembayaran_piutang}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="167" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="75" uuid="8b2748b5-a4e5-474f-beda-dce7a085e6f0"/>
+				<subreportParameter name="nomor">
+					<subreportParameterExpression><![CDATA[$P{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "official_receipt_detail.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="1" y="88" width="555" height="70" uuid="59651dae-d00b-4acb-b5dd-9c58a6f770ed"/>
+				<subreportParameter name="nomor">
+					<subreportParameterExpression><![CDATA[$P{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "official_receipt_account.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="95" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="189" height="20" uuid="584f6ed1-3f6a-4f5d-8dc2-121b6b03498e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Prepared By,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="0" width="181" height="20" uuid="eaf99c89-e492-4534-b3ac-265994027d9c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Checked By,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="185" height="20" uuid="e2eff680-1666-48cf-ac46-032a51050b15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Approved by,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="73" width="181" height="20" uuid="d3f5bbe3-0b69-46a5-afd6-81be3cf686b9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[(________________)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="73" width="189" height="20" uuid="e84643f4-ef33-4a72-bc03-1909b5be750d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[(________________)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="73" width="185" height="20" uuid="71e646d9-ab80-4d90-b609-5f13b57fa968"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[(________________)]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton  actionListener="#{controllerSupplier.extendKontak()}" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" 
+                          value="Tambah Baris" process="@this " update="detilkontak" />
+    </p:panelGrid>
+
+    <p:dataTable id="detilkontak" var="item"  value="#{controllerSupplier.dataSupplierKontak}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+        <f:facet name="header">Daftar Kontak Supplier</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+
+        <p:column headerText="Contact Person" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.kontak}" id="okontak"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="kontak" value="#{item.kontak}" />
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Jabatan" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.jabatan}" id="okontak"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="kontak_jabatan" value="#{item.jabatan}" />
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="HP" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.hp}" id="okontak_hp"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="kontak_hp" value="#{item.hp}" />
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Email" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.email}" id="okontak_email"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="kontak_email" value="#{item.email}" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:50px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerSupplier.onDeleteKontakClicked(item)}"  update="detilkontak" />
+            </p:commandButton>
+
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

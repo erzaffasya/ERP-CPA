@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="tahun" value="Tahun "/>
+        <h:panelGroup/>
+        <p:inputText id="tahun" value="#{controllerHrPegawai.trainning.tahun}" required="true"/>
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="deskripsi" value="Deskripsi"/>
+        <h:panelGroup/>
+        <p:inputText id="deskripsi" value="#{controllerHrPegawai.trainning.deskripsi}" required="true"/>
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="nosertifikat" value="No Sertifikat "/>
+        <h:panelGroup/>
+        <p:inputText id="nosertifikat" value="#{controllerHrPegawai.trainning.no_sertifikat}"/>
+        <p:outputLabel  value="4."/>
+        <p:outputLabel for="expire" value="No Sertifikat "/>
+        <h:panelGroup/>
+        <p:calendar id="expire" value="#{controllerHrPegawai.trainning.tgl_expire}"/>
+    </p:panelGrid>
+
+
+</ui:composition>

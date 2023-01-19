@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Saldoawal</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSaldoawal.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SALDOAWAL')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton process="singleDT"  icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerSaldoawal.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerSaldoawal.item}" target="#{controllerSaldoawal.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Saldoawal  </h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerSaldoawal.dataSaldoawal}" selectionMode="single" reflow="true"
+                                 selection="#{controllerSaldoawal.item}" rowKey="#{item.id_gudang}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="i">
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{i + 1}" />
+                        </p:column>
+                        
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}">
+                            <h:outputText value="#{item.status}" />
+                        </p:column>
+                        <p:column headerText="Saldo Persediaan" sortBy="#{item.jumlah}">
+                            <h:outputText value="#{item.jumlah}"><f:convertNumber pattern="#,##0.00"/></h:outputText>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Informasi" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Saldoawal Gudang : #{controllerSaldoawal.item.gudang}" rendered="#{!controllerSaldoawal.item.status eq true}"/>
+                    <h:outputText value="Anda tidak dapat menghapus Saldoawal Gudang : #{controllerSaldoawal.item.gudang} !!!" rendered="#{controllerSaldoawal.item.status eq true}"/>
+                    <p:commandButton id="deleteButton" actionListener="#{controllerSaldoawal.delete(controllerSaldoawal.item.id_gudang)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{!controllerSaldoawal.item.status eq true}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{!controllerSaldoawal.item.status eq true}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

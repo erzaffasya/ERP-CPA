@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quotation_detail" language="groovy" pageWidth="595" pageHeight="100" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0c3bb9ee-961c-4640-96ba-e2178b1a6fb0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor_po" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from po_detail join barang on po_detail.id_barang=barang.id_barang
+join satuan_besar on barang.id_satuan_besar=satuan_besar.id_satuan_besar
+where nomor_po=$P{nomor_po}]]>
+	</queryString>
+	<field name="nomor_po" class="java.lang.String"/>
+	<field name="urut" class="java.lang.Integer"/>
+	<field name="id_barang" class="java.lang.String"/>
+	<field name="qty" class="java.math.BigDecimal"/>
+	<field name="harga" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="diskon" class="java.math.BigDecimal"/>
+	<field name="id_satuan_kecil" class="java.lang.String"/>
+	<field name="diambil" class="java.math.BigDecimal"/>
+	<field name="sisa" class="java.math.BigDecimal"/>
+	<field name="diskonpersen" class="java.math.BigDecimal"/>
+	<field name="diskonrp" class="java.math.BigDecimal"/>
+	<field name="nama_barang" class="java.lang.String"/>
+	<field name="id_kategori_barang" class="java.lang.String"/>
+	<field name="id_satuan_besar" class="java.lang.String"/>
+	<field name="barcode" class="java.lang.String"/>
+	<field name="id_jenis_barang" class="java.lang.String"/>
+	<field name="images" class="java.lang.Object"/>
+	<field name="status" class="java.lang.Boolean"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="nama_alias" class="java.lang.String"/>
+	<field name="isi_satuan" class="java.math.BigDecimal"/>
+	<field name="id_family" class="java.lang.String"/>
+	<field name="satuan_besar" class="java.lang.String"/>
+	<variable name="GROUP_EXP" class="java.lang.String"/>
+	<columnHeader>
+		<band height="93">
+			<staticText>
+				<reportElement x="6" y="22" width="291" height="20" uuid="9a6abed1-8ef8-46d6-8f53-96cb208d5205"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cabang Central Park -  Jakarta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="2" width="196" height="20" uuid="9bd44877-df23-4365-965e-eecb842ee39c"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[ Discount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="22" width="196" height="20" uuid="7f72eb11-6653-40bb-b89e-ec79aed8add9"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[ DPP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="493" y="2" width="72" height="20" uuid="3c7390ed-a6d9-4399-a5fb-85c3b05975d2"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="493" y="22" width="72" height="20" uuid="16769570-5844-4285-abb6-972b726d33dc"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="2" width="291" height="20" uuid="642a3721-29b1-4322-aa5b-1144982bd77a"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[BANK MAYBANK  INDONESIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="42" width="47" height="20" uuid="1351bc38-8262-41a4-a069-e86738f32d2e"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[A/C]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="42" width="10" height="20" uuid="eed2ac19-97fc-4e20-95db-df26a8e2194a"/>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="42" width="235" height="20" uuid="14a8680e-a4ca-495f-8406-2917849eda97"/>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="42" width="196" height="20" uuid="6cbb354d-d7cd-4085-b1c2-00704ff20326"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[ PPN 10%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="493" y="42" width="72" height="20" uuid="67d736bf-a26e-46fc-8377-a386197520d3"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+</jasperReport>

@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Intruksi Open PO</ui:define>
+    <ui:define name="head">
+        
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerIntruksiPo.item.id}" />
+        <f:viewAction action="#{controllerIntruksiPo.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAINTENANCEINTRUKSIPO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="intruksipo.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerIntruksiPo.ubah(null)}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Input  Intruksi Open PO</h1>
+                            <ui:include src="intruksipo-atas.xhtml"/>
+                            <ui:include src="intruksipo-detail.xhtml"/>
+                            <ui:include src="intruksipo-bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel Intruksi PO" widgetVar="dlg3" resizable="false" id="canceldo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <p:editor  id="pesan" widgetVar="editor4" value="#{controllerIntruksiPo.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerIntruksiPo.ubahStatus('X')}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="@form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

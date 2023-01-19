@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input Jurnal Umum</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="reference" value="Reference"/>
+        <p:inputText id="reference" value="#{controllerJurnalUmum.item.gl_number}" required="true" readonly="true" />
+        <p:outputLabel for="date" value="Date"/>
+        <p:calendar id="date" value="#{controllerJurnalUmum.item.gl_date}" required="true"/>
+        <p:outputLabel for="note" value="Note"/>
+        <p:inputText id="note" value="#{controllerJurnalUmum.item.note}" required="true"/>
+    </p:panelGrid>
+
+    
+
+
+</ui:composition>

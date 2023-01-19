@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerPegawaiKpi.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KPIPEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <script type="text/javascript">
+                function handleLoginRequest(xhr, status, args) {
+                    if (args.validationFailed) {
+                        PF('dlg').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg').hide();
+
+                    }
+                }
+            </script>
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Pegawai</h1>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPegawaiKpi.dataPegawaiKpi}" selectionMode="single" reflow="true" widgetVar="pegawaiTable"
+                                 selection="#{controllerPegawaiKpi.item}" rowKey="#{item.id_pegawai}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column ><img src="/img/pegawai/#{item.fotonya}" width="100" /></p:column>
+
+                        <p:column headerText="Nama" sortBy="#{item.nama}"  filterBy="#{item.nama}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="NIP" sortBy="#{item.nip}" filterBy="#{item.nip}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nip}" />
+                        </p:column>
+                        <p:column headerText="Jabatan" sortBy="#{item.jabatan}" filterBy="#{item.jabatan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Departemen" sortBy="#{item.departemen}" filterBy="#{item.departemen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.departemen}" />
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Atasan Langsung" sortBy="#{item.nama_atasan}" filterBy="#{item.nama_atasan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_atasan}" />
+                        </p:column>
+                        <p:column headerText="KPI" style="text-align: center;">
+                            <p:link outcome="pegawaikpi" value="KPI">
+                                <f:param name="id" value="#{item.id_pegawai}" />
+                            </p:link>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

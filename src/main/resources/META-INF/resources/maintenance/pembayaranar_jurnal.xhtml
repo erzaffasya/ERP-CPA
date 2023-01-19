@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    
+    <p:dataTable id="jurnal" var="item" value="#{controllerPembayaranPiutang.dataAccGlDetail}" editable="true" editMode="cell" widgetVar="cellCars2" rowIndexVar="ri" tableStyle="table-layout: auto;">
+
+        <f:facet name="header">Jurnal</f:facet>
+
+        <p:column headerText="Code" style="width:150px">
+            <h:outputText value="#{item.id_account}" id="oid_account" />
+        </p:column>
+
+        <p:column headerText="Account Name" >
+            <h:outputText value="#{item.account}"/>
+        </p:column>
+        <p:column headerText="Debit" styleClass="rightColumnContent">
+                    <h:outputText value="#{item.debit}">
+                        <f:convertNumber pattern="#,##0.00" />
+                    </h:outputText>
+        </p:column>
+        <p:column headerText="Credit" styleClass="rightColumnContent">
+                    <h:outputText value="#{item.credit}">
+                        <f:convertNumber pattern="#,##0.00" />
+                    </h:outputText>
+        </p:column>
+        <p:columnGroup type="footer">
+            <p:column colspan="2" style="text-align:right" footerText="Totals:" />
+            <p:column id="jmldebit" styleClass="rightColumnContent">
+                <f:facet name="footer">
+                    <h:outputText value="#{controllerPembayaranPiutang.jumlahDebit}">
+                        <f:convertNumber pattern="#,###.00" />
+                    </h:outputText>
+                </f:facet>
+            </p:column> 
+            <p:column id="jmlcredit" styleClass="rightColumnContent">
+                <f:facet name="footer">
+                    <h:outputText value="#{controllerPembayaranPiutang.jumlahKredit}">
+                        <f:convertNumber pattern="#,###.00" />
+                    </h:outputText>
+                </f:facet>
+            </p:column >
+            <p:column  rendered="#{controllerPembayaranPiutang.item.status ne 'A'}">
+            </p:column>
+        </p:columnGroup>
+    </p:dataTable>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-9,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+        <p:outputLabel  value="Selisih" style="font-size: 20px; font-weight: bold; "/>
+        <p:outputLabel id="selisih"   value="#{controllerPembayaranPiutang.selisih}" style="font-size: 20px; font-weight: bold; ">
+            <f:convertNumber pattern="#,##0.00" />
+        </p:outputLabel>
+    </p:panelGrid>
+</ui:composition>

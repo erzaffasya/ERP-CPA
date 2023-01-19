@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">Daftar Forecast</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerForecast.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAINTENANCEFORECAST')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerForecast.updateMaintenance()}"   icon="ui-icon-update" value="Edit"  rendered="#{page.myPegawai.id_jabatan != 13}"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus" rendered="#{page.myPegawai.id_jabatan != 13}">
+                                <f:setPropertyActionListener value="#{controllerForecast.item}" target="#{controllerForecast.item}" />
+                            </p:commandButton>
+
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Forecast</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Forecast"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerForecast.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerForecast.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerForecast.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerForecast.dataForecast}" selectionMode="single" reflow="true"
+                                 selection="#{controllerForecast.item}" rowKey="#{item.id}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:column headerText="Nomor Forecast" sortBy="#{item.no_forecast}" style="width:200px;" filterBy="#{item.no_forecast}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_forecast}" />
+                        </p:column>
+                        <p:column headerText="Triwulan" sortBy="#{item.triwulan}" filterBy="#{item.triwulan}" filterMatchMode="contains">
+                            <h:outputText value="Triwulan #{item.triwulan}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C'}"/>
+                            <h:outputText value="Reject" rendered="#{item.status eq 'R'}"/>
+                        </p:column>
+                        <p:column headerText="Create By" sortBy="#{item.create_name}" filterBy="#{item.create_name}" filterMatchMode="contains">
+                            <h:outputText value="#{item.create_name}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Forecast" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Forecast Nomor :" rendered="#{controllerForecast.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerForecast.item.no_forecast}" style="font-weight:bold" rendered="#{controllerForecast.item.status eq 'D'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerForecast.delete(controllerForecast.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerForecast.item.status eq 'D'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerForecast.item.status eq 'D'}"/>
+                
+                    <h:outputText style="font-weight:bold; color: red;" value="Anda Tidak Dapat menghapus  Forecast Nomor : #{controllerForecast.item.no_forecast}" rendered="#{controllerForecast.item.status ne 'D'}"/>
+                    <p:commandButton id="odButton" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerForecast.item.status ne 'D'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

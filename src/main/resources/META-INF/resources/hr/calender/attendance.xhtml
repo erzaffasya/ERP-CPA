@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="tanggal" value="#{controllerAbsensi.datestart}" >
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </f:viewParam>
+        <f:viewAction action="#{controllerAbsensi.myAttendaceClocks()}" />
+    </f:metadata>
+    <ui:define name="title">Attendance Activities</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Aktivitas absensi harian</h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <h:outputLabel value="Periode"/>
+                        <p:datePicker id="month" view="month" value="#{controllerAbsensi.datestart}" pattern="MMMM  yyyy" yearNavigator="true" yearRange="2019:2050" >
+                            <p:ajax event="dateSelect" listener="#{controllerAbsensi.myAttendaceClocks()}" update="singleDT"/>
+                        </p:datePicker>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAbsensi.dataAbsen}" 
+                                  >
+                        <p:column headerText="Tanggal" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd MMMM yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Jam masuk" >
+                            <h:outputText value="#{item.jam_masuk}" ><f:convertDateTime pattern="HH:mm" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Jam keluar" >
+                            <h:outputText value="#{item.jam_keluar}" ><f:convertDateTime pattern="HH:mm" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Jadwal kerja" >
+                            <h:outputText value="#{item.schedule_des}" />
+                        </p:column>
+                        <p:column headerText="Status Absen" >
+                            <h:outputText value="#{item.status_absen}"/>
+                        </p:column>
+                        <p:column headerText="Keterangan" >
+                            <h:outputText value="#{item.keterangan}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

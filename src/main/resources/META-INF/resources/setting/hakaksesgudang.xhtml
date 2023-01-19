@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.onLoadListHakAksesGudang()}"/></f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('HAKAKSESGUDANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton type="button" value="Cetak" icon="ui-icon-print" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerHrPegawai.ubahhakAksesGudang()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" >
+                        <div class="card card-w-title" >
+                            <h1 style="margin-left: 40px;">Setting Hak Akses Gudang </h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="nama"  value="Nama karywan"/>
+                                <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                                  var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                                  scrollHeight="250" required="true" requiredMessage="Nomor SO harus diisi !!!"   >
+                                    <p:ajax event="itemSelect" listener="#{controllerHrPegawai.onPegawaiSelect}" update="gudangs"/>
+                                </p:autoComplete>
+                            </p:panelGrid>
+                            <p:panelGrid id="gudangs" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Hak akses gudang"/>
+                                <h:panelGroup/>
+                                <h:panelGroup/>
+                                <p:pickList id="kepada" value="#{controllerHrPegawai.gudang}" var="gudang" effect="bounce"
+                                            itemValue="#{gudang}" itemLabel="#{gudang.gudang}"  showCheckbox="true"
+                                            showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{gudangConverter}" responsive="true">
+                                    <f:facet name="sourceCaption">Nama gudang</f:facet>
+                                    <f:facet name="targetCaption">Gudang yang diberikan</f:facet>
+                                    <p:column style="width:85%;">
+                                        <h:outputText value="#{gudang.gudang}" />
+                                    </p:column>
+                                </p:pickList>
+                            </p:panelGrid>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

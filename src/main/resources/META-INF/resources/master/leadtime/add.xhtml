@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vendor</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerLeadtime.initItem()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('LEADTIME')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton type="button" value="Cetak" icon="ui-icon-print" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerLeadtime.tambah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Input Master Leadtime</h1>
+                              <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="origin" value="Origin"/>
+                                <p:inputText id="origin" value="#{controllerLeadtime.item.origin}" required="true" />
+                                
+                                <p:outputLabel for="destination" value="Destination"/>
+                                <p:inputText id="destination" value="#{controllerLeadtime.item.destination}" required="true"/>
+                                
+                                <p:outputLabel for="region" value="Region"/>
+                                <p:inputText id="region" value="#{controllerLeadtime.item.region}"  required="true"/>
+                                
+                                <p:outputLabel for="normaly" value="Normaly"/>
+                                <p:inputNumber id="normaly" value="#{controllerLeadtime.item.normaly}" decimalPlaces="0" required="true"/>
+                                
+                                <p:outputLabel for="spare" value="Spare"/>
+                                <p:inputNumber id="spare" value="#{controllerLeadtime.item.spare}" decimalPlaces="0" required="true" />
+                                
+                                <p:outputLabel for="total" value="Total"/>
+                                <p:inputNumber id="total" value="#{controllerLeadtime.item.total}" decimalPlaces="0"  required="true"/>
+                              </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

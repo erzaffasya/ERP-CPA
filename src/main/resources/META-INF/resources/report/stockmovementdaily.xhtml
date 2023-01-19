@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Mutasi Barang</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerReportMutasi.onLoadListDaily()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOCKMOVEMENTDAILY')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Stock Movement Daily</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerReportMutasi.gudang}">
+                            <f:selectItems value="#{options.comboGudang}" />
+                            
+                        </p:selectOneMenu>
+                        <p:outputLabel  value="Tanggal"/>
+                        <p:calendar id="awal" value="#{controllerReportMutasi.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerReportMutasi.onLoadListDaily()}" update="singleDT" value="Search"/>
+                        
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="singleDT" fileName="Mutasi"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportMutasi.dataMutasi}"  rowIndexVar="index"
+                                  paginator="true" rows="50" paginatorPosition="bottom">
+                        <p:column style="width:50px;">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Material Code" sortBy="#{item.id_barang}" style="width:80px;" filterBy="#{item.id_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}" style="width:400px;" filterBy="#{item.nama_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Satuan"  sortBy="#{item.satuan_besar}" style="width:80px;">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Stok Awal" sortBy="#{item.saldo_awal}" style="width:100px; text-align: right;">
+                            <h:outputText value="#{item.saldo_awal}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Masuk" sortBy="#{item.masuk}" style="width:100px; text-align: right;">
+                            <h:outputText value="#{item.masuk}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Keluar" sortBy="#{item.keluar}" style="width:100px; text-align: right;">
+                            <h:outputText value="#{item.keluar}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Stok Akhir" sortBy="#{item.saldo_akhir}" style="width:100px; text-align: right;">
+                            <h:outputText value="#{item.saldo_akhir}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

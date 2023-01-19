@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Level"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerLevel.item.nama}" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="kode" value="Kode Level"/>
+        <h:panelGroup/>
+        <p:inputText id="kode" value="#{controllerLevel.item.kode}" required="true"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="kepada" value="Level ini terdiri dari kantor"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerLevel.masterkantors}" var="kantor" effect="bounce"
+                    itemValue="#{kantor}" itemLabel="#{kantor.nama}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{kantorConverter}" responsive="true">
+            <f:facet name="sourceCaption">Nama kantor</f:facet>
+            <f:facet name="targetCaption">Kantor yang diberikan</f:facet>
+            <p:column style="width:85%;">
+                <h:outputText value="#{kantor.nama}" />
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

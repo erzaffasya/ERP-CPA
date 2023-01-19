@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+
+        
+        <h:outputText value="Dibuat oleh" />
+        <h:outputText value="Dicek oleh" rendered="#{controllerPermintaanPembelian.item.spv ne null}"/>
+        <h:outputText value="" rendered="#{controllerPermintaanPembelian.item.spv eq null}"/>
+        <h:outputText value="Dicek oleh" rendered="#{controllerPermintaanPembelian.item.checked_name ne null}"/>
+        <h:outputText value="" rendered="#{controllerPermintaanPembelian.item.checked_name eq null}"/>
+        <h:outputText value="Disetujui oleh" rendered="#{controllerPermintaanPembelian.item.approved2 ne null}"/>
+        <h:outputText value="" rendered="#{controllerPermintaanPembelian.item.approved2 eq null}"/>
+        <h:outputText value="Disetujui oleh" />
+        
+        
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_dibuat eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_dibuat eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_dibuat eq null}" />
+        
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.spv_status eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.spv_status eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.spv_status eq null}" />
+        
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_cheked eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_cheked eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_cheked eq null}" />
+        
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved2 eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved2 eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved2 eq null}" />
+        
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved eq null}" />
+        
+        
+        <p:inputText value="#{controllerPermintaanPembelian.item.dibuat_nama}" readonly="true"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.spv_name }" readonly="true" rendered="#{controllerPermintaanPembelian.item.spv ne null}"/>
+        <h:outputText value="" rendered="#{controllerPermintaanPembelian.item.spv eq null}"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.nama_cheked}" readonly="true" rendered="#{controllerPermintaanPembelian.item.checked_name ne null}"/>
+        <h:outputText value="" rendered="#{controllerPermintaanPembelian.item.checked_name eq null}"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.nama_approved2}" readonly="true" rendered="#{controllerPermintaanPembelian.item.approved2 ne null}"/>
+        <h:outputText value="" rendered="#{controllerPermintaanPembelian.item.approved2 eq null}"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.nama_approved}" readonly="true"/>
+
+        
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.spv_jabatan}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan_cheked}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan_approved2}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan_approved}" />
+        
+        
+        <h:outputText value="#{controllerPermintaanPembelian.item.create_date}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.spv_date}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.tgl_cheked}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.tgl_approved2}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.tgl_disetujui}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+    </p:panelGrid>    
+</ui:composition>

@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Sales Order</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerSo.item.nomor}" />
+        <f:viewAction action="#{controllerSo.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah By Penawaran" icon="ui-icon-plus" />
+                            <p:button href="addkontrak.jsf" value="Tambah By Kontrak" icon="ui-icon-plus" />
+                            <p:commandButton type="button" value="Cetak" icon="ui-icon-print" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerSo.ubah('D')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="growl"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerSo.item.kode_user == controllerSo.id_pegawai and controllerSo.item.status eq 'D'}"
+                                             />
+                            <p:commandButton id="send"
+                                             actionListener="#{controllerSo.ubah('S')}"
+                                             value="Send" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="growl"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerSo.item.kode_user == controllerSo.id_pegawai and controllerSo.item.status eq 'D'}"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <ui:include src="form_atas_consignment.xhtml"/>
+                            <ui:include src="form_detail_consignment.xhtml"/>
+                            <ui:include src="form_bawah_consignment.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

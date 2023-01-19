@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-4,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+
+        <h:panelGroup />
+        <h:outputText value="Dibuat oleh" />
+        <h:outputText value="Dichek oleh" />
+        <h:outputText value="Disetujui oleh" />
+        <h:outputText value="Disetujui oleh" />
+        <h:panelGroup />
+        <p:selectBooleanButton id="value1" value="#{controllerPermintaanPembelian.item.status_dibuat}" onLabel="Approve" offLabel="Reject" rendered="#{controllerPermintaanPembelian.item.status_dibuat ne null}" />
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_dibuat eq null}" />
+        <p:selectBooleanButton id="value2" value="#{controllerPermintaanPembelian.item.status_cheked}" onLabel="Approve" offLabel="Reject" rendered="#{controllerPermintaanPembelian.item.status_cheked ne null}"/>
+        <h:outputText  rendered="#{controllerPermintaanPembelian.item.status_cheked eq null}" />
+        <p:selectBooleanButton id="value3" value="#{controllerPermintaanPembelian.item.status_approved2}" onLabel="Approve" offLabel="Reject" rendered="#{controllerPermintaanPembelian.item.status_approved2 ne null}"/>
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved2 eq null}" />
+        <p:selectBooleanButton id="value4" value="#{controllerPermintaanPembelian.item.status_approved}" onLabel="Approve" offLabel="Reject" rendered="#{controllerPermintaanPembelian.item.status_approved ne null}"/>
+        <h:outputText rendered="#{controllerPermintaanPembelian.item.status_approved eq null}" />
+        
+        <h:panelGroup />
+        <p:inputText value="#{controllerPermintaanPembelian.item.dibuat_nama}" readonly="true"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.nama_cheked}" readonly="true"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.nama_approved2}" readonly="true"/>
+        <p:inputText value="#{controllerPermintaanPembelian.item.nama_approved}" readonly="true"/>
+
+        <h:panelGroup />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan_cheked}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan_approved2}" />
+        <h:outputText value="#{controllerPermintaanPembelian.item.jabatan_approved}" />
+        
+        <h:panelGroup />
+        <h:outputText value="#{controllerPermintaanPembelian.item.create_date}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.tgl_cheked}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.tgl_approved2}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+        <h:outputText value="#{controllerPermintaanPembelian.item.tgl_disetujui}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+    </p:panelGrid>    
+</ui:composition>

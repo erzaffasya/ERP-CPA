@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:remoteCommand name="refreshFooter" update=":form:detil:total"/>
+    <p:dataTable id="detil" var="item" value="#{controllerPermintaanPembelian.dataPermintaanPembelianDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+    <p:columnGroup type="header">
+            <p:row>
+                <p:column rowspan="2" headerText="Nama Barang"  />
+                <p:column rowspan="2" headerText="Keperluan" />
+                <p:column rowspan="2" headerText="Spesifikasi" />
+                <p:column colspan="2" headerText="Jumlah" />
+                <p:column rowspan="2" headerText="Satuan" />
+                <p:column rowspan="2" headerText="Harga Satuan" />
+                <p:column rowspan="2" headerText="Total" />
+                <p:column rowspan="2" headerText="Tgl dibutuhkan" />
+                <p:column rowspan="2" headerText="Keterangan" />
+                <p:column rowspan="2" headerText=""  rendered="#{!controllerPermintaanPembelian.item.status_approved eq true}"/>
+            </p:row>
+            <p:row>
+                <p:column  headerText="Order" />
+                <p:column  headerText="Stok" />
+            </p:row>
+        </p:columnGroup>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:inputText value="#{item.id_barang}" id="nama_barang" required="true" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.keperluan}"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="keperluan" value="#{item.keperluan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.spesifikasi}"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="spesifikasi" value="#{item.spesifikasi}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.jumlah_order}"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="jumlah_order" value="#{item.jumlah_order}" style="width:96%" >
+                        <p:ajax listener="#{controllerPermintaanPembelian.hitungTotal(item,ri)}" process="@this" oncomplete="refreshFooter();" update="amount" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.jumlah_stok}"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="jumlah_stok" value="#{item.jumlah_stok}" style="width:96%" >
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="centerColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText id="osatuan_kecil" value="#{item.satuan}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_kecil" value="#{item.satuan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="harga" value="#{item.harga}" style="width:96%" >
+                        <p:ajax listener="#{controllerPermintaanPembelian.hitungTotal(item,ri)}" process="@this" oncomplete="refreshFooter();" update="amount" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <h:outputText id="amount" value="#{item.amount}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.tanggal_dibutuhkan}"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="tanggal_dibutuhkan" value="#{item.tanggal_dibutuhkan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.keterangan}"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="keterangan" value="#{item.keterangan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column rendered="#{!controllerPermintaanPembelian.item.status_approved eq true}" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPermintaanPembelian.onDeleteClicked(item)}" process="@this" oncomplete="refreshFooter();"  update="detil"/>
+            </p:commandButton>
+
+        </p:column>
+        <p:columnGroup type="footer">
+            <p:row>
+                <p:column colspan="6" style="text-align:right" footerText="Totals:" />
+                <p:column colspan="2"  style="text-align:right"  >
+                    <f:facet name="footer">
+                        <h:outputText id="total" value="#{controllerPermintaanPembelian.item.total}" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                    </f:facet>
+                </p:column>
+                <p:column colspan="3" rendered="#{!controllerPermintaanPembelian.item.status_approved eq true}" />
+                <p:column colspan="2" rendered="#{controllerPermintaanPembelian.item.status_approved eq true}" />
+            </p:row>
+        </p:columnGroup>
+
+
+    </p:dataTable>
+
+</ui:composition>

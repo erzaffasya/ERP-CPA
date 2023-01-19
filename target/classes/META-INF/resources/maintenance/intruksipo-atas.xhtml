@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Nomor IntruksiPo"/>
+        <p:inputText id="nomor" value="#{controllerIntruksiPo.item.no_intruksi_po}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar id="tanggal" value="#{controllerIntruksiPo.item.tanggal}" required="true" requiredMessage="Tanggal harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" >
+            <p:ajax event="dateSelect" listener="#{controllerIntruksiPo.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerIntruksiPo.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel  value="Nomor Forecast"/>
+        <p:inputText  value="#{controllerIntruksiPo.item.no_forecast}" readonly="true"/>
+        <p:outputLabel  value="Gudang"/>
+        <p:inputText  value="#{controllerIntruksiPo.item.gudang}" readonly="true"/>
+        <p:outputLabel  value="Keterangan"/>
+        <p:inputText  id="keterangan"  value="#{controllerIntruksiPo.item.keterangan}"   />
+        <p:outputLabel  value="Status"/>
+        <p:selectOneMenu id="status" value="#{controllerIntruksiPo.item.status}" >
+            <f:selectItem itemLabel="Draft" itemValue="D" />
+            <f:selectItem itemLabel="Send" itemValue="S" />
+            <f:selectItem itemLabel="PO Draft" itemValue="C" />
+            <f:selectItem itemLabel="PO Completed" itemValue="A" />
+            <f:selectItem itemLabel="PO Reject" itemValue="R" />
+            <f:selectItem itemLabel="Cancel" itemValue="X" />
+        </p:selectOneMenu>        
+    </p:panelGrid>
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerIntruksiPo.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+
+
+</ui:composition>

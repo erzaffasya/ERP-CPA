@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Purchase Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nama_supplier" value="Nama Supplier :"/>
+        <p:inputText id="nama_supplier" value="#{controllerPo.item.nama_supplier}"   readonly="true"/>
+        <p:outputLabel for="nomor" value="PO No."/>
+        <p:inputText id="nomor" value="#{controllerPo.item.nomor_po}" immediate="true" required="true" requiredMessage="PO No. Harus diisi !!"/>
+        <p:outputLabel for="tanggal" value="PO Date"/>
+        <p:calendar id="tanggal" value="#{controllerPo.item.tanggal}" required="true" requiredMessage="PO Date harus diisi !!"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:inputText id="gudang" value="#{controllerPo.item.gudang}" />
+        
+    </p:panelGrid>
+
+    
+
+</ui:composition>

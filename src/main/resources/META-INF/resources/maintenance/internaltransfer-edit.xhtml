@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Internal Transfer</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerInternalTransfer.item.nomor}" />
+        <f:viewAction action="#{controllerInternalTransfer.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAINTENANCEINTERNALTRANSFER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./internaltransfer.jsf" value="Daftar" icon="ui-icon-plus" />
+                            
+                           <p:commandButton id="simpan"
+                                             actionListener="#{controllerInternalTransfer.maintenance()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Maintenance  InternalTransfer  </h1>
+                            <ui:include src="internaltransfer_atas.xhtml"/>
+                            <ui:include src="internaltransfer_detail.xhtml"/>
+                            <ui:include src="internaltransfer_bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

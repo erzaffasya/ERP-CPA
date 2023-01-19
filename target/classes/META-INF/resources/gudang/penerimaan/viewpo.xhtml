@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Purchase Order</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .nba-grid {
+                width: 100%;
+                table-layout: fixed;
+                word-wrap: break-word;
+                border: 0;
+
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPo.item.id}" />
+        <f:viewAction action="#{controllerPo.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerPo.cetakPenerimaan()}" /> 
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPo.ubah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <ui:include src="form_po_atas.xhtml"/>
+                            <ui:include src="form_po_detail.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <div id="bebas" style="height: 100px;"></div>
+    </ui:define>
+</ui:composition>

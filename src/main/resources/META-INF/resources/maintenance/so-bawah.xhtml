@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-6,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="totaljumlah" value="#{controllerSo.item.total}" style="width:100%; text-align:right;" readonly="true" />
+
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:outputText value="Discount" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="persendiskon" value="#{controllerSo.item.persendiskon}" style="width:30%" required="true">
+            <p:ajax listener="#{controllerSo.hitungDiskon()}" update="diskon dpp ppn grandtotal" />
+        </p:inputNumber>
+        <p:inputNumber id="diskon" value="#{controllerSo.item.total_discount}" style="width:100%; text-align:right;" required="true">
+            <p:ajax event="change" listener="#{controllerSo.hitungDpp()}" update="dpp ppn grandtotal" />
+        </p:inputNumber>
+
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:outputText value="Total Setelah Discount" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="dpp" value="#{controllerSo.item.dpp}" style="width:100%" readonly="true" />
+
+
+
+    </p:panelGrid> 
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+        <p:outputLabel  value="Term Of Payment"/>
+        <p:inputNumber id="top" value="#{controllerSo.item.top}" decimalPlaces="0"/>
+        <h:outputText value="PPN 11%" style="font-weight: bold; text-align:right;"/>
+        <p:selectBooleanCheckbox id="is_ppn" value="#{controllerSo.item.is_ppn}" >
+            <p:ajax event="change" listener="#{controllerSo.hitungPpn()}" update="ppn grandtotal" />
+        </p:selectBooleanCheckbox>
+        <p:inputNumber id="ppn" value="#{controllerSo.item.total_ppn}" style="width:100%" required="true"/>
+        <p:outputLabel  value="Delivery Point"/>
+        <p:textEditor id="deliverypoint" widgetVar="editor3" value="#{controllerSo.item.deliverypoint}" height="100" style="margin-bottom:10px" placeholder="Enter your content">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+        <h:outputText value="Grand Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="grandtotal" value="#{controllerSo.item.grandtotal}" style="width:100%" readonly="true" />
+
+
+    </p:panelGrid>    
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+
+        <p:outputLabel  value="Syarat Lain"/>
+
+        <p:textEditor id="syarat" widgetVar="editor2" value="#{controllerSo.item.syarat}" height="100" style="margin-bottom:10px" placeholder="Enter your content">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>    
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;" rendered="#{controllerSo.item.status eq 'R'}">
+    <p:outputLabel  value="Tanggal Cancel"/>
+    <p:inputText id="tglcancel" value="#{controllerSo.item.tgl_cancel}" />
+    <p:outputLabel  value="Alasan"/>
+        <p:textEditor id="pesan" widgetVar="editor12" value="#{controllerSo.item.pesan}" height="100" style="margin-bottom:10px" >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>    
+
+</ui:composition>

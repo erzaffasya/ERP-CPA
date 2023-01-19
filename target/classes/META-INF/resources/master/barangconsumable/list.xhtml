@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerBarangConsumable.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data Barang Consumable</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('BARANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+
+        <h:form id="form" enctype="multipart/form-data">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar  id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerBarangConsumable.update()}"   icon="ui-icon-update" value="Edit" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerBarangConsumable.item}" target="#{controllerBarangConsumable.item}" />
+                            </p:commandButton>
+
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerBarangConsumable.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Produk</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="productlist"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerBarangConsumable.dataBarangConsumable}" selectionMode="single" reflow="true"
+                                 selection="#{controllerBarangConsumable.item}" rowKey="#{item.id}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerBarangConsumable.update()}" global="false" />
+                        <p:column style="width: 40px" >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Material Code" sortBy="#{item.material_code}" filterBy="#{item.material_code}" filterMatchMode="contains">
+                            <h:outputText value="#{item.material_code}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}" filterBy="#{item.nama_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Part Number" sortBy="#{item.part_number}">
+                            <h:outputText value="#{item.part_number} #{item.part_number}" />
+                        </p:column>
+                        <p:column headerText="Kategori" sortBy="#{item.nama_kategori}">
+                            <h:outputText value="#{item.nama_kategori}" />
+                        </p:column>
+                        <p:column headerText="Kemasan" sortBy="#{item.nama_kemasan}">
+                            <h:outputText value="#{item.nama_kemasan}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" sortBy="#{item.isi_satuan}">
+                            <h:outputText value="#{item.isi_satuan}" />
+                        </p:column>
+                        <p:column headerText="Satuan" sortBy="#{item.nama_satuan_kecil}">
+                            <h:outputText value="#{item.nama_satuan_kecil}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Hapus Produk" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Produk :" />
+                    <h:outputText value="#{controllerBarangConsumable.item.nama_barang}" style="font-weight:bold" id="brg"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerBarangConsumable.delete(controllerBarangConsumable.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+
+
+
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

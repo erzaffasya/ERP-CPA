@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerLemburKaryawan.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Aktifitas pengajuan lembur</h1>
+                    <p:panelGrid id="pnnotifikasi" columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+
+                        <p:dataTable id="notifikasi" value="#{controllerLemburKaryawan.dataNotifikasi}" var="nt" 
+                                     selection="#{controllerLemburKaryawan.LSelectedNotifikasi}" rowKey="#{nt.id}" rendered="#{controllerLemburKaryawan.dataNotifikasi.size() > 0}">
+                            <f:facet name="header">
+                                <div style="text-align: left; font-size: 20px;">Notfikasi untuk diselesaikan</div>
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Pilih semua" style="text-align: left; font-size: 20px; ">
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-11,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                    <h:outputLabel value="#{nt.keterangan}" style="font-size: 16px; "/>
+                                    <p:column>
+                                        <p:commandButton 
+                                            actionListener="#{controllerLemburKaryawan.onDetilSelect(nt.id)}"  
+                                            oncomplete="PF('sidebar5').show()"
+                                            value="Detail" 
+                                            process="@this" 
+                                            update="notifikasi :form:report  :form:detil :form:judul">
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:panelGrid>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <h:outputLabel value="Periode"/>
+                        <p:datePicker id="month" view="month" value="#{controllerLemburKaryawan.bulan}" pattern="MMMM  yyyy" yearNavigator="true" yearRange="2019:2050" >
+                            <p:ajax event="dateSelect" listener="#{controllerLemburKaryawan.onLoadList()}" update="report"/>
+                        </p:datePicker>
+                    </p:panelGrid>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:selectOneMenu id="departemen" value="#{controllerLemburKaryawan.id_departemen}" required="true" style="width: 95%;">
+                            <f:selectItems value="#{controllerLemburKaryawan.comboDepartement}" />
+                            <p:ajax event="change" listener="#{controllerLemburKaryawan.onLoadList()}" update="report"/>
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="jabatan" value="#{controllerLemburKaryawan.id_jabatan}" style="width: 95%;">
+                            <f:selectItems value="#{controllerLemburKaryawan.comboJabatan}" />
+                            <p:ajax event="change" listener="#{controllerLemburKaryawan.onLoadList()}" update="report"/>
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="status" value="#{controllerLemburKaryawan.status}"  style="width: 95%;">
+                            <f:selectItems value="#{controllerLemburKaryawan.comboStatus}" />
+                            <p:ajax event="change" listener="#{controllerLemburKaryawan.onLoadList()}" update="report"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+
+                    <p:dataTable id="report" var="item" value="#{controllerLemburKaryawan.dataLembur}" selectionMode="single" reflow="true" 
+                                 selection="#{controllerLemburKaryawan.item}" rowKey="#{item.id}" rowIndexVar="index" >
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="NIK" />
+                                <p:column headerText="Nama"/>
+                                <p:column headerText="Tanggal Lembur"/>
+                                <p:column headerText="Status"/>
+                                <p:column headerText=" "/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column ><h:outputText value="#{item.nik}"/></p:column>
+                        <p:column ><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                        <p:column ><h:outputText value="#{item.tanggal}"><f:convertDateTime pattern="EEEE, dd MMM yyyy" /></h:outputText></p:column>
+                        <p:column ><h:outputText value="#{item.keterangan_status}"/></p:column>
+                        <p:column>
+                            <p:commandButton 
+                                actionListener="#{controllerLemburKaryawan.onDetilSelect(item.id,item.revisi)}"  
+                                oncomplete="PF('sidebar5').show()"
+                                value="Detail" 
+                                process="@this" 
+                                update="report  :form:detil :form:judul">
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+
+            <p:sidebar widgetVar="sidebar5" fullScreen="true" baseZIndex="10000">
+
+                <p:panelGrid id="judul" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                    <h:panelGroup/>
+                    <p:panelGrid id="detil" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                        <p:staticMessage severity="info" summary="#{controllerLemburKaryawan.item.keterangan_status}" />
+                        <h1>Pengajuan #{controllerLemburKaryawan.item.nama_lembur}</h1>
+                        <p:outputLabel  value="Untuk"/>
+                        <p:outputLabel id="untuk"  value="#{controllerLemburKaryawan.item.nama_pegawai}"/>
+                        <p:outputLabel  value="Yang mengajukan "/>
+                        <p:outputLabel id="untuk"  value="#{controllerLemburKaryawan.item.create_by_name}"/>
+                        <p:outputLabel  value="Jabatan"/>
+                        <p:outputLabel  value="#{controllerLemburKaryawan.item.jabatan}"/>
+                        <p:outputLabel  value="Tanggal pengajuan"/>
+                        <p:outputLabel  value="#{controllerLemburKaryawan.item.create_date}"><f:convertDateTime pattern="dd MMMM yyyy" /></p:outputLabel>
+                        <p:outputLabel  value="Tanggal lembur"/>
+                        <p:outputLabel  value="#{controllerLemburKaryawan.item.tanggal}"/>
+                        <p:outputLabel  value="Keterangan"/>
+                        <p:outputLabel  value="#{controllerLemburKaryawan.item.keterangan}"/>
+                        <p:outputLabel  value="Status"/>
+                        <p:outputLabel  value="#{controllerLemburKaryawan.item.keterangan_status}"/>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:panelGrid id="detiltombol" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                        <p:commandButton value="Tolak" styleClass="red-btn" style="margin-bottom:10px; width: 150px;" rendered="#{controllerLemburKaryawan.item.status ne 'R'}">
+                            <p:ajax  listener="#{controllerLemburKaryawan.persetujuanSelect(false)}"  update="growl :form:report :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()"/>
+                        </p:commandButton>    
+                        <p:commandButton value="Setuju" rendered="#{controllerLemburKaryawan.item.status ne 'A' and controllerLemburKaryawan.item.status ne 'R'}">
+                            <p:ajax  listener="#{controllerLemburKaryawan.persetujuanSelect(true)}"  update="growl :form:report :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()"/>
+                        </p:commandButton>    
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:sidebar>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

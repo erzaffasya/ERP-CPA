@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+
+
+    <ui:define name="title">Posting</ui:define>
+    <f:metadata>
+
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('POSTINGTAHUN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Tutup Tahun</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="tahun" value="Tahun"/>
+                        <p:inputText id="tahun" value="#{controllerAccValue.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerAccValue.postingtahun()}"   icon="ui-icon-search" value="Posting" update="growl"/>
+                    </p:panelGrid>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

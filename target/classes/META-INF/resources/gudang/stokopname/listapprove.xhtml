@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">Delivery Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerStokOpname.onLoadListStokOpname()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOKOPNAMEAPPROVE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Stok Opname</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar DO"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="tglmulai" value="#{controllerStokOpname.tglmulai}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="tglselesai" value="#{controllerStokOpname.tglselesai}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerStokOpname.status}">
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Upload" itemValue="U" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                            <f:selectItem itemLabel="Posting" itemValue="P" />
+                        </p:selectOneMenu>        
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerStokOpname.onLoadListStokOpname()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerStokOpname.dataStokOpname}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerStokOpname.itemso}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="ri">
+                        <p:ajax 
+                            event="rowDblselect" 
+                            listener="#{controllerStokOpname.viewapprove()}" 
+                            global="false" />
+                        <ui:include src="listdata.xhtml"/>
+                </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerGudang.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('GUDANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+        <p:growl id="growl" showDetail="true" />
+        <div class="ui-g" >
+            <div class="ui-g-12" >
+                <p:toolbar id="tbar">
+                    <f:facet name="left" >
+                        <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                        <p:commandButton actionListener="#{controllerGudang.update()}"   icon="ui-icon-update" value="Edit"  id="btn-edit"/>
+                        <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                            <f:setPropertyActionListener value="#{controllerGudang.item}" target="#{controllerGudang.item}" />
+                        </p:commandButton>
+                        <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerGudang.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                    </f:facet>
+                </p:toolbar>
+                <p:sticky target="tbar" />
+            </div>
+        </div>
+        
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Gudang</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerGudang.dataGudang}" selectionMode="single" selection="#{controllerGudang.item}" 
+                                 rowKey="#{item.id_gudang}" paginator="true" rows="25" tableStyle="table-layout: auto;" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerGudang.update()}" global="false" />
+                        <p:column headerText="Id Gudang" sortBy="#{item.id_gudang}">
+                            <h:outputText value="#{item.id_gudang}" />
+                        </p:column>
+
+                        <p:column headerText="Nama Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}"  filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Kontak Person" sortBy="#{item.nama_kontak}" filterBy="#{item.nama_kontak}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_kontak}" />
+                        </p:column>
+                        <p:column headerText="DSM" sortBy="#{item.dsm_name}"  filterBy="#{item.dsm_name}" filterMatchMode="contains">
+                            <h:outputText value="#{item.dsm_name}" />
+                        </p:column>
+                        <p:column headerText="Telpon" sortBy="#{item.telpon}">
+                            <h:outputText value="#{item.telpon}" />
+                        </p:column>
+                        <p:column headerText="Alamat" sortBy="#{item.alamat}">
+                            <h:outputText value="#{item.alamat}" escape="false"/>
+                        </p:column>
+                        
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Gudang :" />
+                    <h:outputText value="#{controllerGudang.item.gudang}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerGudang.delete(controllerGudang.item.id_gudang)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

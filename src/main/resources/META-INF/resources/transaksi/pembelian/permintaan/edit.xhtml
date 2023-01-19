@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Permintaan Pembelian</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPermintaanPembelian.item.no_pp}" />
+        <f:viewAction action="#{controllerPermintaanPembelian.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PERMINTAAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerPermintaanPembelian.cetak()}" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPermintaanPembelian.ubah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{(controllerPermintaanPembelian.item.dibuat==controllerPermintaanPembelian.pegawai.id_pegawai and !controllerPermintaanPembelian.item.status_dibuat eq true) or (controllerPermintaanPembelian.item.checked_name==controllerPermintaanPembelian.pegawai.id_pegawai and controllerPermintaanPembelian.item.status_dibuat eq true and !controllerPermintaanPembelian.item.status_cheked eq true) or (controllerPermintaanPembelian.item.disetujui==controllerPermintaanPembelian.pegawai.id_pegawai and controllerPermintaanPembelian.item.status_cheked eq true and !controllerPermintaanPembelian.item.status_approved eq true)}"/>
+
+
+                            <p:commandButton id="sendPP"
+                                             actionListener="#{controllerPermintaanPembelian.sendPP()}"
+                                             value="Send PP" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPermintaanPembelian.item.dibuat==controllerPermintaanPembelian.pegawai.id_pegawai and !controllerPermintaanPembelian.item.status_dibuat eq true}"/>
+                            <p:commandButton id="createPO"
+                                             actionListener="#{controllerPermintaanPembelian.createPO()}"
+                                             value="Create PO" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{(controllerPermintaanPembelian.pegawai.id_jabatan_new == 128 or controllerPermintaanPembelian.pegawai.id_jabatan_new == 150 or controllerPermintaanPembelian.pegawai.id_jabatan_new == 178) and controllerPermintaanPembelian.item.status_approved eq true}"/>
+
+
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Permintaan Pembelian dan Pengajuan Dana</h1>
+                            <ui:include src="form_atas.xhtml"/>
+                            <ui:include src="form_detail.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-4" 
+                                         layout="grid" 
+                                         styleClass="ui-panelgrid-blank form-group" 
+                                         style="border:0px none; background-color:transparent; text-align: left;" 
+                                         rendered="#{!controllerPermintaanPembelian.item.status_approved eq true}">
+                                <p:editor  id="pesan" widgetVar="editor4" value="#{controllerPermintaanPembelian.item.pesan}" 
+                                           height="200" style="margin-bottom:10px"  
+                                           />
+                            </p:panelGrid>    
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+                                
+                                
+                                <p:commandButton id="approvespv"
+                                                 actionListener="#{controllerPermintaanPembelian.approveSpv(true)}"
+                                                 value="Approve SPV" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-check-square"
+                                                 rendered="#{controllerPermintaanPembelian.item.spv eq controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and controllerPermintaanPembelian.item.status_dibuat eq true 
+                                                             and !controllerPermintaanPembelian.item.spv_status eq true}"/>
+                                <p:commandButton id="rejectspv"
+                                                 actionListener="#{controllerPermintaanPembelian.approveSpv(false)}"
+                                                 value="Reject SPV" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-close"
+                                                 rendered="#{controllerPermintaanPembelian.item.spv eq controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and controllerPermintaanPembelian.item.status_dibuat eq true 
+                                                             and !controllerPermintaanPembelian.item.spv_status eq true}"/>
+
+                                
+                                <p:commandButton id="approve"
+                                                 actionListener="#{controllerPermintaanPembelian.approveAtasan(true)}"
+                                                 value="Approve " 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-check-square"
+                                                 rendered="#{controllerPermintaanPembelian.item.checked_name eq controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and ((controllerPermintaanPembelian.item.status_dibuat eq true and controllerPermintaanPembelian.item.spv eq null) or (controllerPermintaanPembelian.item.spv_status eq true and controllerPermintaanPembelian.item.spv ne null)) 
+                                                             and !controllerPermintaanPembelian.item.status_cheked eq true}"/>
+                                <p:commandButton id="reject"
+                                                 actionListener="#{controllerPermintaanPembelian.approveAtasan(false)}"
+                                                 value="Reject" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-close"
+                                                 rendered="#{controllerPermintaanPembelian.item.checked_name==controllerPermintaanPembelian.pegawai.id_pegawai and controllerPermintaanPembelian.item.status_dibuat eq true and !controllerPermintaanPembelian.item.status_cheked eq true}"/>
+
+
+                                <p:commandButton id="approvekeuangan"
+                                                 actionListener="#{controllerPermintaanPembelian.approveKeuangan(true)}"
+                                                 value="Approve" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-floppy-o"
+                                                 rendered="#{controllerPermintaanPembelian.item.approved2==controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and ((controllerPermintaanPembelian.item.status_cheked eq true and controllerPermintaanPembelian.item.checked_name ne null) or (controllerPermintaanPembelian.item.checked_name eq null and controllerPermintaanPembelian.item.spv eq null and controllerPermintaanPembelian.item.status_dibuat eq true)  or (controllerPermintaanPembelian.item.checked_name eq null and controllerPermintaanPembelian.item.spv ne null and controllerPermintaanPembelian.item.spv_status eq true)) 
+                                                             and !controllerPermintaanPembelian.item.status_approved2 eq true and controllerPermintaanPembelian.item.status_approved eq null}"/>
+                                <p:commandButton id="rejectkeuangan"
+                                                 actionListener="#{controllerPermintaanPembelian.approveKeuangan(false)}"
+                                                 value="Reject" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-floppy-o"
+                                                 rendered="#{controllerPermintaanPembelian.item.approved2==controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and ((controllerPermintaanPembelian.item.status_cheked eq true and controllerPermintaanPembelian.item.checked_name ne null) or (controllerPermintaanPembelian.item.checked_name eq null and controllerPermintaanPembelian.item.spv eq null and controllerPermintaanPembelian.item.status_dibuat eq true)  or (controllerPermintaanPembelian.item.checked_name eq null and controllerPermintaanPembelian.item.spv ne null and controllerPermintaanPembelian.item.spv_status eq true)) 
+                                                             and (controllerPermintaanPembelian.item.status_approved2 eq true or controllerPermintaanPembelian.item.status_approved2 eq null) and controllerPermintaanPembelian.item.status_approved eq null}"/>
+
+
+
+
+                                <p:commandButton id="approvedirektur"
+                                                 actionListener="#{controllerPermintaanPembelian.approveDirektur(true)}"
+                                                 value="Approve" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-floppy-o"
+                                                 rendered="#{controllerPermintaanPembelian.item.disetujui==controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and ((controllerPermintaanPembelian.item.status_approved2 eq true and controllerPermintaanPembelian.item.approved2 != null) or (controllerPermintaanPembelian.item.approved2==null and controllerPermintaanPembelian.item.status_dibuat eq true)) 
+                                                             and !controllerPermintaanPembelian.item.status_approved eq true }"/>
+                                <p:commandButton id="rejectdirektur"
+                                                 actionListener="#{controllerPermintaanPembelian.approveDirektur(false)}"
+                                                 value="Reject" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-floppy-o"
+                                                 rendered="#{controllerPermintaanPembelian.item.disetujui==controllerPermintaanPembelian.pegawai.id_pegawai 
+                                                             and ((controllerPermintaanPembelian.item.status_approved2 eq true and controllerPermintaanPembelian.item.approved2 != null) or (controllerPermintaanPembelian.item.approved2==null and controllerPermintaanPembelian.item.status_dibuat eq true)) 
+                                                             and (controllerPermintaanPembelian.item.status_approved eq true or controllerPermintaanPembelian.item.status_approved eq null)}"/>
+                            </p:panelGrid> 
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                                         style="border:0px none; background-color:transparent; text-align: left;"
+                                         rendered="#{controllerPermintaanPembelian.dataPesan != null}">
+                                <p:dataTable id="pesanDT" var="item" value="#{controllerPermintaanPembelian.dataPesan}" 
+                                             paginator="false" >
+                                    <p:column headerText="dari"  style="width:30px;">
+                                        <h:outputText value="#{item.nama}" />
+                                    </p:column>
+                                    <p:column headerText="Pesan"  style="width:120px;">
+                                        <h:outputText value="#{item.pesan}" escape="false"></h:outputText>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panelGrid>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

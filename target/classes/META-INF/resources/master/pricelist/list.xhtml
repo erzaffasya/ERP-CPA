@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Bottom Price</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPricelist.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PRICELIST')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h1>Form Input Bottom Price</h1>
+                            </p:panelGrid>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="gudang" value="Gudang"/>
+                                <p:selectOneMenu id="gudang" value="#{controllerPricelist.id_gudang}" required="true">
+                                    <p:ajax event="change" listener="#{controllerPricelist.onLoad()}" update="form"/>
+                                    <f:selectItems value="#{options.comboGudang}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:fileUpload fileUploadListener="#{controllerPricelist.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                          update="form" fileLimit="3" sizeLimit="100000000"  allowTypes="/(\.|\/)(gif|jpe?g|png|csv)$/"/>
+                            <div style="text-align: right">
+                                <h:commandLink  id="xls">
+                                    <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                    <p:dataExporter type="csv" target="detil" fileName="Bottom Price #{controllerPricelist.item.gudang}"/>
+                                </h:commandLink>
+                            </div>
+                            <p:dataTable id="detil" var="item" value="#{controllerPricelist.dataPricelistDetail}"  widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+                                <p:column headerText="Nama Barang" >
+                                    <h:outputText value="#{item.nama_barang}"  />
+                                </p:column>
+                                <p:column headerText="Kode Barang" >
+                                    <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+                                </p:column>
+                                <p:column headerText="Unit Price" styleClass="rightColumnContent">
+                                    <h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="Satuan" >
+                                    <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

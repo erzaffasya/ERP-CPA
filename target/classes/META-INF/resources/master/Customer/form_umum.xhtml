@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="idcustomer" value="Kode"/>
+        <p:inputText id="idcustomer" value="#{controllerCustomer.item.id_kontak}" maxlength="8" required="true"/>
+        <p:outputLabel for="isaktif" value="Aktif"/>
+        <p:selectBooleanCheckbox id="isaktif" value="#{controllerCustomer.item.isaktif}" />
+        <p:outputLabel for="customer" value="Perusahaan"/>
+        <p:inputText id="customer" value="#{controllerCustomer.item.customer}" required="true"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="@next" value="Salesman"/>
+        <p:selectOneMenu id="salesman" value="#{controllerCustomer.item.id_sales}">
+            <f:selectItems value="#{options.comboMarketingAll}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="id_kategori_customer" value="Kategori"/>
+        <p:selectOneMenu id="id_kategori_customer" value="#{controllerCustomer.item.id_kategori_customer}">
+            <f:selectItems value="#{options.kategoriCustomer}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="id_sektor" value="Sektor"/>
+        <p:selectOneMenu id="id_sektor" value="#{controllerCustomer.item.id_sektor}">
+            <f:selectItems value="#{options.sektor}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="no_npwp" value="NPWP"/>
+        <p:inputText id="no_npwp" value="#{controllerCustomer.item.no_npwp}" />
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="alamat_npwp" value="Alamat NPWP"/>
+        <p:textEditor id="alamat_npwp" widgetVar="editor1" value="#{controllerCustomer.item.alamat_npwp}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="telepon" value="Telpon"/>
+        <p:inputText id="telepon" value="#{controllerCustomer.item.telepon}" />
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="fax" value="Fax"/>
+        <p:inputText id="fax" value="#{controllerCustomer.item.fax}" />
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="email" value="Email"/>
+        <p:inputText id="email" value="#{controllerCustomer.item.email}" />
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="website" value="Website"/>
+        <p:inputText id="website" value="#{controllerCustomer.item.website}" />
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="batas_kredit" value="Batas Kredit"/>
+        <p:inputNumber id="batas_kredit" value="#{controllerCustomer.item.batas_kredit}" />
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="top" value="Term Of Payment"/>
+        <p:inputNumber id="top" value="#{controllerCustomer.item.top}" decimalPlaces="0"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="nama_bank" value="Bank"/>
+        <p:textEditor id="nama_bank" widgetVar="editor2" value="#{controllerCustomer.item.nama_bank}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="alamat_penagihan" value="Alamat Penagihan"/>
+        <p:textEditor id="alamat_penagihan" widgetVar="editor3" value="#{controllerCustomer.item.alamat_penagihan}" height="100" style="margin-bottom:10px" placeholder="ketik alamat penagihan">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="@next" value="Alamat Pengiriman"/>
+        <p:textEditor id="alamat_kirim" widgetVar="editor15" value="#{controllerCustomer.item.alamat_kirim}" height="100" style="margin-bottom:10px" placeholder="Ketik alamat pengiriman">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup/>
+        <h:panelGroup/>
+    </p:panelGrid>
+
+</ui:composition>

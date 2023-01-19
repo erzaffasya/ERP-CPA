@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable  id="detil" var="item" value="#{controllerDecanting.dataDecantingDetail}" editable="true" editMode="cell" widgetVar="cellCars1" rowIndexVar="ri">
+
+        <f:facet name="header">Asal Barang</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />        
+        </p:column>
+
+        <p:column headerText="Kode Barang" >
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Qty Besar" >
+            <h:outputText id="oqtybesar" value="#{item.qtybesar}" style="text-align: right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Satuan Besar" >
+            <h:outputText id="osatuan_besar" value="#{item.satuan_besar}" style="text-align: center"/>
+        </p:column>
+        <p:column headerText="Qty Kecil">
+            <h:outputText value="#{item.qty}" id="oqty" style="text-align: right"><f:convertNumber pattern="#,##0.00" id="oqty"/></h:outputText>
+        </p:column>
+        <p:column headerText="Satuan Kecil" >
+            <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}" style="text-align: center"/>
+        </p:column>
+        
+
+        <p:column headerText="Packaging">
+            <h:outputText value="#{item.packaging}" style="text-align: right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Batch Number" >
+            <h:outputText value="#{item.batch}"></h:outputText>
+        </p:column>
+        
+    </p:dataTable>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-6,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+        <h:panelGroup />
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="totalatas" value="#{controllerDecanting.item.totalatas}" style="width:100%; text-align:right;" readonly="true" />
+    </p:panelGrid>
+</ui:composition>

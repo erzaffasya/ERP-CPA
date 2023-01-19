@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Stok Opname</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .old {
+                background-color: #fca752 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .red-row {
+                background-color: red !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .noBorders tr, .noBorders td {
+                background: none !important;
+                border: none !important;
+            }    
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }    
+
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerStokOpname.itemso.id}" />
+        <f:viewAction action="#{controllerStokOpname.onLoadAkuntansi()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOKOPNAMEAKUNTANSI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Stok Opname " style="font-size: 24px;"/>
+                                <p:link href="viewstokopname.jsf?id=#{controllerStokOpname.itemso.id}" value="Hasil Stok Opname" target="_blank"/>
+                                
+                            </p:panelGrid>
+                            <p:panelGrid columns="6" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel  value="Nomor " style="text-align: "/>
+                                <p:outputLabel   value=": #{controllerStokOpname.itemso.nomor}"/>
+                                <p:outputLabel  value="Tanggal "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.tanggal}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel  value="Tgl.Upload "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.upload_date}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy HH:mm:ss" />
+                                </p:outputLabel>    
+                                <p:outputLabel  value="Gudang "/>
+                                <p:outputLabel   value=": #{controllerStokOpname.itemso.gudang}"/>
+                                <p:outputLabel  value="Tgl.Dibuat "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.create_date}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy HH:mm:ss" />
+                                </p:outputLabel>    
+                                <p:outputLabel  value="Tgl.Approve "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.approved_date}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy HH:mm:ss" />
+                                </p:outputLabel>    
+                                <p:outputLabel  value="Status " style="text-align: "/>
+                                <p:outputLabel   value=": Approved" rendered="#{controllerStokOpname.itemso.status eq 'A'}"/>
+                                <p:outputLabel   value=": Posting" rendered="#{controllerStokOpname.itemso.status eq 'P'}"/>
+                                <p:outputLabel  value="Persediaan " style="text-align: "/>
+                                <h:outputText   value="#{controllerStokOpname.itemso.total}">
+                                    <f:convertNumber pattern=": #,##0.00" />
+                                </h:outputText>
+                                <div style="text-align: right">
+                                    <h:commandLink  id="xls">
+
+                                        <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                        <p:dataExporter type="xls" target="tbl-detil" fileName="Stokopnamehpp"/>
+                                    </h:commandLink>
+                                </div>
+                            </p:panelGrid>
+                            <p:dataTable id="tbl-detil" var="item" value="#{controllerStokOpname.dataStok}"  tableStyle="table-layout: auto;" rowIndexVar="ri"
+                                         rowStyleClass="#{(item.hpp eq 0) ? 'old' : null}">
+                                <p:column >
+                                    <f:facet name="header">
+                                        <h:outputText value="No" />
+                                    </f:facet>
+                                    <h:outputText 
+                                        value="#{ri + 1}" />
+                                </p:column>
+                                <p:column headerText="Material Code">
+                                    <h:outputText value="#{item.id_barang}" />
+                                </p:column>
+                                <p:column headerText="Barang">
+                                    <h:outputText value="#{item.nama_barang}" />
+                                </p:column>
+                                <p:column headerText="Referensi">
+                                    <h:outputText value="#{item.reff}" />
+                                </p:column>
+                                <p:column headerText="QTY" styleClass="rightColumnContent">
+                                    <h:outputText value="#{item.stok / item.isi_satuan}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="Satuan">
+                                    <h:outputText value="#{item.satuan_besar}" />
+                                </p:column>
+                                <p:column headerText="QTY" styleClass="rightColumnContent">
+                                    <h:outputText value="#{item.stok}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="Satuan">
+                                    <h:outputText value="#{item.satuan_kecil}" />
+                                </p:column>
+                                <p:column headerText="HPP" styleClass="rightColumnContent">
+                                    <h:outputText value="#{item.hpp}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Jumlah" styleClass="rightColumnContent">
+                                    <h:outputText value="#{item.stok * item.hpp}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                <p:columnGroup type="footer" >
+                                    <p:row>
+                                        <p:column colspan="9" style="text-align:right" footerText="Total Persediaan : " >
+
+                                        </p:column>
+                                        <p:column style="text-align:right;" >
+                                            <f:facet name="footer">
+                                                <h:outputText value="#{controllerStokOpname.itemso.total}" >
+                                                    <f:convertNumber pattern="#,##0.00" />
+                                                </h:outputText>
+                                            </f:facet>
+                                        </p:column>
+                                    </p:row>
+                                </p:columnGroup>
+                            </p:dataTable>
+
+                            <p:panelGrid columns="6" columnClasses="ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:commandButton id="reloadhpp" value="Reload HPP"  icon="fa  fa-floppy-o" >
+                                    <p:ajax  listener="#{controllerStokOpname.onReloadHpp(controllerStokOpname.itemso.id)}" update="growl"/>
+                                </p:commandButton>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

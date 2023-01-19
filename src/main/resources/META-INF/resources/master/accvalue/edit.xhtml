@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Begining Balance Account</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerAccValue.item.account}" />
+        <f:viewParam name="tahun" value="#{controllerAccValue.tahun}" />
+        <f:viewAction action="#{controllerAccValue.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('ACCVALUE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton actionListener="#{controllerAccValue.add()}"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton type="button" value="Cetak" icon="ui-icon-print" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerAccValue.ubah()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1 >BEGGINING BALANCE ACCOUNT TAHUN #{controllerAccValue.tahun}</h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="tahun" value="Tahun"/>
+                                <p:inputText id="tahun" value="#{controllerAccValue.tahun}" required="true"/>
+                                <p:outputLabel for="kode" value="Code"/>
+                                <p:inputText id="kode" value="#{controllerAccValue.item.account}" required="true" readonly="true" />
+                                <p:outputLabel for="account" value="Description"/>
+                                <p:inputText id="account" value="#{controllerAccValue.item.nama_account}" readonly="true"/>
+                                <p:outputLabel for="debit" value="Debit"/>
+                                <p:inputNumber id="debit" value="#{controllerAccValue.item.debit}" />
+                                <p:outputLabel for="credit" value="Credit"/>
+                                <p:inputNumber id="credit" value="#{controllerAccValue.item.credit}" />
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

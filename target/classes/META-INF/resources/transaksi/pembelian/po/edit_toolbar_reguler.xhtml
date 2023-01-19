@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerPo.cetakreguler()}" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPo.ubahReguler(controllerPo.item.is_purchasing,'P')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPo.item.is_checked1 eq null and controllerPo.item.is_approve eq null and controllerPo.item.purchasing eq controllerPo.id_pegawai}"/>
+
+                            <p:commandButton id="sendPo"
+                                             actionListener="#{controllerPo.ubahReguler(true,'P')}"
+                                             value="Send PO" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPo.item.is_purchasing eq null and controllerPo.item.is_checked1 eq null and controllerPo.item.is_approve eq null and controllerPo.item.purchasing eq controllerPo.id_pegawai}"/>
+                                             
+                            <p:commandButton id="simpanchecked"
+                                             actionListener="#{controllerPo.ubahReguler(controllerPo.item.is_checked1,'C')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPo.item.is_purchasing eq true  and controllerPo.item.is_approve eq null and controllerPo.item.checked1 eq controllerPo.id_pegawai}"/>
+
+                            <p:commandButton id="checked"
+                                             actionListener="#{controllerPo.ubahReguler(true,'C')}"
+                                             value="Approve" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-check"
+                                             rendered="#{controllerPo.item.is_purchasing eq true and controllerPo.item.is_checked1 ne true and controllerPo.item.is_approve eq null and controllerPo.item.checked1 eq controllerPo.id_pegawai}"/>
+                            
+                            <p:commandButton id="reject"
+                                             actionListener="#{controllerPo.ubahReguler(false,'C')}"
+                                             value="Reject" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-close"
+                                             style="background-color: red;"
+                                             rendered="#{controllerPo.item.is_purchasing eq true and controllerPo.item.is_checked1 ne false and controllerPo.item.is_approve eq null and controllerPo.item.checked1 eq controllerPo.id_pegawai}"/>
+                                             
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+</ui:composition>

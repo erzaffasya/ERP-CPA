@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid id="panel" columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="IT No"/>
+        <p:inputText id="nomor" value="#{controllerInternalTransfer.item.nomor}"  readonly="true"/>
+        <p:outputLabel for="referensi" value="IO Number"/>
+        <p:inputText id="referensi" value="#{controllerInternalTransfer.item.nomor_io}"  />
+        <p:outputLabel for="tanggal" value="Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal"  value="#{controllerInternalTransfer.item.tanggal}" required="true" requiredMessage="Tanggal harus diisi !!!">
+            <p:ajax event="dateSelect" listener="#{controllerInternalTransfer.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerInternalTransfer.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel for="kontak" value="Contact Person"/>
+        <p:inputText id="kontak" value="#{controllerInternalTransfer.item.nama_penerima}"  />
+        <p:outputLabel for="gudangasal" value="Gudang Asal"/>
+        <p:inputText id="gudangasal" value="#{controllerInternalTransfer.item.gudang_asal}" readonly="true" />
+        <p:outputLabel for="gudangtujuan" value="Gudang Tujuan"/>
+        <p:inputText id="gudangtujuan" value="#{controllerInternalTransfer.item.gudang_tujuan}" readonly="true" />
+        <p:outputLabel for="sipb" value="SIPB No"/>
+        <p:inputText id="sipb" value="#{controllerInternalTransfer.item.sipb}" />
+        <p:outputLabel for="telpon" value="Telpon"/>
+        <p:inputText id="telpon" value="#{controllerInternalTransfer.item.telpon}"  />
+        <p:outputLabel for="tanggalkirim" value="Delivery Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggalkirim"  value="#{controllerInternalTransfer.item.tanggal_kirim}"  />
+        <p:outputLabel for="jamkirim" value="Delivery time"/>
+        <p:inputText id="jamkirim" value="#{controllerInternalTransfer.item.jam_kirim}"  />
+        <p:outputLabel for="@next" value="External Tranporter"/>
+        <p:selectBooleanCheckbox  value="#{controllerInternalTransfer.item.istransporter}" >
+            <p:ajax  event="change" update="panel1" /> 
+        </p:selectBooleanCheckbox>
+    </p:panelGrid>
+    <p:panelGrid id="panel1" columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="driver" value="Driver"/>
+        <h:panelGroup id="driver">
+            <p:inputText  value="#{controllerInternalTransfer.item.driver}"  rendered="#{controllerInternalTransfer.item.istransporter == true}"/>
+            <p:selectOneMenu   value="#{controllerInternalTransfer.item.idtransporter}"  rendered="#{controllerInternalTransfer.item.istransporter == false}">
+                <f:selectItem itemLabel="Pilih Driver" itemValue=""/>
+                <f:selectItems value="#{options.comboDriver}" />
+            </p:selectOneMenu>
+        </h:panelGroup>
+        <p:outputLabel for="@next" value="Transporter" id="otransporter" rendered="#{controllerInternalTransfer.item.istransporter == true}"/>
+        <p:inputText id="transporter" value="#{controllerInternalTransfer.item.transporter}" rendered="#{controllerInternalTransfer.item.istransporter == true}"/>
+        <h:panelGroup rendered="#{controllerInternalTransfer.item.istransporter == false}"/>
+        <h:panelGroup rendered="#{controllerInternalTransfer.item.istransporter == false}"/>
+        <p:outputLabel for="@next" value="Jenis Kendaraan"/>
+        <p:selectOneMenu id="idjenis" value="#{controllerInternalTransfer.item.id_jenis}" >
+            <f:selectItem itemLabel="Pilih Jenis Kendaraan" itemValue=""/>
+            <f:selectItems value="#{optionKendaraan.jenis}" />
+            <p:ajax listener="#{controllerInternalTransfer.changeJenis}" update="nopol"/>
+        </p:selectOneMenu>
+        <p:outputLabel for="@next" value="Nopol"/>
+        <h:panelGroup id="nopol">
+        <p:inputText  value="#{controllerInternalTransfer.item.nopol}"  rendered="#{controllerInternalTransfer.item.istransporter == true}"/>
+        <p:selectOneMenu  value="#{controllerInternalTransfer.item.id_kendaraan}" rendered="#{controllerInternalTransfer.item.istransporter == false}">
+            <f:selectItem itemLabel="Pilih Kendaraan" itemValue=""/>
+            <f:selectItems value="#{optionKendaraan.kendaraan}" />
+        </p:selectOneMenu>
+        </h:panelGroup>
+    </p:panelGrid>
+    <p:panelGrid  columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="@next" value="Biaya"/>
+        <p:inputNumber id="biaya" value="#{controllerInternalTransfer.item.biaya}"/>
+        <p:outputLabel for="@next" value="Total Liter"/>
+        <p:inputNumber id="total" value="#{controllerInternalTransfer.item.total}" decimalPlaces="0" readonly="true"/>
+    </p:panelGrid>
+</ui:composition>

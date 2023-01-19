@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+              version="2.2">
+    
+    <!--
+        This file is not mandatory.
+        However, it is necessary to JoinFaces scan types handled by JSF.
+        Example of types handled by JSF: ManagedBean, FacesComponent,
+            FacesValidator, FacesConverter, FacesBehaviorRenderer,
+            ResourceDependency, ResourceDependencies, ListenerFor,
+            ListenersFor, UIComponent, Validator, Converter,
+            Renderer, FacesBehavior, PhaseListener,
+            FaceletsResourceResolver, Resource, NamedEvent        
+    -->    
+    <name>Ultima-Prime</name>
+    
+    <ordering>
+        <after>
+            <name>primfaces</name>
+        </after>
+    </ordering>
+    
+    <application>
+        <!--        <resource-handler>org.omnifaces.resourcehandler.CombinedResourceHandler</resource-handler>-->
+        <el-resolver>
+            org.springframework.web.jsf.el.SpringBeanFacesELResolver
+        </el-resolver>
+        <!--        <system-event-listener>
+            <system-event-listener-class>net.sra.prime.ultima.view.HandleResourceListener</system-event-listener-class>
+            <system-event-class>javax.faces.event.PreRenderViewEvent</system-event-class>
+        </system-event-listener>        -->
+    </application>
+    
+    
+    
+    <!--    <name>primefaces_ultima</name>
+    -->
+    <component>
+        <component-type>org.primefaces.component.UltimaMenu</component-type>
+        <component-class>net.sra.prime.ultima.primefaces.ultima.component.menu.UltimaMenu</component-class>
+    </component>
+    
+    <render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.UltimaMenuRenderer</renderer-type>
+            <renderer-class>net.sra.prime.ultima.primefaces.ultima.component.menu.UltimaMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+    
+    
+    <application>
+        <action-listener>
+            org.primefaces.application.DialogActionListener
+        </action-listener>
+        <navigation-handler>
+            org.primefaces.application.DialogNavigationHandler
+        </navigation-handler>
+        <view-handler>
+            org.primefaces.application.DialogViewHandler
+        </view-handler>
+    </application>
+    
+    
+    
+    
+    
+    
+</faces-config>

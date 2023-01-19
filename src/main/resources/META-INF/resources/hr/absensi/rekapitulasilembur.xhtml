@@ -1,0 +1,198 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <ui:define name="head">
+        <style type="text/css">
+            .old {
+                background-color: #fca752 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .red-row {
+                background-color: red !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .noBorders tr, .noBorders td {
+                background: none !important;
+                border: none !important;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Attendance Activities</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('REKAPITULASILEMBUR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" life="8000"/>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+
+
+                    <p:panelGrid id="panel1" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none;  ">
+                        <p:outputLabel for="nama"  value="Nama Pegawai"/>
+                        <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                          var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                          scrollHeight="250" required="true" requiredMessage="Nama pegawai harus diisi !!!" style="width: 98%;">
+                            <p:ajax event="itemSelect" listener="#{controllerAbsensiLembur.onPegawaiSelect}" update="singleDT" />
+                        </p:autoComplete>
+                    </p:panelGrid>
+                    <p:panelGrid id="panel2" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="bulan" value="Periode" />
+                        <p:selectOneMenu id="bulan" value="#{controllerAbsensiLembur.month}">
+                            <f:selectItems value="#{options.comboBulan}" />
+                            <p:ajax event="change" listener="#{controllerAbsensiLembur.onAttendaceClocks()}" update="singleDT"/> 
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerAbsensiLembur.year}" maxlength="4">
+                            <p:ajax event="change" listener="#{controllerAbsensiLembur.onAttendaceClocks()}" update="singleDT"/> 
+                        </p:inputText>
+                    </p:panelGrid>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAbsensiLembur.dataAbsen}" rowIndexVar="ri" editable="true" >
+                        <p:ajax event="rowEdit" listener="#{controllerAbsensiLembur.onRowEdit}" update=":form:growl  singleDT" />
+                        <p:ajax event="rowEditCancel" listener="#{controllerAbsensiLembur.onRowCancel}" update=":form:growl singleDT" />
+
+                        <f:facet name="header">
+                            <h:outputText value="Absen #{controllerAbsensiLembur.itemPegawai.nama} Periode #{options.getNamaBulan(controllerAbsensiLembur.month)}" />
+                        </f:facet>
+                        <p:columnGroup type="header">  
+                            <p:row>  
+                                <p:column headerText="Tanggal" rowspan="2" style="width: 120px;"/>  
+                                <p:column headerText="Jadwal Kerja" rowspan="2" style="width: 120px;"/>  
+                                <p:column headerText="Absen" rowspan="2" style="width: 90px;"/>  
+
+                                <p:column headerText="Lembur" colspan="3" style="width: 120px;"/>  
+                                <p:column headerText="Pengajuan Lembur " colspan="3" style="width: 120px;"/>  
+                                <p:column headerText="Total" rowspan="2" style="width: 30px;"/>  
+                                <p:column headerText="Kalkulasi Jam Lembur" colspan="8" style="width: 240px;"/>  
+                                <p:column headerText="Total Jam Lembur" rowspan="2" style="width: 40px;"/>  
+                                <p:column headerText="Keterangan" rowspan="2"/>  
+                                <p:column headerText="SPL No." rowspan="2"/>  
+
+                            </p:row> 
+                            <p:row>
+                                <p:column headerText="Before"/>  
+                                <p:column headerText="Break"/>  
+                                <p:column headerText="After"/>  
+                                <p:column headerText="Before"/>  
+                                <p:column headerText="Break"/>  
+                                <p:column headerText="After"/>  
+                                <p:column headerText="X 1.5" colspan="2"/>  
+                                <p:column headerText="X 2" colspan="2"/>  
+                                <p:column headerText="X 3" colspan="2"/>  
+                                <p:column headerText="X 4" colspan="2"/>  
+                            </p:row>  
+                        </p:columnGroup>  
+
+                        <p:column >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="EEE, dd MMM yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.schedule_des}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.absen_desc}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.lmbbefore}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.jam_break}"><f:convertDateTime pattern="HH:mm" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.lmbafter}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.hour_before}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.break_time}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.hour_after}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.qtylembur}" />
+                        </p:column>
+
+                        <p:column >
+                            <h:outputText value="#{item.x1}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.jx1}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+
+                        <p:column >
+                            <h:outputText value="#{item.x2}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.jx2}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+
+                        <p:column >
+                            <h:outputText value="#{item.x3}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.jx3}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+
+                        <p:column >
+                            <h:outputText value="#{item.x4}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.jx4}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+
+                        <p:column >
+                            <h:outputText value="#{item.tx}" ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                        </p:column>
+
+                        <p:column >
+                            <h:outputText value="#{item.keterangan_lembur}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.id_lembur_karyawan}" />
+                        </p:column>
+
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="9" style="text-align:right;font-weight: bold;" footerText=""/>
+                                <p:column style="text-align:right;font-weight: bold;" footerText="#{controllerAbsensiLembur.footerTotalOvertime}"/>
+                                <p:column colspan="8" style="text-align:right;font-weight: bold;" footerText="Total Jam : "/>
+                                <p:column  style="text-align:right;font-weight: bold;" footerText="#{controllerAbsensiLembur.footerGrandTotal}"/>    
+                            </p:row>
+                        </p:columnGroup>
+
+                    </p:dataTable>
+                    <ui:remove>
+                        <p:panelGrid id="tombol" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;" >
+                            <p:commandButton id="simpan"
+                                             value="Simpan" 
+                                             process="@form"
+                                             icon="fa  fa-floppy-o" 
+                                             rendered="#{controllerAbsensiLembur.itemStatus.status ne 'P'}"
+                                             >
+                                <p:ajax listener="#{controllerAbsensiLembur.submitAbsen('D')}"   update="tombol growl"/> 
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </ui:remove>
+                </div>
+            </div>
+
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

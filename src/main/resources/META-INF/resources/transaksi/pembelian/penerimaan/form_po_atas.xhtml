@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Account Payable</ui:define>
+
+
+    <p:panelGrid columns="6" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="nomor_po" value="PO Number"/>
+        <p:autoComplete   id="nomor_po" value="#{poAutoComplete.po}" completeMethod="#{poAutoComplete.completePoForPenerimaan}"
+                          var="po" itemLabel="#{po.nomor_po}" itemValue="#{po}" converter="#{poConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nomor PO harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerPenerimaan.onPoSelect}" update="nm_supplier gudang detil totaljumlah persendiskon diskon dpp is_ppn ppn is_pph pph grandtotal top jurnal notes"/>
+            <p:column headerText="Supplier" >
+                <h:outputText value="#{po.nama_supplier}" />
+            </p:column>
+            <p:column headerText="Nomor PO" >
+                <h:outputText value="#{po.nomor_po}" />
+            </p:column>
+            <p:column headerText="PO Date">
+                <h:outputText value="#{po.tanggal}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="Grand Total">
+                <div style="text-align:right;"><h:outputText value="#{po.grandtotal}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+            </p:column>
+        </p:autoComplete>    
+
+        <p:outputLabel for="nomor" value="AP Number"/>
+        <p:inputText id="nomor" value="#{controllerPenerimaan.item.no_penerimaan}" readonly="true"/>
+
+        <p:outputLabel for="tgl_penerimaan" value="AP Date"/>
+        <p:calendar id="tgl_penerimaan"  value="#{controllerPenerimaan.item.tgl_penerimaan}" required="true" pattern="dd-MM-yyyy">
+            <p:ajax event="dateSelect" listener="#{controllerPenerimaan.onTglApSelect}" update="growl tgl_penerimaan ppn grandtotal" />
+            <p:ajax event="change" listener="#{controllerPenerimaan.onTglApChange}" update="growl tgl_penerimaan  ppn grandtotal" />
+        </p:calendar>
+
+        <p:outputLabel  value="Supplier :"/>
+        <p:inputText id="nm_supplier" value="#{controllerPenerimaan.item.nama_supplier}"  readonly="true"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerPenerimaan.item.id_gudang}" required="true" disabled="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerPenerimaan.item.kode_mata_uang}" style="width: 100%;">
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="invoice"  value="Invoice"/>
+        <p:inputText id="invoice"  value="#{controllerPenerimaan.item.referensi}" required="true"/>
+        <p:outputLabel for="invdate"  value="Invoice Date"/>
+        <p:calendar  id="invdate" value="#{controllerPenerimaan.item.tanggal_referensi}" required="true" pattern="dd-MM-yyyy"/>
+        <p:outputLabel for="tgl_pengiriman" value="Receipt Date" style="text-align: left"/>
+        <p:calendar id="tgl_pengiriman"  value="#{controllerPenerimaan.item.tgl_pengiriman}" required="true" pattern="dd-MM-yyyy">
+            <p:ajax event="dateSelect" listener="#{controllerPenerimaan.onTglPengirimanSelect}" update="duedate growl tgl_pengiriman" />
+            <p:ajax event="change" listener="#{controllerPenerimaan.onTglPengirimanChange}" update="duedate growl tgl_pengiriman" />
+        </p:calendar>
+        <p:outputLabel for="top" value="Term Of Payment" style="text-align: left;" />
+        <p:inputNumber id="top" value="#{controllerPenerimaan.item.top}" required="true" decimalPlaces="0">
+            <p:ajax listener="#{controllerPenerimaan.onTopChange}" update="duedate"/>
+        </p:inputNumber>
+        <p:outputLabel for="@next" value="Due Date" style="text-align: left"/>
+        <p:calendar id="duedate"  value="#{controllerPenerimaan.item.tgl_jatuh_tempo}"  readonlyInput="true"  required="true" pattern="dd-MM-yyyy"/>
+        <p:outputLabel for="faktur"  value="No Faktur Pajak"/>
+        <p:inputText id="faktur"  value="#{controllerPenerimaan.item.no_faktur_pajak}"/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel  value="Notes"/>
+        <p:inputText id="notes"  value="#{controllerPenerimaan.item.keterangan}"/>
+    </p:panelGrid>
+
+</ui:composition>

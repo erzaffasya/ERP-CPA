@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+        <p:dataTable id="pesanDT" var="item" value="#{controllerPo.dataPesan}" paginator="false" 
+                     rendered="#{not empty controllerPo.dataPesan}">
+            <p:column headerText="dari"  style="width:30px;">
+                <h:outputText value="#{item.nama}" />
+            </p:column>
+            <p:column headerText="Pesan"  style="width:120px;">
+                <h:outputText value="#{item.pesan}" escape="false"></h:outputText>
+            </p:column>
+
+        </p:dataTable>
+</ui:composition>

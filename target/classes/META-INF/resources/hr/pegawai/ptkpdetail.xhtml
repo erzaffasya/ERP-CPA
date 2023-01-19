@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewParam name="years" value="#{controllerHrPegawai.years}" />
+        <f:viewAction action="#{controllerHrPegawai.onloadListPegawaiPtkp()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <script type="text/javascript">
+                function handleLoginRequest(xhr, status, args) {
+                    if (args.validationFailed) {
+                        PF('dlg').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg').hide();
+
+                    }
+                }
+            </script>
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>PTKP status adjustment tahun  #{controllerHrPegawai.years}</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:button href="./ptkpadd1.jsf?years=#{controllerHrPegawai.years}"   icon="ui-icon-add" value="Tambah"  />
+                        <p:commandButton  actionListener="#{controllerHrPegawai.deletePegawaiPtkp(controllerHrPegawai.pegawaiPtkp.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataPegawaiPtkp}"  reflow="true"
+                                   rowIndexVar="index">
+                        <p:column headerText="Nama Pegawai" width="60%">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="PTKP" width="20%">
+                            <h:outputText value="#{item.ptkp}" />
+                        </p:column>
+                        <p:column >
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                                <p:commandButton type="button" styleClass="indigo-btn" icon="fa fa-money"  value="Simpan"  style="margin-bottom:10px; width: 100%;" >
+                                    <p:ajax  listener="#{controllerHrPegawai.tambahKarir}"   />
+                                </p:commandButton>
+                                <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                    <f:setPropertyActionListener value="#{item}" target="#{controllerHrPegawai.pegawaiPtkp}"  />
+                            </p:commandButton>
+                            </p:panelGrid>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            
+            <p:dialog  widgetVar="dlg3" resizable="false" id="studentDlg"
+                       showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus pegawai atas nama :" />
+                    <h:outputText value="#{controllerHrPegawai.pegawaiPtkp.id_pegawai}" style="font-weight:bold"/>                                               
+                    <p:commandButton  actionListener="#{controllerHrPegawai.deletePegawaiPtkp(controllerHrPegawai.pegawaiPtkp.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>       
+
+    </ui:define>
+
+</ui:composition>

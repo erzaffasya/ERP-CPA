@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input Buy Contract</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="id_supplier" value="Supplier"/>
+        <p:autoComplete required="true"  id="id_supplier" value="#{supplierAutoComplete.supplier}" completeMethod="#{supplierAutoComplete.completeSupplierContains}"
+                        var="supplier" itemLabel="#{supplier.supplier}" itemValue="#{supplier}" converter="#{supplierConverter}"
+                        groupBy="#{supplierAutoComplete.getSupplierGroup(supplier)}" scrollHeight="250"  requiredMessage="Nama Supplier harus diisi !!!" >
+            <p:ajax event="itemSelect" listener="#{controllerHargaBeli.onSupplierSelect}"  />
+        </p:autoComplete>    
+        <p:outputLabel for="id_customer" value="Customer"/>
+        <p:autoComplete   id="id_customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                          var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                          groupBy="#{customerAutoComplete.getCustomerGroup(customer)}" scrollHeight="250"  requiredMessage="Nama Customer harus diisi !!!" >
+
+        </p:autoComplete>    
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:inputText id="keterangan" value="#{controllerHargaBeli.item.nama_kontrak}" immediate="true" required="true" requiredMessage="Nomor Kontrak Harus diisi !!"/>
+        <p:outputLabel  value="Aktif"/>
+        <p:selectBooleanCheckbox id="aktif" value="#{controllerHargaBeli.item.aktif}" />
+        <p:outputLabel for="nomor" value="No Kontrak"/>
+        <p:inputText id="nomor" value="#{controllerHargaBeli.item.no_kontrak}" immediate="true" required="true" requiredMessage="Nomor Kontrak Harus diisi !!"/>
+        <p:outputLabel for="tanggal" value="Tgl Kontrak"/>
+        <p:calendar id="tanggal" value="#{controllerHargaBeli.item.tanggal}" required="true" requiredMessage="Tanggal Kontrak harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="tanggal_mulai" value="Tgl Mulai"/>
+        <p:calendar id="tanggal_mulai" value="#{controllerHargaBeli.item.tgl_mulai}" required="true" requiredMessage="Tanggal Mulai harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="tanggal_selesai" value="Tgl Selesai"/>
+        <p:calendar id="tanggal_selesai" value="#{controllerHargaBeli.item.tgl_selesai}" required="true" requiredMessage="Tanggal Kontrak harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="shiptonumber" value="Ship To Party"/>
+        <p:inputText id="shiptonumber" value="#{controllerHargaBeli.item.shiptonumber}" immediate="true" />
+        <h:panelGroup/>
+        <p:textEditor id="shipto" widgetVar="editor1" value="#{controllerHargaBeli.item.shipto}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerHargaBeli.extend}" update="detil"/>
+        </p:commandButton>
+    </p:panelGrid>
+
+
+</ui:composition>

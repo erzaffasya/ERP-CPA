@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+            <f:viewAction action="#{controllerHrPegawai.onLoadHubunganKerja()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="card card-w-title">
+                    <div class="ui-g-12 ui-lg-12">
+                        <div class="ui-g-12 ui-lg-12">
+                            <ui:include src="tabmenu.xhtml"/>
+                        </div>    
+                        <div class="ui-g-12 ui-lg-12">
+
+                            <div class="ui-g-12 ui-lg-4" >
+                                <ui:include src="leftprofile.xhtml"/>
+                                <div style="margin-bottom: 20px;">
+                                    <p:link outcome="/hr/pegawai/editrinciangaji" value="Ubah rincian gaji" style="margin-right:20px; margin-bottom: 20px;">
+                                        <f:param name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+                                    </p:link>
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-lg-8">    
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <h1>Rincian Gaji</h1>
+                                    <h:panelGroup/>
+                                    <p:outputLabel  value="Gaji pokok"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.gaji_pokok}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Tunjangan jabatan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.tunjangan_jabatan}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Tunjangan Uang Makan dan Transport [UMT]"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.umt}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Insentif kehadiran"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.insentif_kehadiran}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Tunjangan komunikasi"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.tunjangan_komunikasi}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Tunjangan bbm"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.tunjangan_bbm}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    
+                                </p:panelGrid>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" 
+                  styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;"
+                  rendered="#{!controllerPenerimaanGudang.item.status}">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerPenerimaanGudang.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+
+    <p:dataTable id="detil" var="item" value="#{controllerPenerimaanGudang.dataPenerimaanDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+
+        <p:column headerText="Kode Barang" style="width:100px">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+
+        <p:column headerText="Diorder" style="width:120px;">
+            <div style="text-align:right;"><h:outputText value="#{item.diorder}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Diterima" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" required="true" rendered="#{!controllerPenerimaanGudang.item.status eq true}"/>
+                    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_kecil" value="#{item.satuan_kecil}" style="width:96%" readonly="yes"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Batch Number" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.batch}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="batch" value="#{item.batch}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column style="width:32px" rendered="#{!controllerPenerimaanGudang.item.status}" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPenerimaanGudang.onDeleteClicked(item)}"  update="detil " />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

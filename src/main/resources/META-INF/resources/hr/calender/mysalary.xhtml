@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+    <f:metadata>
+
+    </f:metadata>
+    <ui:define name="title">Cetak Slip Gaji</ui:define>
+    <ui:define name="content">
+        <script src="/js/pdfobject.min.js"></script>
+        <script>
+
+            var urlPDF = "/public/slipgajiku.pdf";
+
+            var options = {
+                pdfOpenParams: {
+                    navpanes: 0,
+                    toolbar: 1,
+                    statusbar: 0,
+                    view: "FitV"
+                },
+                forcePDFJS: true,
+                PDFJS_URL: urlPDF
+            };
+
+            var executePDF = function () {
+                var myPDF = PDFObject.embed(urlPDF, "#bebas", options);
+                rc();
+            };
+
+            $(document).ready(function () {
+                var w = $(window).height();
+                $("#bebas").height(w - 240);
+            });
+
+
+            jQuery(document).ready(function () {
+                executePDF();
+            });
+
+
+            function handleLoginRequest1(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    PF('dlg2').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg2').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <p:remoteCommand name="rc"   action="#{controllerMySalary.onClear()}" />
+            <h1>Slip Gaji</h1>
+
+            <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                <h:outputLabel value="Periode"/>
+                <p:datePicker id="month" view="month" value="#{controllerMySalary.date}" pattern="MMMM  yyyy" yearNavigator="true" yearRange="2019:2050" >
+                </p:datePicker>
+                <h:panelGroup/>
+                <p:commandButton value="Cari"  update="growl" onclick="PF('dlg2').show();"/>
+            </p:panelGrid>
+
+            <p:dialog header="SILAHKAN MASUKAN PIN ANDA " widgetVar="dlg2" resizable="false" modal="true" >
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="pinnya" value="PIN" />
+                    <p:password id="pinnya" value="#{controllerMySalary.pinnya}"  label="pin" />
+                    <f:facet name="footer">
+                        <p:commandButton value="Login" update="growl" action="#{controllerMySalary.onLoadList()}"
+                                         oncomplete="handleLoginRequest1(xhr, status, args)" />
+                    </f:facet> 
+                </h:panelGrid>
+            </p:dialog>  
+        </h:form>
+        <c:choose>
+            <c:when test="${controllerMySalary.id ne null}">
+                <div id="bebas" style="height: 100px;"></div>
+            </c:when>
+        </c:choose>
+    </ui:define>
+</ui:composition>

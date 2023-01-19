@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Daftar Penawaran</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPenawaran.onLoadListNewCustomer()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerPenawaran.createSo()}"   icon="ui-icon-update" value="Create SO"  id="btn-edit"/>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPenawaran.createSo()}"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Penawaran</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPenawaran.dataPenawaran}" selectionMode="single" reflow="true"
+                                 selection="#{controllerPenawaran.item}" rowKey="#{item.nomor}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerPenawaran.createSo()}" global="false" />
+                        <p:column headerText="No. Penawran" sortBy="#{item.nomor}" style="width:320px;" filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Revisi" sortBy="#{item.revisi}" style="width:50px;">
+                            <h:outputText value="#{item.revisi}" />
+                        </p:column>
+                        <p:column headerText="Tgl Penawaran" sortBy="#{item.tanggal}" style="width:120px;" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.newcustomer}" filterBy="#{item.newcustomer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.newcustomer}" />
+                        </p:column>
+                        <p:column headerText="Marketing" sortBy="#{item.salesman}">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="Dibuat Oleh" sortBy="#{item.createby}">
+                            <h:outputText value="#{item.createby}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.grandtotal}" style="width:120px;">
+                            <div style="text-align:right;"><h:outputText value="#{item.grandtotal}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.statussend}" style="width:120px;">
+                            <h:outputText value="Draft" rendered="#{item.statussend eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.statussend eq 'S'}"/>
+                            <h:outputText value="Approve" rendered="#{item.statussend eq 'A'}"/>
+                            <h:outputText value="Reject" rendered="#{item.statussend eq 'R'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

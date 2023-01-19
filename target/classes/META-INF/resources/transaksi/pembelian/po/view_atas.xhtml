@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Purchase Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="intruksipo" value="No Intruksi PO"/>
+        <p:inputText id="intruksipo" value="#{controllerPo.item.no_intruksi_po}"   readonly="true"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="nama_supplier" value="Nama Supplier :"/>
+        <p:inputText id="nama_supplier" value="#{controllerPo.item.nama_supplier}"  readonly="true"/>
+        <p:outputLabel for="customer" value="Nama Customer :"/>
+        <p:inputText id="customer" value="#{controllerPo.item.customer}"  readonly="true"/>
+        <p:outputLabel for="nomor" value="PO No."/>
+        <p:inputText id="nomor" value="#{controllerPo.item.nomor_po}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="PO Date"/>
+        <p:calendar id="tanggal" value="#{controllerPo.item.tanggal}" readonly="true"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:inputText id="gudang" value="#{controllerPo.item.gudang}" readonly="true" />
+        <p:outputLabel for="contract" value="No. Kontrak"/>
+        <p:inputText id="contract" value="#{controllerPo.item.no_kontrak}" readonly="true" />
+        <p:outputLabel  value="Attention"/>
+        <p:inputText id="attention"  value="#{controllerPo.item.kepada}" readonly="true"/>
+        <p:outputLabel  value="Hp"/>
+        <p:inputText id="hp"  value="#{controllerPo.item.hp}" readonly="true"/>
+        <p:outputLabel  value="Telpon"/>
+        <p:inputText id="telpon" value="#{controllerPo.item.telpon}" readonly="true"/>
+        <p:outputLabel for="deliverytime" value="Delivery Time"/>
+        <p:inputText id="deliverytime" value="#{controllerPo.item.deliverytime}" readonly="true"/>
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:inputText id="kode_mata_uang" value="#{controllerPo.item.kode_mata_uang}" readonly="true"/>
+        <p:outputLabel  value="Email"/>
+        <p:inputText id="email" value="#{controllerPo.item.email}" readonly="true"/>
+        <p:outputLabel for="top" value="Term Of Payment"/>
+        <p:inputNumber id="top" value="#{controllerPo.item.top}" decimalPlaces="0" readonly="true"/>
+        <p:outputLabel  value="Quotation No."/>
+        <p:inputText  value="#{controllerPo.item.referensi}" readonly="true"/>
+        <p:outputLabel  value="Quotation Date"/>
+        <p:calendar  value="#{controllerPo.item.tanggal_referensi}"  />
+        <p:outputLabel  value="Ship-To-Party"/>
+        <p:inputText id="shiptonumber"  value="#{controllerPo.item.shiptonumber}" readonly="true"/>
+        <h:panelGroup/>
+        <p:textEditor id="alamat" widgetVar="editor2" value="#{controllerPo.item.shipto}" height="100" style="margin-bottom:10px" readonly="true">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>
+</ui:composition>

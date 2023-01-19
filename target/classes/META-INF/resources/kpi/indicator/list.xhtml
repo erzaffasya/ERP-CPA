@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerIndicator.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KPIINDICATOR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerIndicator.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerIndicator.item}" target="#{controllerIndicator.item}" />
+                            </p:commandButton>
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Indikator KPI</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerIndicator.dataIndicator}" selectionMode="single" reflow="true"
+                                 selection="#{controllerIndicator.item}" rowKey="#{item.id_indicator}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Indikator" sortBy="#{item.indicator}" filterMatchMode="contains" filterBy="#{item.indicator}">
+                            <h:outputText value="#{item.indicator}" />
+                        </p:column>
+                        <p:column headerText="Kategori" sortBy="#{item.category}" filterMatchMode="contains" filterBy="#{item.category}">
+                            <h:outputText value="#{item.category}" />
+                        </p:column>
+                        <p:column headerText="Keterangan/Bukti" sortBy="#{item.evidence}" filterMatchMode="contains" filterBy="#{item.evidence}">
+                            <h:outputText value="#{item.evidence}" />
+                        </p:column>
+                        <p:column headerText="Ukuran" sortBy="#{item.unit}" filterMatchMode="contains" filterBy="#{item.unit}">
+                            <h:outputText value="#{item.unit}" />
+                        </p:column>
+                        <p:column headerText="Bobot" sortBy="#{item.bobot}" filterMatchMode="contains" filterBy="#{item.bobot}">
+                            <h:outputText value="#{item.bobot}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Target" sortBy="#{item.target}" filterMatchMode="contains" filterBy="#{item.target}">
+                            <h:outputText value="#{item.target}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Indicator " />
+                    <h:outputText value="#{controllerIndicator.item.indicator}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerIndicator.delete(controllerIndicator.item.id_indicator)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

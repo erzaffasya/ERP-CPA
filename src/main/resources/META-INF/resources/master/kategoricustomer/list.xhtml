@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        
+    </ui:define>
+
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KATEGORICUSTOMER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Kategori Customer</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerKategoriCustomer.dataKategoriCustomer}" selectionMode="single" reflow="true"
+                                 selection="#{controllerKategoriCustomer.SKategoriCustomer}" rowKey="#{item.id_kategori_customer}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:column headerText="Kategori" sortBy="#{item.nm_kategori_customer}">
+                            <h:outputText value="#{item.nm_kategori_customer}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton process="singleDT"  icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton process="singleDT"  icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerKategoriCustomer.SKategoriCustomer}" target="#{controllerKategoriCustomer.SKategoriCustomer}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Kategori :" />
+                    <h:outputText value="#{controllerKategoriCustomer.SKategoriCustomer.nm_kategori_customer}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerKategoriCustomer.delete(controllerKategoriCustomer.SKategoriCustomer.id_kategori_customer)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Kas Keluar</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerAccKas.onLoadListOutAcc()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MONITORINGKASKELUAR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerAccKas.view()}"   icon="ui-icon-update" value="View" update="growl" id="btn-edit"/>
+                            <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerAccKas.view()}"/>
+    
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Kas Keluar</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Kas Keluar"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerAccKas.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerAccKas.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel value="Kantor"/>
+                        <p:selectOneMenu id="kantor" value="#{controllerAccKas.id_kantor}" > 
+                            <f:selectItems value="#{options.comboKantor}" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerAccKas.onLoadListOutAcc()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAccKas.dataAccKas}" selectionMode="single" reflow="true"
+                                 selection="#{controllerAccKas.item}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom">
+                       <p:ajax event="rowDblselect" listener="#{controllerAccKas.view()}" global="false" />
+                        <p:column headerText="Nomor" sortBy="#{item.nomor}" filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.uraian}" filterBy="#{item.uraian}" filterMatchMode="contains">
+                            <h:outputText value="#{item.uraian}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.total}" filterBy="#{item.total}" filterMatchMode="contains" style="text-align:right;">
+                            <h:outputText value="#{item.total}"  >
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Approve" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="Posting" rendered="#{item.status eq 'P'}"/>
+                        </p:column>
+                        <p:column style="width:50px; text-align: center;" headerText="Posting">
+                            <p:commandButton  icon="fa fa-check" rendered="#{item.status ne 'P'}">
+                                <p:ajax  listener="#{controllerAccKas.onPostingOut(item)}"   update="singleDT :form:growl" />
+                            </p:commandButton>
+
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

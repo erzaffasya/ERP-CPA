@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vendor</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPengguna.item.id_lama}" />
+        <f:viewAction action="#{controllerPengguna.onChangePassword()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPengguna.ubahPassword()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <h:inputHidden value="#{controllerPengguna.item.id_lama}" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1></h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                <p:outputLabel for="pegawai" value="Pegawai" />
+                                <p:inputText id="pegawai" value="#{controllerPengguna.item.nama}" readonly="true"/>
+                                <p:outputLabel for="usernamenya" value="Username"/>
+                                <p:inputText id="usernamenya" value="#{controllerPengguna.item.usernamenya}"  required="true"/>
+                                <p:outputLabel for="foto" value="Foto Profile"/>
+                                <p:fileUpload id="foto" fileUploadListener="#{controllerPengguna.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                              update="growl" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

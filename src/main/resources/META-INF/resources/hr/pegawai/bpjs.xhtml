@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+            <f:viewAction action="#{controllerHrPegawai.onLoadBpjs()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="card card-w-title">
+                    <div class="ui-g-12 ui-lg-12">
+                        <div class="ui-g-12 ui-lg-12">
+                            <ui:include src="tabmenu.xhtml"/>
+                        </div>    
+                        <div class="ui-g-12 ui-lg-12">
+
+                            <div class="ui-g-12 ui-lg-4" >
+                                <ui:include src="leftprofile.xhtml"/>
+                                <div style="margin-bottom: 20px;">
+                                    <p:link outcome="/hr/pegawai/editbpjs" value="Ubah BPJS" style="margin-right:20px; margin-bottom: 20px;">
+                                        <f:param name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+                                    </p:link>
+                                </div>
+                                
+                            </div>
+
+                            <div class="ui-g-12 ui-lg-8">    
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <h1>BPJS Ketenagakerjaan</h1>
+                                    <h:panelGroup/>
+                                    <p:outputLabel  value="Nomor BPJS Ketenagakerjaan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.bpjs_tk}" />
+                                    <p:outputLabel  value="Jaminan Keselamatan Kerja"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jkk}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Jaminan Hari Tua ditanggung  Perusahaan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jht_perusahaan}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Jaminan Hari Tua ditanggung Pekerja"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jht_pekerja}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Jaminan Kematian"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jkm}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Jaminan Pensiun ditanggung  Perusahaan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jp_perusahaan}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Jaminan Pensiun ditanggung  Pekerja"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jp_pekerja}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    
+                                    <h1>BPJS Kesehatan</h1>
+                                    <h:panelGroup/>
+                                    <p:outputLabel  value="Nomor BPJS Kesehtan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.bpjs_kes}" />
+                                    <p:outputLabel  value="Ditanggung Perusahaan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.kesehatan_perusahaan}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Ditanggung Pekerja"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.kesehatan_pekerja}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                
+                                    <h1>Prudential</h1>
+                                    <h:panelGroup/>
+                                    <p:outputLabel  value="Nomor"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.prudential}" />
+                                    <p:outputLabel  value="Ditanggung Perusahaan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.iuran_prudential_perusahaan}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Ditanggung Pekerja"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.iuran_prudential}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    
+                                    <h1>Allianz</h1>
+                                    <h:panelGroup/>
+                                    <p:outputLabel  value="Nomor"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.allianz}" />
+                                    <p:outputLabel  value="Ditanggung Perusahaan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.iuran_allianz_perusahaan}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                    <p:outputLabel  value="Ditanggung Pekerja"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.iuran_allianz}" ><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                                </p:panelGrid>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>

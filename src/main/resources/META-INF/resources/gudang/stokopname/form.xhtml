@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+    
+    
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Stok Opname " style="font-size: 24px;"/>
+                                <p:commandButton action="#{controllerStokOpname.downloadXls}" 
+                                             value="Form Stok Opname"  
+                                             ajax="false" 
+                                             rendered="#{controllerStokOpname.itemso.status eq 'D' or controllerStokOpname.itemso.status eq 'U'}"/>
+                                <p:commandButton action="#{controllerStokOpname.downloadHasilXls}" 
+                                             value="Download hasil"  
+                                             ajax="false" styleClass="ui-button-outlined p-mr-2 p-mb-2" 
+                                             rendered="#{controllerStokOpname.itemso.status eq 'A' or controllerStokOpname.itemso.status eq 'P'}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="6" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel  value="Nomor " style="text-align: "/>
+                                <p:outputLabel   value=": #{controllerStokOpname.itemso.nomor}"/>
+                                <p:outputLabel  value="Tanggal "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.tanggal}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel  value="Tgl.Upload "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.upload_date}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy HH:mm:ss" />
+                                </p:outputLabel>    
+                                <p:outputLabel  value="Gudang "/>
+                                <p:outputLabel   value=": #{controllerStokOpname.itemso.gudang}"/>
+                                <p:outputLabel  value="Tgl.Dibuat "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.create_date}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy HH:mm:ss" />
+                                </p:outputLabel>    
+                                <p:outputLabel  value="Tgl.Approve "/>
+                                <p:outputLabel   value="#{controllerStokOpname.itemso.approved_date}">
+                                    <f:convertDateTime pattern=": dd-MM-yyyy HH:mm:ss" />
+                                </p:outputLabel>
+                                <p:outputLabel  value="Status " style="text-align: "/>
+                                <p:outputLabel   value=": Draft" rendered="#{controllerStokOpname.itemso.status eq 'D'}"/>
+                                <p:outputLabel   value=": Upload" rendered="#{controllerStokOpname.itemso.status eq 'U'}"/>
+                                <p:outputLabel   value=": Approved" rendered="#{controllerStokOpname.itemso.status eq 'A'}"/>
+                                <p:outputLabel   value=": Posting" rendered="#{controllerStokOpname.itemso.status eq 'P'}"/>
+                                <p:outputLabel  value="Jml.Upload " style="text-align: "/>
+                                <p:outputLabel   value=": #{controllerStokOpname.itemso.qtyupload}"/>
+                            </p:panelGrid>
+                            <p:dataTable id="tbl-detil" var="item" value="#{controllerStokOpname.dataStokOpnameDetil}"  tableStyle="table-layout: auto;" rowIndexVar="ri"
+                                         rowStyleClass="#{(item.qty_stok ne item.qty and controllerStokOpname.itemso.qtyupload > 0) ? 'old' : null}">
+                                <p:column >
+                                    <f:facet name="header">
+                                        <h:outputText value="No" />
+                                    </f:facet>
+                                    <h:outputText 
+                                        value="#{ri + 1}" />
+                                </p:column>
+                                <p:column headerText="Material Code">
+                                    <h:outputText value="#{item.id_barang}" />
+                                </p:column>
+                                <p:column headerText="Barang">
+                                    <h:outputText value="#{item.barang}" />
+                                </p:column>
+                                
+                                <p:column headerText="QTY" rendered="#{controllerStokOpname.blind eq true}">
+                                    <h:outputText value="#{item.qty / item.isi_satuan}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="QTY Fisik">
+                                    <h:outputText value="#{item.qty_stok / item.isi_satuan}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                
+                                <p:column headerText="Selisih" rendered="#{controllerStokOpname.blind eq true}">
+                                    <h:outputText value="#{item.selisih / item.isi_satuan}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="Satuan">
+                                    <h:outputText value="#{item.satuan_besar}" />
+                                </p:column>
+                                <p:column headerText="Keterangan">
+                                    <h:outputText value="#{item.notes}" />
+                                </p:column>
+                            </p:dataTable>
+                            
+    
+</ui:composition>

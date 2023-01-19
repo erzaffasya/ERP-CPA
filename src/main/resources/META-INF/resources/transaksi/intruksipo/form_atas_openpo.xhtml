@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    
+    <p:panelGrid id="panel3" columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomoripo" value="Nomor IntruksiPo"/>
+        <p:inputText id="nomoripo" value="#{controllerIntruksiPo.item.no_intruksi_po}" readonly="true"/>
+        <p:outputLabel for="tgl" value="Tanggal"/>
+        <p:calendar id="tgl" value="#{controllerIntruksiPo.item.tanggal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel  value="Keterangan"/>
+        <p:inputText  id="keterangan"  value="#{controllerIntruksiPo.item.keterangan}"   />
+        <p:outputLabel  value="Gudang"/>
+        <p:inputText    value="#{controllerIntruksiPo.itemForecast.gudang}" readonly="true"/>
+        <p:outputLabel for="nomor" value="Nomor Forecast"/>
+        <p:inputText id="nomor" value="#{controllerIntruksiPo.itemForecast.no_forecast}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tanggal Forecast"/>
+        <p:calendar id="tanggal" value="#{controllerIntruksiPo.itemForecast.tanggal}" readonly="true" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        
+        <p:outputLabel   value="Keterangan Forecast"/>
+        <p:inputText    value="#{controllerIntruksiPo.itemForecast.keterangan}" readonly="true"/>
+
+    </p:panelGrid>
+
+</ui:composition>

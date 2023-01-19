@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Sales Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. So."/>
+        <p:inputText id="nomor" value="#{controllerSo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl So"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerSo.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="SO Date harus diisi !!" >
+            <p:ajax event="dateSelect" listener="#{controllerSo.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerSo.onTglChange}" update="growl tanggal" />
+        </p:calendar>    
+        <p:outputLabel for="nomor_penawaran" value="Penawaran No."/>
+        <p:inputText id="nomor_penawaran" value="#{controllerSo.item.no_penawaran}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerSo.item.referensi}" immediate="true" required="true"/>
+        <p:outputLabel for="id_customer" value="Kode Customer :"/>
+        <p:inputText id="id_customer" value="#{controllerSo.item.id_customer}" required="true" requiredMessage="Kode Customer harus diisi !!!!"/>
+        <p:outputLabel for="tgl_ref" value="Tgl PO"/>
+        <p:calendar pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" id="tgl_ref" value="#{controllerSo.item.tgl_ref}" required="true"/>
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:inputText id="customer" value="#{controllerSo.item.customer}"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerSo.item.id_gudang}" disabled="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="kepada" value="Contact Person"/>
+        <p:inputText id="kepada" value="#{controllerSo.item.kepada}"/>
+        <p:outputLabel for="sls"  value="Salesman" />
+        <p:selectOneMenu id="sls"  value="#{controllerSo.item.id_salesman}" disabled="true" >
+            <f:selectItems value="#{options.comboMarketingAll}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="telpon" value="Telpon :"/>
+        <p:inputText id="telpon" value="#{controllerSo.item.telpon}"/>
+        <h:panelGroup/>
+        <p:staticMessage id="sm"  severity="info" summary="#{controllerSo.item.customer}" detail="#{controllerSo.infoCustomer}" escape="false" rendered="#{controllerSo.infoCustomer ne ''}"/>
+    </p:panelGrid>
+    
+
+</ui:composition>

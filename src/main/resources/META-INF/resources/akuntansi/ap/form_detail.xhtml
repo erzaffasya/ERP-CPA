@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:p="http://primefaces.org/ui">
+
+    
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" 
+                 style="border:0px none;" rendered="#{controllerProposalAp.item.status eq 'D'}" >
+        <p:inputText id="day"  value="#{controllerProposalAp.batas}"/>
+        <p:outputLabel  value=" Hari"/>
+        <p:commandButton actionListener="#{controllerProposalAp.searchAp()}" icon="fa fa-search" value="Search" update="detil"/>
+
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerProposalAp.dataProposalApDetail}" editable="true" reflow="true"  tableStyle="table-layout: auto;" 
+                 editMode="cell" widgetVar="cellCars" rowIndexVar="ri" rowKey="#{item.ap_number}" selection="#{controllerProposalAp.selectedAccProposalApDetail}" >
+        <p:ajax  event="toggleSelect" oncomplete="teste()" />
+        <f:facet name="header">
+            <div style="text-align: left">
+                
+                
+                    <p:commandButton actionListener="#{controllerProposalAp.onStatusManyClicked('A')}"  icon="fa fa-check" 
+                                     value="Approve" update="detil" style="width: 100px; align-content: flex-start;"
+                                     rendered="#{controllerProposalAp.item.status eq 'S' and (page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101)}"/>
+                    <p:commandButton actionListener="#{controllerProposalAp.onStatusManyClicked('R')}"  icon="fa fa-close" 
+                                     value="Reject" update="detil" style="width: 100px; align-content: flex-start;"
+                                     rendered="#{controllerProposalAp.item.status eq 'S' and (page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101)}"/>
+                
+
+            </div>
+        </f:facet>
+        <p:column selectionMode="multiple" styleClass="centerColumnContent"/>
+        <p:column styleClass="centerColumnContent">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Vendor" filterBy="#{item.supplier}" filterMatchMode="contains">
+            <h:outputText value="#{item.supplier}" />
+        </p:column>
+        <p:column headerText="Invoice No." filterBy="#{item.no_invoice}" filterMatchMode="contains">
+            <h:outputText value="#{item.no_invoice}" />
+        </p:column>
+        <p:column headerText="Due Date" filterBy="#{item.duedate}" filterMatchMode="contains">
+            <h:outputText value="#{item.duedate}" >
+                <f:convertDateTime pattern="dd-MM-yyyy" />
+            </h:outputText>    
+        </p:column>
+        <p:column headerText="DPP" styleClass="rightColumnContent">
+            <h:outputText value="#{item.dpp}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="PPN" styleClass="rightColumnContent">
+            <h:outputText value="#{item.ppn}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="PPH" styleClass="rightColumnContent">
+            <h:outputText value="#{item.pph}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Total" styleClass="rightColumnContent">
+            <h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Notes" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.notes}" id="lnotes" /></f:facet>
+                <f:facet name="input">
+                    <h:inputText value="#{item.notes}" id="notes" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Status" styleClass="centerColumnContent">
+            <h:outputText value="Approve" rendered="#{item.st eq 'A'}"/>
+            <h:outputText value="Reject" rendered="#{item.st eq 'R'}"/>
+        </p:column>
+        <p:column styleClass="centerColumnContent" rendered="#{controllerProposalAp.item.status eq 'D'}" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerProposalAp.onDeleteClicked(item)}"  update="detil " />
+            </p:commandButton>
+
+        </p:column>
+        
+        <p:column  rendered="#{controllerProposalAp.item.status eq 'S' and (page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101)}" >
+            <p:commandButton  icon="fa fa-check"  >
+                <p:ajax  listener="#{controllerProposalAp.onStatusClicked(item,'A',ri)}"  update="detil " />
+            </p:commandButton>
+            <p:commandButton  icon="fa fa-close"  >
+                <p:ajax  listener="#{controllerProposalAp.onStatusClicked(item,'R',ri)}"  update="detil " />
+            </p:commandButton>    
+        </p:column>
+        
+    </p:dataTable>
+
+</ui:composition>

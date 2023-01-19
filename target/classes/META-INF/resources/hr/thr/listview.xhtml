@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="title">THR Karyawan</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerThr.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('THRVIEW')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+
+                <h:form id="form">
+                    <p:growl id="growl" showDetail="true" />
+                    <div class="ui-g" >
+                        <div class="ui-g-12" >
+                            <p:toolbar id="tbar">
+                                <f:facet name="left" >
+                                    <p:commandButton actionListener="#{controllerThr.view()}"   icon="ui-icon-update" value="View" update="growl" id="btn-edit"/>
+                                    <h:outputScript library="js" name="common.js" />
+                                    <p:hotkey bind="return"   actionListener="#{controllerThr.view()}"/>
+
+                                </f:facet>
+                            </p:toolbar>
+                            <p:sticky target="tbar" />
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Thr Karyawan</h1>
+
+                            <p:dataTable id="singleDT" var="item" value="#{controllerThr.dataThr}" selectionMode="single" reflow="true"
+                                         selection="#{controllerThr.item}" rowKey="#{item.id_thr}" paginator="true" rows="25" paginatorPosition="bottom">
+                                <p:ajax event="rowDblselect" listener="#{controllerThr.view()}" global="false" />
+                                <p:column headerText="Keterangan" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.description}" />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+
+</ui:composition>

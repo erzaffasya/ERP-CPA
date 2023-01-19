@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="grid1" value="Menu Utama"/>
+        <p:selectManyCheckbox id="grid1" value="#{controllerMenuAkses.selectedMenuUtama}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuUtama}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid2" value="Marketing"/>
+        <p:selectManyCheckbox id="grid2" value="#{controllerMenuAkses.selectedMenuMarketing}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuMarketing}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid3" value="Admin"/>
+        <p:selectManyCheckbox id="grid3" value="#{controllerMenuAkses.selectedMenuAdmin}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuAdmin}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid4" value="Warehouse"/>
+        <p:selectManyCheckbox id="grid4" value="#{controllerMenuAkses.selectedMenuWarehouse}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuWarehouse}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid5" value="HRD"/>
+        <p:selectManyCheckbox id="grid5" value="#{controllerMenuAkses.selectedMenuHrd}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuHrd}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid8" value="Accounting Finance"/>
+        <p:selectManyCheckbox id="grid8" value="#{controllerMenuAkses.selectedMenuAccounting}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuAccounting}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid6" value="Master"/>
+        <p:selectManyCheckbox id="grid6" value="#{controllerMenuAkses.selectedMenuMaster}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuMaster}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        
+        
+        <p:outputLabel for="grid7" value="Laporan"/>
+        <p:selectManyCheckbox id="grid7" value="#{controllerMenuAkses.selectedMenuLaporan}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuLaporan}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid9" value="Maintenance"/>
+        <p:selectManyCheckbox id="grid9" value="#{controllerMenuAkses.selectedMenuMaintenance}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuMaintenance}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid10" value="Setting"/>
+        <p:selectManyCheckbox id="grid10" value="#{controllerMenuAkses.selectedMenuSetting}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuSetting}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid11" value="Payroll"/>
+        <p:selectManyCheckbox id="grid11" value="#{controllerMenuAkses.selectedMenuPayroll}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuPayroll}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+        
+        <p:outputLabel for="grid12" value="KPI"/>
+        <p:selectManyCheckbox id="grid12" value="#{controllerMenuAkses.selectedMenuKpi}" layout="responsive" columns="1" converter="javax.faces.Integer">
+            <f:selectItems value="#{controllerMenuAkses.dataMenuKpi}" var="city" itemLabel="#{city.name} (#{city.keterangan})" itemValue="#{city.id}" />
+        </p:selectManyCheckbox>
+    </p:panelGrid>
+</ui:composition>

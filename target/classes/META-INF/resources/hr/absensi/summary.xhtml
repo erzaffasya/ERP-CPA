@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{controllerAbsensiReport.initItem()}" />
+    </f:metadata>
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-datatable {
+                margin-bottom: 25px
+            }
+
+            .ui-datatable .ui-datatable-header {
+                text-align: left !important;
+            }
+
+            .ui-button-text-only .ui-button-text {
+                padding: 0.3em 0.4em;
+            }
+
+            .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+                visibility: hidden;
+            }
+
+            .ui-filter-column .ui-column-customfilter .custom-filter {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .year-spinner input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Attendance Activities</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SUMMARYABSEN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <script type="text/javascript">
+            //<![CDATA[
+            function start() {
+                PF('pbClient').setValue(0);
+                PF('startButton1').disable();
+
+                window['progress'] = setInterval(function () {
+                    var pbClient = PF('pbClient'),
+                            oldValue = pbClient.getValue(),
+                            newValue = oldValue + 10;
+
+                    pbClient.setValue(pbClient.getValue() + 10);
+
+                    if (newValue === 100) {
+                        clearInterval(window['progress']);
+                    }
+
+
+                }, 1000);
+            }
+
+            function cancel() {
+                clearInterval(window['progress']);
+                PF('pbClient').setValue(0);
+                PF('startButton1').enable();
+            }
+            //]]>
+        </script>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-7,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <h:outputLabel value="Periode"/>
+                        <p:datePicker id="month" view="month" value="#{controllerAbsensiReport.datestart}" pattern="MMMM  yyyy" yearNavigator="true" yearRange="2019:2050" />
+                        <h:panelGroup/>
+                    </p:panelGrid>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:selectOneMenu id="kantor" value="#{controllerAbsensiReport.id_kantor}"  style="width: 95%;">
+                            <f:selectItem itemValue="" itemLabel="Seluruh Cabang"/>
+                            <f:selectItems value="#{options.comboKantor}" />
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="departemen" value="#{controllerAbsensiReport.id_departemen}" style="width: 95%;">
+                            <f:selectItem itemLabel="Semua Departemen" itemValue=""/>
+                            <f:selectItems value="#{options.comboDepartement}" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:commandButton  actionListener="#{controllerAbsensiReport.createSummary()}" update="report judul growl posting"  value="Cari" onclick="PF('pbAjaxLong').start();PF('startButton3').disable();" widgetVar="startButton3" style="width: 98%;"/>
+
+                        <p:commandButton action="#{controllerAbsensiReport.createSummaryXls()}" value="Excel"  ajax="false" icon="images/xls.png" style="width: 98%;"/>    
+                        <p:commandButton id="posting"  actionListener="#{controllerAbsensiReport.postingAll()}" update="report judul growl"  value="Posting All"  style="width: 98%;" />
+                    </p:panelGrid>
+                    <p:panelGrid id="judul" columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <h1>Montly Absence Of Report Periode #{options.getNamaBulanbyDate(controllerAbsensiReport.datestart)}</h1>
+                    </p:panelGrid>
+                    <p:progressBar widgetVar="pbAjaxLong" ajax="true" value="#{controllerAbsensiReport.progress2}" labelTemplate="{value}%" styleClass="animated" global="false" interval="500">
+                        <p:ajax event="complete"  update="growl" oncomplete="PF('startButton3').enable()"/>
+                    </p:progressBar>
+
+                    <p:dataTable id="report" var="rowName" value="#{controllerAbsensiReport.rowNames}" rowIndexVar="rowIdx" rendered="#{controllerAbsensiReport.rowNames ne null}" widgetVar="ri">
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="Pencarian Pegawai : " />
+                                <p:inputText id="globalFilter" onkeyup="PF('ri').filter()" style="width:150px;"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="" style="width: 100px;" >
+                            <p:link outcome="attendance_clocks" value="#{rowName}" target="_blank">
+                                <f:param name="tanggal" value="#{controllerAbsensiReport.stringdatestart}" >
+                                </f:param>
+                                <f:param name="id" value="#{controllerAbsensiReport.rowNames3[rowIdx]}" />
+                            </p:link>
+
+                        </p:column>
+                        <p:column headerText="" style="width: 100px;" filterBy="#{rowName}" filterMatchMode="contains">
+                            <h:outputText value="#{controllerAbsensiReport.rowNames2[rowIdx]}"/>
+                        </p:column>
+
+                        <p:columns var="columnName" value="#{controllerAbsensiReport.colNames}" headerText="#{columnName}"
+                                   columnIndexVar="colIdx" exportable="false">
+                            <ui:repeat value="#{controllerAbsensiReport.data3D[rowIdx][colIdx]}" var="data">
+                                <h:outputText value="#{data}" />
+                            </ui:repeat>
+                        </p:columns>
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

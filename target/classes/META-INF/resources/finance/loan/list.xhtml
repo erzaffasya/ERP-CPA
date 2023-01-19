@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pinjaman Karyawan</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerLoan.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('LOAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerLoan.update()}"   icon="ui-icon-update" value="Edit" update="growl" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerLoan.item}" target="#{controllerLoan.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerLoan.update()}"/>
+    <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Pinjaman karyawan</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Loan"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerLoan.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerLoan.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="Status Loan"/>
+                        <p:selectOneMenu id="status" value="#{controllerLoan.status}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Posting" itemValue="P" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerLoan.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                        
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerLoan.dataLoan}" selectionMode="single" reflow="true"
+                                 selection="#{controllerLoan.item}" rowKey="#{item.id_loan}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerLoan.update()}" global="false" />
+                        <p:column headerText="Nomor" sortBy="#{item.loan_number}" filterBy="#{item.loan_number}" filterMatchMode="contains">
+                            <h:outputText value="#{item.loan_number}" />
+                        </p:column>
+                        <p:column headerText="Nama" sortBy="#{item.nama}" filterBy="#{item.nama}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.date}" filterBy="#{item.date}" filterMatchMode="contains" >
+                            <h:outputText value="#{item.date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.amount}" filterBy="#{item.amount}" filterMatchMode="contains" style="text-align:right;">
+                            <h:outputText value="#{item.amount}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Lama cicilan" sortBy="#{item.installment}" filterBy="#{item.installment}" filterMatchMode="contains" style="text-align:right;">
+                            <h:outputText value="#{item.installment}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="contains">
+                            <h:outputText value="#{item.description}"  />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Posting" rendered="#{item.status eq 'A'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Loan" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda yakin akan menghapus pinjaman Nomor #{controllerLoan.item.loan_number} atas nama" rendered="#{controllerLoan.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerLoan.item.nama}" style="font-weight:bold" rendered="#{controllerLoan.item.status eq 'D' }"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerLoan.delete(controllerLoan.item.id_loan)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerLoan.item.status eq 'D' }"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerLoan.item.status eq 'D'}"/>
+                
+                    <h:outputText value="Anda tidak dapat menghapus Pinjaman ini !!!" rendered="#{controllerLoan.item.status eq 'P' }"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerLoan.item.status eq 'P'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

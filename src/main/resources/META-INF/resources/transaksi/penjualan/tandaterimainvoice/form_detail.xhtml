@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerTandaTerimaInvoice.dataTandaTerimaInvoiceDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <p:column headerText="No  Invoice" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.no_penjualan}" id="oreferensi" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="referensi" value="#{penjualanAutoComplete.penjualan}" completeMethod="#{penjualanAutoComplete.completePenjualanByCustomerContains}"
+                                    var="penjualan" itemLabel="#{penjualan.no_penjualan}" itemValue="#{penjualan}" converter="#{penjualanConverter}" >
+                        <p:ajax event="itemSelect" listener="#{controllerTandaTerimaInvoice.onPenjualanSelect(item,ri)}" update="detil total" />
+                        <p:column headerText="Nomor Invoice" >
+                            <h:outputText value="#{penjualan.no_penjualan}" />
+                        </p:column>
+                        <p:column headerText="No Faktur Pajak" >
+                            <h:outputText value="#{penjualan.faktur}" />
+                        </p:column>
+                        <p:column headerText="No Do" >
+                            <h:outputText value="#{penjualan.no_dos}" />
+                        </p:column>
+                        <p:column headerText="No Po" >
+                            <h:outputText value="#{penjualan.referensi}" />
+                        </p:column>
+                        <p:column headerText="Total" >
+                            <h:outputText value="#{penjualan.grandtotal}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:autoComplete >    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="No.Faktur Pajak">
+            <h:outputText value="#{item.nomor_faktur}"/>
+        </p:column>
+        <p:column headerText="No. DO">
+            <h:outputText value="#{item.no_do}"/>
+        </p:column>
+        <p:column headerText="No. PO">
+            <h:outputText value="#{item.no_po}"/>
+        </p:column>
+        <p:column headerText="Jumlah" styleClass="rightColumnContent">
+            <h:outputText value="#{item.nilai}" id="osaldo" style="text-align:right;"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerTandaTerimaInvoice.onDeleteClicked(item)}"  update="detil" />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

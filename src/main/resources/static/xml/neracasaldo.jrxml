@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="neracasaldo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="5157478b-a41c-4322-b367-b5d7e937ec54">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="14"/>
+	<parameter name="tahun" class="java.lang.String"/>
+	<parameter name="bulan" class="java.lang.String"/>
+	<parameter name="logo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="shelllogo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT a.*, b.account as nama_account
+
+ FROM acc_value a
+             INNER JOIN account b ON a.account=b.id_account
+             WHERE a.years=$P{tahun} and
+CASE $P{bulan}
+  WHEN '1' THEN (db0+db1)-(cr0+cr1) !=0
+  WHEN '2' THEN (db0+db1+db2)-(cr0+cr1+cr2) !=0
+  WHEN '3' THEN (db0+db1+db2+db3)-(cr0+cr1+cr2+cr3) !=0
+  WHEN '4' THEN (db0+db1+db2+db3+db4)-(cr0+cr1+cr2+cr3+cr4) !=0
+  WHEN '5' THEN (db0+db1+db2+db3+db4+db5)-(cr0+cr1+cr2+cr3+cr4+cr5) !=0
+  WHEN '6' THEN (db0+db1+db2+db3+db4+db5+db6)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6) !=0
+  WHEN '7' THEN (db0+db1+db2+db3+db4+db5+db7)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6+cr7) !=0
+  WHEN '8' THEN (db0+db1+db2+db3+db4+db5+db7+db8)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6+cr7+cr8) !=0
+  WHEN '9' THEN (db0+db1+db2+db3+db4+db5+db7+db8+db9)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6+cr7+cr8+cr9) !=0
+  WHEN '10' THEN (db0+db1+db2+db3+db4+db5+db7+db8+db9+db10)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6+cr7+cr8+cr9+cr10) !=0
+  WHEN '11' THEN (db0+db1+db2+db3+db4+db5+db7+db8+db9+db10+db11)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6+cr7+cr8+cr9+cr10+cr11) !=0
+  WHEN '12' THEN ((db0+db1+db2+db3+db4+db5+db7+db8+db9+db10+db11+db12)-(cr0+cr1+cr2+cr3+cr4+cr5+cr6+cr7+cr8+cr9+cr10+cr11+cr12)) !=0 else false
+END
+             ORDER BY b.id_account]]>
+	</queryString>
+	<field name="years" class="java.lang.String"/>
+	<field name="account" class="java.lang.Integer"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="db0" class="java.math.BigDecimal"/>
+	<field name="db1" class="java.math.BigDecimal"/>
+	<field name="db2" class="java.math.BigDecimal"/>
+	<field name="db3" class="java.math.BigDecimal"/>
+	<field name="db4" class="java.math.BigDecimal"/>
+	<field name="db5" class="java.math.BigDecimal"/>
+	<field name="db6" class="java.math.BigDecimal"/>
+	<field name="db7" class="java.math.BigDecimal"/>
+	<field name="db8" class="java.math.BigDecimal"/>
+	<field name="db9" class="java.math.BigDecimal"/>
+	<field name="db10" class="java.math.BigDecimal"/>
+	<field name="db11" class="java.math.BigDecimal"/>
+	<field name="db12" class="java.math.BigDecimal"/>
+	<field name="db13" class="java.math.BigDecimal"/>
+	<field name="cr0" class="java.math.BigDecimal"/>
+	<field name="cr1" class="java.math.BigDecimal"/>
+	<field name="cr2" class="java.math.BigDecimal"/>
+	<field name="cr3" class="java.math.BigDecimal"/>
+	<field name="cr4" class="java.math.BigDecimal"/>
+	<field name="cr5" class="java.math.BigDecimal"/>
+	<field name="cr6" class="java.math.BigDecimal"/>
+	<field name="cr7" class="java.math.BigDecimal"/>
+	<field name="cr8" class="java.math.BigDecimal"/>
+	<field name="cr9" class="java.math.BigDecimal"/>
+	<field name="cr10" class="java.math.BigDecimal"/>
+	<field name="cr11" class="java.math.BigDecimal"/>
+	<field name="cr12" class="java.math.BigDecimal"/>
+	<field name="cr13" class="java.math.BigDecimal"/>
+	<field name="nama_account" class="java.lang.String"/>
+	<variable name="nama_account_1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{nama_account}]]></variableExpression>
+	</variable>
+	<variable name="totaldebit" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($P{bulan} == "1") ? (
+    (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}) < 0) ? 0 : 1 * (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}))
+    ) :  (
+    ($P{bulan} == "2") ? (
+        (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}))
+    ) : (
+          ($P{bulan} == "3") ? (
+                (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}))
+          ) :  (
+                    ($P{bulan} == "4") ? (
+                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}))
+                    ) : (
+                        ($P{bulan} == "5") ? (
+                            (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}))
+                        ) : (
+                            ($P{bulan} == "6") ? (
+                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}))
+                            ) : (
+                                ($P{bulan} == "7") ? (
+                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}))
+                                ) : (
+                                    ($P{bulan} == "8") ? (
+                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}))
+                                    ) : (
+                                            ($P{bulan} == "9") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}))
+                                            ) : (
+                                            ($P{bulan} == "10") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}))
+                                            ) : (
+                                                ($P{bulan} == "11") ? (
+                                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}))
+                                                ) : (
+                                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}) < 0) ? 0 : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}))
+                                                    )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+   )]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalkredit" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($P{bulan} == "1") ? (
+    (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}) > 0) ? 0 : -1 * (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}))
+    ) :  (
+    ($P{bulan} == "2") ? (
+        (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}))
+    ) : (
+          ($P{bulan} == "3") ? (
+                (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}))
+          ) :  (
+                    ($P{bulan} == "4") ? (
+                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}))
+                    ) : (
+                        ($P{bulan} == "5") ? (
+                            (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}))
+                        ) : (
+                            ($P{bulan} == "6") ? (
+                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}))
+                            ) : (
+                                ($P{bulan} == "7") ? (
+                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}))
+                                ) : (
+                                    ($P{bulan} == "8") ? (
+                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}))
+                                    ) : (
+                                            ($P{bulan} == "9") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}))
+                                            ) : (
+                                            ($P{bulan} == "10") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}))
+                                            ) : (
+                                                ($P{bulan} == "11") ? (
+                                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}))
+                                                ) : (
+                                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}) > 0) ? 0 : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}))
+                                                    )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+   )]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<image>
+				<reportElement x="437" y="1" width="118" height="53" uuid="9bf4383f-8e5f-4b36-91c7-6fa550378814"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="0" y="1" width="122" height="54" uuid="8b7efc9f-8809-4937-a9d8-0c535f252f18"/>
+				<imageExpression><![CDATA[$P{shelllogo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="54" width="555" height="20" uuid="edd3b2c9-5899-472c-9864-f493b002db9d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN NERACA SALDO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="74" width="555" height="20" uuid="fc1b1641-ee0c-448b-8955-15d718f8bf0f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bulan "+$P{bulan}+" Tahun "+$P{tahun}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="9" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="41" width="110" height="20" backcolor="#CCCCCC" uuid="827b28ef-3322-4b4a-8d9f-63d39df791f1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="110" y="41" width="204" height="20" backcolor="#CCCCCC" uuid="705ec596-ee94-4ff7-88d2-7503832a90a9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="314" y="41" width="112" height="20" backcolor="#CCCCCC" uuid="7f17a347-f541-4daa-a460-0308f2ea75c7"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Debit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="426" y="41" width="111" height="20" backcolor="#CCCCCC" uuid="2a354892-34fe-419b-a025-899fb8fa7034"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kredit]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="110" height="20" isRemoveLineWhenBlank="true" uuid="1f23f2a5-f213-4e06-944b-1ab1f4c27bb6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{account}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="0" width="204" height="20" isRemoveLineWhenBlank="true" uuid="a0540efc-96bd-448e-b456-7e1d0415e75d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_account}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="314" y="0" width="112" height="20" uuid="c31a2785-74b4-4993-b360-72dd831814d8"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{bulan} == "1") ? (
+    (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}) <= 0) ? "" : 1 * (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}))
+    ) :  (
+    ($P{bulan} == "2") ? (
+        (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}))
+    ) : (
+          ($P{bulan} == "3") ? (
+                (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}))
+          ) :  (
+                    ($P{bulan} == "4") ? (
+                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}))
+                    ) : (
+                        ($P{bulan} == "5") ? (
+                            (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}))
+                        ) : (
+                            ($P{bulan} == "6") ? (
+                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}))
+                            ) : (
+                                ($P{bulan} == "7") ? (
+                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}))
+                                ) : (
+                                    ($P{bulan} == "8") ? (
+                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}))
+                                    ) : (
+                                            ($P{bulan} == "9") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}))
+                                            ) : (
+                                            ($P{bulan} == "10") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}))
+                                            ) : (
+                                                ($P{bulan} == "11") ? (
+                                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}))
+                                                ) : (
+                                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}) <= 0) ? "" : 1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}))
+                                                    )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+   )]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="426" y="0" width="111" height="20" uuid="01e954c5-aa1e-4543-99f3-d0e9403daa22"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{bulan} == "1") ? (
+    (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}) >= 0) ? "" : -1 * (($F{db0}+$F{db1})-($F{cr0}+$F{cr1}))
+    ) :  (
+    ($P{bulan} == "2") ? (
+        (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2})-($F{cr0}+$F{cr1}+$F{cr2}))
+    ) : (
+          ($P{bulan} == "3") ? (
+                (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}))
+          ) :  (
+                    ($P{bulan} == "4") ? (
+                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}))
+                    ) : (
+                        ($P{bulan} == "5") ? (
+                            (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}))
+                        ) : (
+                            ($P{bulan} == "6") ? (
+                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}))
+                            ) : (
+                                ($P{bulan} == "7") ? (
+                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}))
+                                ) : (
+                                    ($P{bulan} == "8") ? (
+                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}))
+                                    ) : (
+                                            ($P{bulan} == "9") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}))
+                                            ) : (
+                                            ($P{bulan} == "10") ? (
+                                                (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}))
+                                            ) : (
+                                                ($P{bulan} == "11") ? (
+                                                    (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}))
+                                                ) : (
+                                                        (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}) >= 0) ? "" : -1 * (($F{db0}+$F{db1}+$F{db2}+$F{db3}+$F{db4}+$F{db5}+$F{db6}+$F{db7}+$F{db8}+$F{db9}+$F{db10}+$F{db11}+$F{db12})-($F{cr0}+$F{cr1}+$F{cr2}+$F{cr3}+$F{cr4}+$F{cr5}+$F{cr6}+$F{cr7}+$F{cr8}+$F{cr9}+$F{cr10}+$F{cr11}+$F{cr12}))
+                                                    )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+   )]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="314" y="0" width="112" height="20" uuid="81499cce-3f1f-4ba6-aab9-7234a29f65e0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totaldebit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="426" y="0" width="111" height="20" uuid="2fbf9bcf-46fe-42dd-8248-0eb1ad0501dc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{totalkredit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="314" height="20" uuid="763ec834-a817-44a0-8e85-bc1fa54a4dcd"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

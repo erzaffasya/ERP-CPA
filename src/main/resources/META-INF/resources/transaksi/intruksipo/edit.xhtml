@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Intruksi Open PO</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerIntruksiPo.item.id}" />
+        <f:viewAction action="#{controllerIntruksiPo.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INTRUKSIPO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <ui:remove><p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerIntruksiPo.cetak()}" /></ui:remove>
+                            <p:commandButton action="#{controllerIntruksiPo.createIpXls()}" value="Excel IP"  ajax="false" icon="fa fa-file-excel-o"/>    
+                            <p:commandButton action="#{controllerIntruksiPo.createXls()}" value="Excel Forecast"  ajax="false" icon="fa fa-file-excel-o" rendered="#{controllerIntruksiPo.item.id_forecast ne null}"/>    
+                            <p:commandButton id="simpan1"
+                                             actionListener="#{controllerIntruksiPo.ubah(controllerIntruksiPo.item.status)}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerIntruksiPo.item.status eq 'D'}"
+                                             />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerIntruksiPo.ubah(controllerIntruksiPo.item.status)}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="atas detil growl"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerIntruksiPo.id_jabatan == 110 and (controllerIntruksiPo.item.status eq 'D' or controllerIntruksiPo.item.status eq 'S') }"
+                                             />
+                            <p:commandButton id="Send"
+                                             actionListener="#{controllerIntruksiPo.ubah('S')}"
+                                             value="Send" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="atas detil growl"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerIntruksiPo.id_jabatan == 110 and controllerIntruksiPo.item.status eq 'D' }"
+                                             />
+                            
+                            <p:commandButton id="Cancel" update=":form:display" 
+                                             onclick="PF('dlg3').show();" 
+                                             icon="fa  fa-close" value="Cancel"
+                                             rendered="#{controllerIntruksiPo.id_jabatan == 110 and controllerIntruksiPo.item.status eq 'S' }"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Input  Intruksi Open PO</h1>
+                            <ui:include src="form_atas.xhtml"/>
+                            <ui:include src="form_detail.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel Intruksi PO" widgetVar="dlg3" resizable="false" id="canceldo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <p:editor  id="pesan" widgetVar="editor4" value="#{controllerIntruksiPo.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerIntruksiPo.ubahStatus('X')}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="@form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

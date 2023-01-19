@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PPH')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <script type="text/javascript">
+                function handleLoginRequest(xhr, status, args) {
+                    if (args.validationFailed || !args.loggedIn) {
+                        PF('dlg').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg').hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+            </script>
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>PPH Pegawai</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="pdf">
+                            <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="pdf" target="singleDT" fileName="customerlist" />
+                        </h:commandLink>
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="customerlist"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:panelGrid columns="3" id="search" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="bulan" value="Periode"/>
+                        <p:selectOneMenu id="bulan" value="#{controllerPegawaiPph.month}">
+                            <f:selectItems value="#{options.comboBulan}" />
+                            <p:ajax event="change" listener="#{controllerPegawaiPph.onLoadListPph()}" update="singleDT"/> 
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerPegawaiPph.year}" maxlength="4" >
+                            <p:ajax event="change" listener="#{controllerPegawaiPph.onLoadListPph()}" update="singleDT"/> 
+                        </p:inputText>
+                        
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPegawaiPph.dataPegawaiPphDetail}"  reflow="true" editable="true" 
+                                 paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+
+                        <p:ajax event="rowEdit" listener="#{controllerHrPegawai.ubahPph}" update=":form:growl singleDT" />
+                        <p:ajax event="rowEditCancel" listener="#{controllerHrPegawai.onRowCancel}" update=":form:growl singleDT" />
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="NIK" sortBy="#{item.nip}" filterBy="#{item.nip}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nip}" />
+                        </p:column>
+                        <p:column headerText="Nama" sortBy="#{item.nama}"  filterBy="#{item.nama}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Jabatan" sortBy="#{item.jabatan}" filterBy="#{item.jabatan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Departemen" sortBy="#{item.departemen}" filterBy="#{item.departemen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.departemen}" />
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="PTKP" sortBy="#{item.ptkp}" filterBy="#{item.ptkp}" filterMatchMode="contains">
+                            <h:outputText value="#{item.ptkp}" />
+                        </p:column>
+                        <p:column headerText="PPH" style="text-align: right;" >
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText  value="#{item.pph}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                <f:facet name="input"><p:inputNumber id="pph" value="#{item.pph}" style="width:96%" decimalPlaces="0"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="width:35px">
+                            <p:rowEditor />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Login" widgetVar="dlg" resizable="false" modal="true" visible="true" >
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="pinnya" value="PIN" />
+                    <p:password id="pinnya" value="#{controllerPegawaiPph.pinnya}" required="true" label="pin" />
+                    <f:facet name="footer">
+                        <p:commandButton value="Login" update="singleDT growl" action="#{controllerPegawaiPph.onLoadListPph()}"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" />
+                    </f:facet> 
+                </h:panelGrid>
+            </p:dialog>  
+        </h:form>
+    </ui:define>
+
+</ui:composition>

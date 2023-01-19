@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerKantor.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KANTOR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerKantor.update()}"   icon="ui-icon-update" value="Edit"  id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerKantor.item}" target="#{controllerKantor.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerKantor.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Vendor</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerKantor.dataInternalKantorCabang}" selectionMode="single" reflow="true"
+                                 selection="#{controllerKantor.item}" rowKey="#{item.id_kantor_cabang}" paginator="true" rows="10" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerKantor.update()}" global="false" />
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Code" sortBy="#{item.id_kantor_cabang}" style="width: 100px">
+                            <h:outputText value="#{item.id_kantor_cabang}" />
+                        </p:column>
+                        <p:column headerText="Deskripsi" sortBy="#{item.nama}">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Alamat" sortBy="#{item.alamat}">
+                            <h:outputText value="#{item.alamat}" />
+                        </p:column>
+                        <p:column headerText="Telpon" sortBy="#{item.telpon}">
+                            <h:outputText value="#{item.telpon}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Vendor :" />
+                    <h:outputText value="#{controllerKantor.item.nama}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerKantor.delete(controllerKantor.item.id_kantor_cabang)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

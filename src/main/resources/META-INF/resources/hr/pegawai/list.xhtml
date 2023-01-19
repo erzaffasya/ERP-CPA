@@ -1,0 +1,255 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <script type="text/javascript">
+                function handleLoginRequest(xhr, status, args) {
+                    if (args.validationFailed) {
+                        PF('dlg').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg').hide();
+
+                    }
+                }
+                
+                function handleLoginRequestr(xhr, status, args) {
+                    if (args.validationFailed) {
+                        PF('dlgresign').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlgresign').hide();
+
+                    }
+                }
+            </script>
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerHrPegawai.update()}"   icon="ui-icon-update" value="Lihat Detil"  id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerHrPegawai.item}" target="#{controllerHrPegawai.item}" />
+                            </p:commandButton>
+                            <p:commandButton 
+                                actionListener="#{controllerHrPegawai.onKarir()}"  
+                                oncomplete="PF('dlg').show()" 
+                                icon="fa fa-money"  
+                                value="Transfer Karyawan" 
+                                update="idpegawai nama jabatan">
+                            </p:commandButton>
+                            <p:commandButton 
+                                actionListener="#{controllerHrPegawai.onResign()}"  
+                                oncomplete="PF('dlgresign').show()" 
+                                icon="fa fa-money"  
+                                value="Resign" 
+                                update="idpegawair namar jabatan reason">
+                            </p:commandButton>
+                            <p:button href="./ptkp.jsf"   icon="ui-icon-people-outline" value="PTKP Status Adjustment"  />
+                            <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerHrPegawai.update()}"/>
+    <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Pegawai</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="pdf">
+                            <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="pdf" target="singleDT" fileName="customerlist" />
+                        </h:commandLink>
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="customerlist"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid id="statusnya" columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Status"/>
+                        <p:selectBooleanCheckbox  value="#{controllerHrPegawai.status}" style="width: 100%" itemLabel="Aktif" rendered="#{controllerHrPegawai.status eq true}">    
+                            <p:ajax listener="#{controllerHrPegawai.onLoadList()}" update="singleDT statusnya"/> 
+                        </p:selectBooleanCheckbox>    
+                        <p:selectBooleanCheckbox  value="#{controllerHrPegawai.status}" style="width: 100%" itemLabel="Tidak Aktif" rendered="#{controllerHrPegawai.status eq false}">    
+                            <p:ajax listener="#{controllerHrPegawai.onLoadList()}" update="singleDT statusnya"/> 
+                        </p:selectBooleanCheckbox>    
+                        
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataPegawai}" selectionMode="single" reflow="true" widgetVar="pegawaiTable"
+                                 selection="#{controllerHrPegawai.item}" rowKey="#{item.id_pegawai}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerHrPegawai.update()}" global="false" />
+                        <f:facet name="header">
+                                    <p:outputPanel style="text-align: right;">
+                                        <h:outputText value="Search all fields :  " style="font-weight: bold;" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('pegawaiTable').filter()" style="width:150px"/>
+                                    </p:outputPanel>
+                                </f:facet>
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column ><img src="/img/pegawai/#{item.fotonya}" width="100" /></p:column>
+                        
+                        <p:column headerText="NIK" sortBy="#{item.id_pegawai}" filterBy="#{item.id_pegawai}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_pegawai}" />
+                        </p:column>
+                        <p:column headerText="NIP" sortBy="#{item.nip}" filterBy="#{item.nip}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nip}" />
+                        </p:column>
+                        <p:column headerText="Nama" sortBy="#{item.nama}"  filterBy="#{item.nama}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Absen" sortBy="#{item.absen}"  filterBy="#{item.absen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.absen}" />
+                        </p:column>
+                        <p:column headerText="Jabatan" sortBy="#{item.jabatan}" filterBy="#{item.jabatan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Departemen" sortBy="#{item.departemen}" filterBy="#{item.departemen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.departemen}" />
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Atasan Langsung" sortBy="#{item.nama_atasan}" filterBy="#{item.nama_atasan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_atasan}" />
+                        </p:column>
+                        <p:column headerText="PTKP" sortBy="#{item.ptkp}" filterBy="#{item.ptkp}" filterMatchMode="contains">
+                            <h:outputText value="#{item.ptkp}" />
+                        </p:column>
+                        <p:column headerText="Nomor Rekening" sortBy="#{item.nomorrekening}" filterBy="#{item.nomorrekening}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomorrekening}" />
+                        </p:column>
+                        <p:column headerText="HP" sortBy="#{item.hp}" filterBy="#{item.hp}" filterMatchMode="contains">
+                            <h:outputText value="#{item.hp}" />
+                        </p:column>
+                        <p:column headerText="Email" sortBy="#{item.email}" filterBy="#{item.email}" filterMatchMode="contains">
+                            <h:outputText value="#{item.email}" />
+                        </p:column>
+                        <p:column headerText="Tgl Resign">
+                        <h:outputText value="#{item.tgl_resign}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText> 
+                        </p:column>    
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog  widgetVar="dlg3" resizable="false" id="studentDlg"
+                       showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus pegawai atas nama :" />
+                    <h:outputText value="#{controllerHrPegawai.item.nama}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerHrPegawai.delete(controllerHrPegawai.item.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+            <p:dialog header="Transfer karyawan" widgetVar="dlg" resizable="false" id="transfer" height="70%" width="50%" modal="true">
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                    <h:panelGroup/>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                        <p:outputLabel for="tgl" value="Tanggal efektif"/>
+                        <p:calendar  pattern="dd-MM-yyyy" id="tgl" value="#{controllerHrPegawai.karir.tanggal_mulai}"  mask="99-99-9999" maxlength="10"   />
+                        <p:outputLabel for="@next" value="ID Pegawai"/>
+                        <p:inputText id="idpegawai" value="#{controllerHrPegawai.karir.id_pegawai}" />
+                        <p:outputLabel for="nama" value="Nama"/>
+                        <p:inputText id="nama" value="#{controllerHrPegawai.karir.nama}" />
+                        <p:outputLabel for="kantor" value="Kantor"/>
+                        <p:selectOneMenu id="kantor" value="#{controllerHrPegawai.karir.id_kantor}" >
+                            <f:selectItems value="#{options.comboKantor}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="departemen" value="Departemen"/>
+                        <p:selectOneMenu id="departemen" value="#{controllerHrPegawai.karir.id_departemen}" >
+                            <f:selectItems value="#{controllerHrDepartemen.comboParent}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="jabatan" value="Jabatan"/>
+                        <p:selectOneMenu id="jabatan" value="#{controllerHrPegawai.karir.id_jabatan}" >
+                            <f:selectItems value="#{controllerHrJabatan.comboJabatan}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="statuskaryawan" value="Status"/>
+                        <p:selectOneMenu id="statuskaryawan" value="#{controllerHrPegawai.karir.statuskaryawan}">
+                            <f:selectItem itemLabel="Pilih status karyawan" itemValue="" />
+                            <f:selectItems value="#{options.comboStatusKaryawan}" />
+                            <p:ajax event="change"   update="waktukerja"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                    
+                    <h:panelGroup rendered="#{controllerHrPegawai.karir.statuskaryawan eq '2'}"/>
+                    <p:panelGrid id="waktukerja" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel for="tanggalselesai" id="lpkwt_akhir" value="Tanggal berakhir" rendered="#{controllerHrPegawai.karir.statuskaryawan eq '2'}"/>
+                        <p:calendar id="tanggalselesai" value="#{controllerHrPegawai.karir.tanggal_selesai}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.karir.statuskaryawan eq '2'}"/>
+                    </p:panelGrid>
+                    <h:panelGroup rendered="#{controllerHrPegawai.karir.statuskaryawan eq '2'}"/>
+                    
+                    <h:panelGroup/>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                        <p:commandButton type="button" styleClass="indigo-btn" icon="fa fa-money"  value="Simpan"  style="margin-bottom:10px;" >
+                            <p:ajax  listener="#{controllerHrPegawai.tambahKarir}" process="@form"  update=":form:singleDT growl"  oncomplete="handleLoginRequest(xhr, status, args)"/>
+                        </p:commandButton>
+                        <p:commandButton id="cancelButton" onclick="PF('dlg').hide();" value="Batal"/>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                    
+                </p:panelGrid>
+            </p:dialog>
+            
+            
+            <p:dialog header="Resign" widgetVar="dlgresign" resizable="false" id="resign" height="70%" width="50%" modal="true">
+                <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-10,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                    <h:panelGroup/>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                        
+                        <p:outputLabel for="@next" value="ID Pegawai"/>
+                        <p:inputText id="idpegawair" value="#{controllerHrPegawai.resign.id_pegawai}" readonly="true" style="width: 100%;"/>
+                        <p:outputLabel for="@next" value="Nama"/>
+                        <p:inputText id="namar" value="#{controllerHrPegawai.resign.nama}" readonly="true" style="width: 100%;"/>
+                        <p:outputLabel for="@next" value="Tanggal resign"/>
+                        <p:calendar  pattern="dd-MM-yyyy" id="tglr" value="#{controllerHrPegawai.resign.date}"  mask="99-99-9999" maxlength="10" style="width: 100%;" />
+                        <p:outputLabel for="jabatan" value="Jabatan"/>
+                        <p:inputText id="jabatan" value="#{controllerHrPegawai.resign.jabatan}" style="width: 100%;" readonly="true"/>
+                        <p:outputLabel for="@next" value="Alasan"/>
+                        <p:inputTextarea id="reason" value="#{controllerHrPegawai.resign.reason}" style="width: 100%;"/>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                </p:panelGrid>
+                <h:panelGroup/>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                        <p:commandButton type="button" styleClass="indigo-btn" icon="fa fa-money"  value="Simpan"  style="margin-bottom:10px;" >
+                            <p:ajax  listener="#{controllerHrPegawai.tambahResign}" process="@form"  update=":form:singleDT growl"  oncomplete="handleLoginRequestr(xhr, status, args)"/>
+                        </p:commandButton>
+                        <p:commandButton id="cancelButton" onclick="PF('dlgresign').hide();" value="Batal"/>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

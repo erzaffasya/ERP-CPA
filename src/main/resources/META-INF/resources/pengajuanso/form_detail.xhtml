@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerSo.dataSoDetail}"  tableStyle="table-layout: auto;">
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+
+        <p:column headerText="Material Code" >
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Qty" styleClass="rightColumnContent">
+            <h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+
+        <p:column headerText="Satuan" styleClass="centerColumnContent">
+            <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+        </p:column>
+
+        <p:column headerText="Unit Price" styleClass="rightColumnContent">
+            <h:outputText value="#{item.harga}" id="oharga"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Disc %" styleClass="rightColumnContent">
+            <h:outputText id="odiskonpersen" value="#{item.diskonpersen}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+
+        <p:column headerText="Disc (Rp)" styleClass="rightColumnContent">
+            <h:outputText id="odiskonrp" value="#{item.diskonrp}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Additional Charge" styleClass="rightColumnContent">
+            <h:outputText id="oadditional" value="#{item.additional_charge}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Amount" styleClass="rightColumnContent">
+            <h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

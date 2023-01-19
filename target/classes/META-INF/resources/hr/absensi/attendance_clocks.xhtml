@@ -1,0 +1,182 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerAbsensi.item.id_pegawai}" />
+        <f:viewParam name="tanggal" value="#{controllerAbsensi.datestart}" >
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </f:viewParam>
+        <f:viewAction action="#{controllerAbsensi.onAttendaceClocks()}" />
+    </f:metadata>
+    <ui:define name="head">
+        <style type="text/css">
+            .old {
+                background-color: #fca752 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .red-row {
+                background-color: red !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .noBorders tr, .noBorders td {
+                background: none !important;
+                border: none !important;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Attendance Activities</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('ABSEN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" life="8000"/>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Absen #{controllerAbsensi.itemPegawai.nama} Periode #{options.getNamaBulanbyDate(controllerAbsensi.datestart)}</h1>
+                    <div style="text-align: right;padding-bottom: 5px;">
+                        <p:commandButton id="xls1" ajax="false" value="Export to Excel" icon="ui-icon-grid-on">  
+                            <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="xlsx" target="singleDT" fileName="#{controllerAbsensi.itemPegawai.nama}_#{options.getNamaBulanbyDate(controllerAbsensi.datestart)}"/>  
+                        </p:commandButton>    
+
+                        <p:commandButton id="autogenerate" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-autorenew" value="Buat absen otomatis" rendered="#{controllerAbsensi.itemStatus.status ne 'P'}">
+                            <f:setPropertyActionListener value="#{controllerAbsensi.itemPegawai}" target="#{controllerAbsensi.itemPegawai}" />
+                        </p:commandButton>    
+                    </div>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAbsensi.dataAbsen}" rowIndexVar="ri" editable="true" 
+                                 rowStyleClass="#{(item.schedule eq 'o' and item.id_status_absen eq 'M') and (item.jam_masuk eq null or item.jam_keluar eq null or item.jam_masuk eq item.jam_keluar)
+                                                  or (item.id_status_absen eq null  and item.schedule ne 'o') 
+                                                  or (item.id_status_absen eq 'M' or item.id_status_absen eq 'LA' or item.id_status_absen eq 'MW') and  ((item.jam_masuk eq item.jam_keluar and item.schedule ne 'o') or (item.jam_masuk eq null and item.schedule ne 'o') or (item.jam_keluar eq null and item.schedule ne 'o')) ? 'old' : null}">
+
+                        <p:ajax event="rowEdit" listener="#{controllerAbsensi.onRowEdit}" update=":form:growl  singleDT" />
+                        <p:ajax event="rowEditCancel" listener="#{controllerAbsensi.onRowCancel}" update=":form:growl singleDT" />
+
+                        <f:facet name="header">
+                            <h:outputText value="Absen #{controllerAbsensi.itemPegawai.nama} Periode #{options.getNamaBulanbyDate(controllerAbsensi.datestart)}" />
+                        </f:facet>
+                        <p:columnGroup type="header">  
+                            <p:row>  
+                                <p:column headerText="Tanggal"/>  
+                                <p:column headerText="Jam Masuk"/>  
+                                <p:column headerText="Jam Keluar"/>  
+                                
+                                <p:column headerText="Jadwal Kerja"/>  
+                                <p:column headerText="Status Absen"/>  
+                                <p:column headerText="Keterangan"/>  
+                                <p:column headerText="Pengajuan lembur jam istirahat"/>  
+                                <p:column headerText="Jumlah lembur jam istirahat"/>
+                                <p:column style="width:25px; text-align: center;" rendered="#{controllerAbsensi.itemStatus.status ne 'P'}" exportable="false"/>  
+                                <p:column style="width:25px; text-align: center;" rendered="#{controllerAbsensi.itemStatus.status ne 'P'}" exportable="false"/>  
+                            </p:row>  
+                        </p:columnGroup>  
+
+                        <p:column >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="EEE, dd MMM yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column >
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.jam_masuk}" ><f:convertDateTime pattern="HH:mm" /></h:outputText></f:facet>
+                                <f:facet name="input"><p:calendar id="timein" value="#{item.jam_masuk}"  pattern="HH:mm" mask="99:99" maxlength="5" timeOnly="true"/></f:facet>   
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column >
+                            <p:cellEditor >
+                                <f:facet name="output"><h:outputText value="#{item.jam_keluar}" ><f:convertDateTime pattern="HH:mm" /></h:outputText></f:facet>
+                                <f:facet name="input"><p:calendar id="timeout" value="#{item.jam_keluar}"  pattern="HH:mm" mask="99:99" maxlength="5" timeOnly="true"/></f:facet>   
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.schedule_des}" />
+                        </p:column>
+                        <p:column >
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.status_absen}"/></f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu id="bagian" value="#{item.id_status_absen}" >
+                                        <f:selectItem itemValue="" itemLabel=""/>
+                                        <f:selectItems value="#{options.comboStatusAbsen}" />
+                                    </p:selectOneMenu>
+                                </f:facet>   
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column >
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.keterangan}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{item.keterangan}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column exportable="false">
+                            <h:outputText value="#{item.break_time} " />
+                        </p:column>
+                        <p:column exportable="false">
+                            <p:cellEditor rendered="#{item.break_time ne null}">
+                                <f:facet name="output"><h:outputText value="#{item.jam_break}" ><f:convertDateTime pattern="HH:mm" /></h:outputText></f:facet>
+                                <f:facet name="input"><p:calendar id="timebreak" value="#{item.jam_break}"  pattern="HH:mm" mask="99:99" maxlength="5" timeOnly="true"/></f:facet>   
+                            </p:cellEditor>
+                            <h:outputText value="" rendered="#{item.break_time eq null}"/>
+                        </p:column>
+                        <p:column style="width:20px" rendered="#{controllerAbsensi.itemStatus.status ne 'P'}" exportable="false">
+                            <p:rowEditor/>
+
+
+                        </p:column>
+                        <p:column style="width:25px; text-align: center;" rendered="#{controllerAbsensi.itemStatus.status ne 'P'}" exportable="false">
+
+                            <p:commandLink id="ajax"    actionListener="#{controllerAbsensi.onRowAuto(item, ri)}" update=":form:singleDT :form:growl" title="Auto Generate Absen">
+                                <i class="fa  fa-bell" ></i>
+                            </p:commandLink>
+
+                        </p:column>
+                    </p:dataTable>
+                    <p:panelGrid id="tombol" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;" >
+                        <p:commandButton id="simpan"
+                                         value="Simpan" 
+                                         process="@form"
+                                         icon="fa  fa-floppy-o" 
+                                         rendered="#{controllerAbsensi.itemStatus.status ne 'P'}"
+                                         >
+                            <p:ajax listener="#{controllerAbsensi.submitAbsen('D')}"   update="tombol growl"/> 
+                        </p:commandButton>
+                        <p:commandButton id="posting"
+                                         value="Posting" 
+                                         process="@form"
+                                         icon="fa  fa-floppy-o" 
+                                         rendered="#{controllerAbsensi.itemStatus.status ne 'P' and page.myPegawai.id_jabatan_new eq page.settinganApproval(2).jabatanpersetujuan1}"
+                                         >
+                            <p:ajax listener="#{controllerAbsensi.submitAbsen('P')}"   update="tombol growl singleDT autogenerate"/> 
+                        </p:commandButton>
+
+                    </p:panelGrid>
+                </div>
+            </div>
+
+            <p:dialog header="Buat absen otomatis" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Membuat absen otomatis untuk pegawai :"/>
+                    <h:outputText value="#{controllerAbsensi.itemPegawai.nama} Periode #{options.getNamaBulanbyDate(controllerAbsensi.datestart)}" style="font-weight:bold" />                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerAbsensi.onGenerateAbsen(controllerAbsensi.datestart, controllerAbsensi.item.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl :form:singleDT" value="Submit" />
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Batal" />
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

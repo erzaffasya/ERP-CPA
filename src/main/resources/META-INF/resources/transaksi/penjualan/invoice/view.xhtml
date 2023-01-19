@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Order Penjualan</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPenjualan.item.no_penjualan}" />
+        <f:viewAction action="#{controllerPenjualan.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="listadmin.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerPenjualan.cetak()}" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                                    <ui:include src="view_atas.xhtml"/>
+                                    <ui:include src="view_detail.xhtml"/>
+                                    <ui:include src="view_bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

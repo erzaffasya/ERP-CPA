@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input Sales Contract</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="id_customer" value="Customer :"/>
+        <p:autoComplete required="true"  id="id_customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                        var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                        groupBy="#{customerAutoComplete.getCustomerGroup(customer)}" scrollHeight="250"  requiredMessage="Nama Customer harus diisi !!!" >
+            <p:ajax event="itemSelect" listener="#{controllerHargaJual.onCustomerSelect}"  />
+            <p:column headerText="Kode" >
+                <h:outputText value="#{customer.id_kontak}" />
+            </p:column>
+            <p:column headerText="Cutomer" >
+                <h:outputText value="#{customer.customer}" />
+            </p:column>
+        </p:autoComplete>    
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:inputText id="keterangan" value="#{controllerHargaJual.item.nama_kontrak}" immediate="true" required="true" requiredMessage="Nomor Kontrak Harus diisi !!"/>
+        <p:outputLabel for="nomor" value="No Kontrak"/>
+        <p:inputText id="nomor" value="#{controllerHargaJual.item.no_kontrak}" immediate="true" required="true" requiredMessage="Nomor Kontrak Harus diisi !!"/>
+        <p:outputLabel for="tanggal" value="Tgl Kontrak"/>
+        <p:calendar id="tanggal" value="#{controllerHargaJual.item.tanggal}" required="true" requiredMessage="Tanggal Kontrak harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="tanggal_mulai" value="Tgl Mulai"/>
+        <p:calendar id="tanggal_mulai" value="#{controllerHargaJual.item.tgl_mulai}" required="true" requiredMessage="Tanggal Mulai harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="tanggal_selesai" value="Tgl Selesai"/>
+        <p:calendar id="tanggal_selesai" value="#{controllerHargaJual.item.tgl_selesai}" required="true" requiredMessage="Tanggal Kontrak harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+
+
+
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerHargaJual.extend}" update="detil"/>
+        </p:commandButton>
+    </p:panelGrid>
+
+
+</ui:composition>

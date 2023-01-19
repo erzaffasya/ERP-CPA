@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Daftar Return Pembelian Barang</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerReturnPembelianGudang.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:commandButton process="singleDT"  icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerReturnPembelianGudang.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerReturnPembelianGudang.item}" target="#{controllerReturnPembelianGudang.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Return Barang</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReturnPembelianGudang.dataReturn}" selectionMode="single" reflow="true"
+                                 selection="#{controllerReturnPembelianGudang.item}" rowKey="#{item.no_return_pembelian_gudang}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:column headerText="Nomor Return" sortBy="#{item.no_return_pembelian_gudang}" style="width:120px;">
+                            <h:outputText value="#{item.no_return_pembelian_gudang}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Return" sortBy="#{item.tanggal}" style="width:120px;">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Receipt No" sortBy="#{item.nomor_penerimaan}" style="width:120px;">
+                            <h:outputText value="#{item.nomor_penerimaan}" />
+                        </p:column>
+                        <p:column headerText="Supplier" sortBy="#{item.nama_supplier}">
+                            <h:outputText value="#{item.nama_supplier}" />
+                        </p:column>
+                        <p:column headerText="Nomor DO" sortBy="#{item.referensi } " style="width:180px;">
+                            <h:outputText value="#{item.referensi}" />
+                            
+                        </p:column>
+
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Po :" />
+                    <h:outputText value="#{controllerReturnPembelianGudang.item.no_return_pembelian_gudang}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerReturnPembelianGudang.delete(controllerReturnPembelianGudang.item.no_return_pembelian_gudang)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

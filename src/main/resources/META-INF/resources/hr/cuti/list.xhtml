@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    
+    
+    <f:metadata>
+        <f:viewAction action="#{controllerCuti.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+  
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('CUTI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah Cuti Baru"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Cuti</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerCuti.dataCuti}" sortBy="#{item.nama_master}" expandableRowGroups="true" 
+                                 rowIndexVar="index">
+                        <p:headerRow>
+                            <p:column>
+                                <h:outputText value="#{item.nama_master}" />
+                            </p:column>
+                        </p:headerRow>
+                        <p:column >
+                            <p:panelGrid  columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="#{item.nama_cuti}" style="font-weight: bold"/>
+                                <div style="text-align: right;"><p:commandButton actionListener="#{controllerCuti.update(item.id)}"   icon="ui-icon-update" value="Edit" style="text-align: right;"/></div>
+                             </p:panelGrid> 
+                            
+                            <p:panelGrid  columns="1" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                                <h:outputText value="#{item.keterangan}" style="font-weight: bold" rendered="#{item.master ne 4}"/>
+                                <h:outputText value="#{item.keterangan_khusus}" escape="false" rendered="#{item.master eq 4}"/>
+                                <h:outputText value="Berlaku untuk seluruh karyawan" rendered="#{item.all_employee}"/>
+                            </p:panelGrid> 
+                            
+                            <p:panelGrid  columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" rendered="#{!item.all_employee}">
+                                <h:outputText value="Berlaku untuk : " />
+                                <h:panelGroup/>
+                                <h:panelGroup/>
+                                <h:outputText value="#{item.jabatan}" escape="false"/>
+                            </p:panelGrid>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

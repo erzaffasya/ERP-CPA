@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Daftar Packing List</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPackinglist.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PACKINGLIST')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="../../transaksi/penjualan/so/listgudang.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerPackinglist.update()}"   icon="ui-icon-update" value="Edit" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPackinglist.item}" target="#{controllerPackinglist.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPackinglist.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Picking List </h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Picking List"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPackinglist.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPackinglist.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerPackinglist.statusIp}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Do Process" itemValue="P" />
+                            <f:selectItem itemLabel="DO Completed" itemValue="A" />
+                            <f:selectItem itemLabel="Cancel" itemValue="C" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerPackinglist.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPackinglist.dataPackinglist}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerPackinglist.item}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerPackinglist.update()}" global="false" />
+                        <p:column headerText="Nomor" sortBy="#{item.nomor}"  filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}"  filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Nomor SO" sortBy="#{item.no_so}"  filterBy="#{item.no_so}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_so}" />
+                        </p:column>
+                        <p:column headerText="Tgl.SO Complete" sortBy="#{item.tanggal_so}"  filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal_so}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="DO Process" rendered="#{item.status eq 'P'}"/>
+                            <h:outputText value="DO Completed" rendered="#{item.status eq 'A'}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C'}"/>
+                        </p:column>
+                        <p:column headerText="Nomor DO" sortBy="#{item.nomor_do}"  filterBy="#{item.nomor_do}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_do}" />
+                        </p:column>
+                        <p:column headerText="Tgl. DO Complete" sortBy="#{item.tanggal_do}"  filterBy="#{item.tanggal_do}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal_do}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                            </h:outputText>    
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Picking List" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Picking List Nomor :" rendered="#{controllerPackinglist.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerPackinglist.item.nomor}" style="font-weight:bold" rendered="#{controllerPackinglist.item.status eq 'D'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPackinglist.delete(controllerPackinglist.item.nomor)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerPackinglist.item.status eq 'D'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerPackinglist.item.status eq 'D'}"/>
+                    
+                    <h:outputText style="font-weight:bold; color: red;" value="Anda Tidak Dapat menghapus  Penerimaan Picking List Nomor : #{controllerPenerimaanGudang.item.no_penerimaan}" rendered="#{controllerPackinglist.item.status ne 'D'}"/>
+                    <p:commandButton id="odButton" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerPackinglist.item.status ne 'D'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

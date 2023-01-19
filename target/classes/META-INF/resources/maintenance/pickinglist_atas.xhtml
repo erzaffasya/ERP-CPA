@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Maintenance  Picking List</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. PL."/>
+        <p:inputText id="nomor" value="#{controllerPackinglist.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl PL"/>
+        <p:calendar pattern="dd-MM-yyyy" id="tanggal" value="#{controllerPackinglist.item.tanggal}" required="true" mask="99-99-9999" maxlength="10"  requiredMessage="Tgl PL Date harus diisi !!" >
+            <p:ajax event="dateSelect" listener="#{controllerPackinglist.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerPackinglist.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel for="nomor_so" value="SO No."/>
+        <p:inputText id="nomor_so" value="#{controllerPackinglist.item.no_so}" readonly="true">
+        </p:inputText>
+        <p:outputLabel for="customer" value="Customer "/>
+        <p:inputText id="customer" value="#{controllerPackinglist.item.customer}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerPackinglist.item.referensi}" immediate="true" />
+        <p:outputLabel for="kepada" value="Contact Person "/>
+        <p:inputText id="kepada" value="#{controllerPackinglist.item.kepada}"/>
+
+        <p:outputLabel for="gudang" value="Gudang "/>
+        <p:inputText id="gudang" value="#{controllerPackinglist.item.gudang}" readonly="true"/>
+        <p:outputLabel for="telpon" value="Telpon "/>
+        <p:inputText id="telpon" value="#{controllerPackinglist.item.telpon}"/>
+        <p:outputLabel for="deliverypoint" value="Delivery Point "/>
+        <p:textEditor id="deliverypoint" widgetVar="editor3" value="#{controllerPackinglist.item.deliverypoint}" height="100" style="margin-bottom:10px" placeholder="Enter your content">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+        <p:outputLabel for="keterangan" value="Keterangan "/>
+        <p:textEditor id="keterangan" widgetVar="editor2" value="#{controllerPackinglist.item.keterangan}" height="100" style="margin-bottom:10px" placeholder="Enter your content">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+        <p:outputLabel for="@next"  value="Status"/>
+        <p:selectOneMenu id="status" value="#{controllerPackinglist.item.status}" >
+            <f:selectItem itemLabel="Draft" itemValue="D" />
+            <f:selectItem itemLabel="Send" itemValue="S" />
+            <f:selectItem itemLabel="Do Process" itemValue="P" />
+            <f:selectItem itemLabel="DO Completed" itemValue="A" />
+            <f:selectItem itemLabel="Cancel" itemValue="C" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+</ui:composition>

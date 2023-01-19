@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-lg-8">
+            <!-- Left Side -->
+            <div class="card card-w-title">
+                <h1>Data pribadi</h1>
+                <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    
+                    <p:outputLabel for="nama" value="Nama Lengkap"/>
+                    <p:inputText id="nama" value="#{controllerHrPegawai.item.nama}" required="true"/>
+                    <p:outputLabel for="nama_panggilan" value="Nama Panggilan"/>
+                    <p:inputText id="nama_panggilan" value="#{controllerHrPegawai.item.nama_panggilan}" required="true"/>
+                    <p:outputLabel for="tempat_lahir" value="Tempat Lahir"/>
+                    <p:inputText id="tempat_lahir" value="#{controllerHrPegawai.item.tempat_lahir}" required="true"/>
+                    <p:outputLabel for="tanggal_lahir" value="Tanggal_lahir"/>
+                    <p:calendar id="tanggal_lahir" value="#{controllerHrPegawai.item.tanggal_lahir}" required="true" requiredMessage="Tanggal lahir harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    <p:outputLabel for="nik_ktp" value="NIK KTP"/>
+                    <p:inputText id="nik_ktp" value="#{controllerHrPegawai.item.nik_ktp}"/>
+                    <p:outputLabel for="gender" value="Gender"/>
+                    <p:selectOneMenu id="gender" value="#{controllerHrPegawai.item.jenis_kelamin}">
+                        <f:selectItems value="#{options.jenisKelamin}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="status_pernikahan" value="Status Pernikahan"/>
+                    <p:selectOneMenu id="status_pernikahan" value="#{controllerHrPegawai.item.status_pernikahan}">
+                        <f:selectItems value="#{options.statusPernikahan}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="agama" value="Agama"/>
+                    <p:selectOneMenu id="agama" value="#{controllerHrPegawai.item.agama}">
+                        <f:selectItems value="#{options.comboAgama}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="golongan_darah" value="Golongan darah"/>
+                    <p:selectOneMenu id="golongan_darah" value="#{controllerHrPegawai.item.golongan_darah}">
+                        <f:selectItems value="#{options.comboGolonganDarah}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="tinggi_badan" value="Tinggi badan"/>
+                    <p:inputText id="tinggi_badan" value="#{controllerHrPegawai.item.tinggi_badan}" />
+                    <p:outputLabel for="berat_badan" value="Berat badan"/>
+                    <p:inputText id="berat_badan" value="#{controllerHrPegawai.item.berat_badan}" />
+                    <p:outputLabel for="anak_ke" value="Anak ke"/>
+                    <p:inputText id="anak_ke" value="#{controllerHrPegawai.item.anak_ke}" />
+                    <p:outputLabel  value="Aktif"/>
+                    <p:selectBooleanCheckbox  value="#{controllerHrPegawai.item.status}" />
+                </p:panelGrid>
+            </div>
+        </div>
+
+        <div class="ui-g-12 ui-lg-4">
+            <div class="card card-w-title">
+                <h3>Hubungan Kerja</h3>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="mulai_bekerja" value="Mulai bekerja"/>
+                    <p:calendar id="mulai_bekerja" value="#{controllerHrPegawai.item.mulai_bekerja}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    <p:outputLabel for="nik" value="Kode"/>
+                    <p:inputText id="nik" value="#{controllerHrPegawai.item.id_pegawai}" required="true"/>
+                    <p:outputLabel for="nip" value="NIK Karyawan"/>
+                    <p:inputText id="nip" value="#{controllerHrPegawai.item.nip}" required="true"/>
+                    <p:outputLabel for="jabatan" value="Jabatan"/>
+                    <p:selectOneMenu id="jabatan" value="#{controllerHrPegawai.item.id_jabatan}" required="true">
+                        <f:selectItems value="#{controllerHrJabatan.comboJabatan}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="departemen" value="Departemen"/>
+                    <p:selectOneMenu id="departemen" value="#{controllerHrPegawai.item.id_departemen}" required="true">
+                        <f:selectItems value="#{controllerHrDepartemen.comboParent}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="kantor" value="Kantor"/>
+                    <p:selectOneMenu id="kantor" value="#{controllerHrPegawai.item.id_kantor}" required="true">
+                        <f:selectItems value="#{options.comboKantor}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel  value="Head Departement"/>
+                    <p:selectBooleanCheckbox  value="#{controllerHrPegawai.item.hd}" />
+                </p:panelGrid>
+            </div>
+        </div>
+
+
+
+
+        <div class="ui-g-12 ui-lg-6">
+            <div class="card card-w-title">
+                <h3>ALAMAT KTP</h3>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="alamat_ktp" value="Alamat"/>
+                    <p:inputTextarea  id="alamat_ktp" rows="3" cols="20" value="#{controllerHrPegawai.item.alamat_ktp}"/>
+                    <p:outputLabel for="kodepos_ktp" value="Kode pos"/>
+                    <p:inputText id="kodepos_ktp" value="#{controllerHrPegawai.item.kodepos_ktp}" />
+                </p:panelGrid>
+                <h3>ALAMAT DOMISILI</h3>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="alamat_ktp" value="Alamat"/>
+                    <p:inputTextarea  id="alamat_ktp" rows="3" cols="20" value="#{controllerHrPegawai.item.alamat_ktp}"/>
+                    <p:outputLabel for="kodepos_ktp" value="Kode pos"/>
+                    <p:inputText id="kodepos_ktp" value="#{controllerHrPegawai.item.kodepos_ktp}" />
+                </p:panelGrid>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-lg-6">
+            <div class="card card-w-title">
+                <h3>CONTACT PERSON</h3>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                    <p:outputLabel  value="Hp 1"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.hp}"/>
+                    <p:outputLabel  value="Hp 2"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.hp2}"/>
+                    <p:outputLabel  value="Hp 3"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.hp3}"/>
+                    <p:outputLabel  value="Whatsapp"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.wa}"/>
+                    <p:outputLabel for="email" value="Email"/>
+                    <p:inputText id="email" value="#{controllerHrPegawai.item.email}" />
+                </p:panelGrid>
+                <h3>EMERGENCY CONTACT</h3>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                    <p:outputLabel  value="1"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.emergency1}"/>
+                    <p:outputLabel  value="2"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.emergency2}"/>
+                    <p:outputLabel  value="3"/>
+                    <p:inputText  value="#{controllerHrPegawai.item.emergency3}"/>
+
+                </p:panelGrid>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-lg-6">
+            <div class="card card-w-title">
+                <h3>STATUS KETENAGAKERJAAN</h3>        
+                <h4>PKWT</h4>        
+                <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="pkwt_awal" value="Awal" style="text-align: right"/>
+                    <p:calendar id="pkwt_awal" value="#{controllerHrPegawai.item.pkwt_awal}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    <p:outputLabel for="pkwt_akhir" value="Akhir" style="text-align: right"/>
+                    <p:calendar id="pkwt_akhir" value="#{controllerHrPegawai.item.pkwt_akhir}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                </p:panelGrid>
+                <h4>PROBATION</h4>        
+                <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="probation_awal" value="Awal" style="text-align: right"/>
+                    <p:calendar id="probation_awal" value="#{controllerHrPegawai.item.probation_awal}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    <p:outputLabel for="probation_akhir" value="Akhir" style="text-align: right"/>
+                    <p:calendar id="probation_akhir" value="#{controllerHrPegawai.item.probation_akhir}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                </p:panelGrid>
+                <h4>PKWTT</h4>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="pkwtt" value="Sejak"/>
+                    <p:calendar id="pkwtt" value="#{controllerHrPegawai.item.pkwtt}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                </p:panelGrid>
+            </div>
+        </div>    
+
+        <div class="ui-g-12 ui-lg-6">
+            <div class="card card-w-title">
+                <h3>NO. KEPESERTAAN JAMINAN SOSIAL KARYAWAN/TI</h3>        
+                <h4>BPJS-TK</h4>        
+                <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-5,ui-grid-col-1,ui-grid-col-5" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="bpjs_tk" value="CPA" />
+                    <p:inputText id="bpjs_tk" value="#{controllerHrPegawai.item.bpjs_tk}"/>
+                    <p:outputLabel for="bpjs_tk2" value="CRA" />
+                    <p:inputText id="bpjs_tk2" value="#{controllerHrPegawai.item.bpjs_tk2}"/>
+                </p:panelGrid>
+                <h4>BPJS-KES</h4>        
+                <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="bpjs_kes" value="Nomor" />
+                    <p:inputText id="bpjs_kes" value="#{controllerHrPegawai.item.bpjs_kes}"/>
+                    <p:outputLabel for="kelas" value="Kelas" />
+                    <p:inputText id="kelas" value="#{controllerHrPegawai.item.kelas}"/>
+                </p:panelGrid>
+                <h4> </h4>        
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="prudential" value="Prudential" />
+                    <p:inputText id="prudential" value="#{controllerHrPegawai.item.prudential}"/>
+                    <p:outputLabel for="allianz" value="Allianz" />
+                    <p:inputText id="allianz" value="#{controllerHrPegawai.item.allianz}"/>
+                    <p:outputLabel for="sunlife" value="Sunlife" />
+                    <p:inputText id="sunlife" value="#{controllerHrPegawai.item.sunlife}"/>
+                </p:panelGrid>
+            </div>
+        </div>    
+    </div>
+
+
+</ui:composition>

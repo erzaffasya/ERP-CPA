@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.onLoadListAsset()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <form>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12 ui-lg-12">
+
+                                <div class="ui-g-12  ui-lg-3" >
+                                    <ui:include src="leftprofile.xhtml"/>
+                                </div>
+
+                                <div class="ui-g-12  ui-lg-9">    
+
+                                    <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataAsset}" sortBy="#{item.tanggal_pinjam}"  
+                                                 rowIndexVar="index">
+                                        <p:column headerText="Tanggal Pinjam">
+                                            <h:outputText value="#{item.tanggal_pinjam}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Serial Number">
+                                            <h:outputText value="#{item.id_asset}" />
+                                        </p:column>
+                                        <p:column headerText="Deskripsi">
+                                            <h:outputText value="#{item.nama_barang}" />
+                                        </p:column>
+                                        <p:column headerText="Tanggal Kembali">
+                                            <h:outputText value="#{item.tanggal_kembali}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>    
+    </ui:define>
+</ui:composition>

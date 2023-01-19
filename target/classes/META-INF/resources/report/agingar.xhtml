@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">Aging AR</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerReportAr.item.customer_code}" />
+        <f:viewAction action="#{controllerReportAr.onLoadAgingAr()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('AGINGAR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Aging AR #{controllerReportAr.item.customer} </h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel for="id_customer" value="Nama Customer :"/>
+                        <p:autoComplete   id="id_customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                                          var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                                          scrollHeight="250" size="50">
+
+                            <p:ajax event="itemSelect" listener="#{controllerReportAr.onCustomerAgingAr()}" update="singleDT" />
+                            <p:column headerText="Kode" >
+                                <h:outputText value="#{customer.id_kontak}" />
+                            </p:column>
+                            <p:column headerText="Customer" >
+                                <h:outputText value="#{customer.customer}" />
+                            </p:column> 
+                        </p:autoComplete>
+                        <p:outputLabel  value="Mulai" style="text-align: center"/>
+                        <p:calendar id="awal" value="#{controllerReportAr.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{controllerReportAr.onLoadAgingAr()}"   icon="ui-icon-search" value="Search" update="growl singleDT"/>
+                    <div style="text-align: right">
+                        <p:commandLink id="pdf" ajax="false"  >  
+                            <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="pdf" target="singleDT" fileName="UmurInvoice"  
+                                         tableTitle="DAFTAR INVOICE #{controllerReportAr.item.customer}"   orientation="Landscape"  
+                                         facetFontSize="10"  facetFontStyle="BOLD"  
+                                         cellFontSize="8" cellFontStyle="NORMAL" />  
+                        </p:commandLink> 
+                        <p:commandLink id="xlsx" ajax="false"  >  
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50" />
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="xlsx" target="singleDT" fileName="Umur Invoice" 
+                                         orientation="Landscape"  
+                                         facetFontSize="15"  
+                                         facetFontStyle="BOLD" cellFontColor="#000000" cellFontSize="12"  datasetPadding="1"  
+                                         cellFontStyle="NORMAL"/>  
+                        </p:commandLink> 
+                    </div>    
+                    <p:dataTable  id="singleDT" var="item" value="#{controllerReportAr.dataAccOsAr}"  rowIndexVar="index"
+                                  scrollable="true"   
+                                  >
+
+                        <p:column style="width:50px;">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column  style="width: 150px;">
+                            <f:facet name="header">  
+                                <h:outputText value="Invoice No" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.invoice_number}" />
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="Invoice Date" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.invoice_date}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="Due Date" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.duedate}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="Cabang" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.cabang}" />
+                        </p:column>
+                        <p:column  style="width: 120px;">
+                            <f:facet name="header">  
+                                <h:outputText value="Nomor Po" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column  style="width: 50px">
+                            <f:facet name="header">  
+                                <h:outputText value="Umur Invoice (Day)" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.umur}" />
+                        </p:column>
+                        <p:column  style="width: 50px">
+                            <f:facet name="header">  
+                                <h:outputText value="Umur Overdue (Day)" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.umuroverdue}" />
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value=" &#60;= 0 Days" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.day1}" style="float: right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="1-30 Days" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.day2}" style="float: right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  style="width:100px; text-align: right;">
+                            <f:facet name="header">  
+                                <h:outputText value="31-60 Days" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.day3}" style="float: right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="61-90 Days"/>  
+                            </f:facet>  
+                            <h:outputText value="#{item.day4}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="91-120 Days" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.day5}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  >
+                            <f:facet name="header">  
+                                <h:outputText value="> 120 Days" />  
+                            </f:facet>  
+                            <h:outputText value="#{item.day6}" style="float:right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

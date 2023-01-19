@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadDataDiri()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton type="button" value="Cetak" icon="ui-icon-print" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerHrPegawai.ubahDataPribadi()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" >
+                        <div class="card card-w-title" >
+                            <h1 style="margin-left: 40px;">Edit Data Pribadi</h1>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">
+
+                                <p:outputLabel for="nama" value="Nama Lengkap" />
+                                <p:inputText id="nama" value="#{controllerHrPegawai.item.nama}" required="true" />
+                                <p:outputLabel  value="Aktif"/>
+                                <p:selectBooleanCheckbox  value="#{controllerHrPegawai.item.status}" />
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">    
+                                <p:outputLabel for="nama_panggilan" value="Nama Panggilan" />
+                                <p:inputText id="nama_panggilan" value="#{controllerHrPegawai.item.nama_panggilan}" required="false" />
+                                <p:outputLabel for="nik_ktp" value="NIK KTP" />
+                                <p:inputText id="nik_ktp" value="#{controllerHrPegawai.item.nik_ktp}" />
+                            </p:panelGrid>
+                            <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">
+                                <p:outputLabel  value="Tempat &amp; tanggal Lahir " />
+                                <p:inputText  value="#{controllerHrPegawai.item.tempat_lahir}" required="false" requiredMessage="Tempat &amp; Tanggal lahir harus diisi !!"  style="margin-bottom: 20px;"/>
+                                <p:calendar   value="#{controllerHrPegawai.item.tanggal_lahir}" required="false" requiredMessage="Tempat &amp; Tanggal lahir harus diisi !!" pattern="dd-MM-yyyy" mask="99-99-9999" maxlength="10" style="margin-bottom: 20px;"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">
+
+                                <p:outputLabel for="gender" value="Gender" />
+                                <p:selectOneMenu id="gender" value="#{controllerHrPegawai.item.jenis_kelamin}" style="margin-bottom: 20px;">
+                                    <f:selectItems value="#{options.jenisKelamin}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="status_pernikahan" value="Status Pernikahan" />
+                                <p:selectOneMenu id="status_pernikahan" value="#{controllerHrPegawai.item.status_pernikahan}" style="margin-bottom: 20px;">
+                                    <f:selectItems value="#{options.statusPernikahan}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="agama" value="Agama" />
+                                <p:selectOneMenu id="agama" value="#{controllerHrPegawai.item.id_agama}" style="margin-bottom: 20px;">
+                                    <f:selectItems value="#{options.comboAgama}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="golongan_darah" value="Golongan darah"/>
+                                <p:selectOneMenu id="golongan_darah" value="#{controllerHrPegawai.item.golongan_darah}" style="margin-bottom: 20px;">
+                                    <f:selectItems value="#{options.comboGolonganDarah}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="tinggi_badan" value="Tinggi badan" />
+                                <p:inputText id="tinggi_badan" value="#{controllerHrPegawai.item.tinggi_badan}" style="margin-bottom: 20px;"/>
+                                <p:outputLabel for="berat_badan" value="Berat badan" />
+                                <p:inputText id="berat_badan" value="#{controllerHrPegawai.item.berat_badan}" style="margin-bottom: 20px;"/>
+                                <p:outputLabel for="anak_ke" value="Anak ke" />
+                                <p:inputText id="anak_ke" value="#{controllerHrPegawai.item.anak_ke}" style="margin-bottom: 20px;"/>
+                                <p:outputLabel  value="No. HP" />
+                                <p:inputText  value="#{controllerHrPegawai.item.hp}" style="margin-bottom: 20px;"/>
+                                <h:panelGroup/>
+                                <p:inputText  value="#{controllerHrPegawai.item.hp2}" style="margin-bottom: 20px;"/>
+                                <p:outputLabel  value="WhatsApp" />
+                                <p:inputText  value="#{controllerHrPegawai.item.wa}" style="margin-bottom: 20px;"/>
+                                <p:outputLabel  value="Email" />
+                                <p:inputText  value="#{controllerHrPegawai.item.email}" style="margin-bottom: 20px;"/>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">
+                                <h:panelGroup/>
+                                <p:outputLabel  value="Alamat sesuai KTP" />
+                                <h:panelGroup/>
+                                <p:inputTextarea rows="3" value="#{controllerHrPegawai.item.alamat_ktp}">
+
+                                </p:inputTextarea>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;">
+                                <p:outputLabel for="provinsi"  value="Provinsi" />
+                                <p:selectOneMenu id="provinsi" value="#{controllerHrPegawai.item.provinsi_ktp}" style="margin-bottom: 20px;">
+                                    <f:selectItems value="#{options.provinsi}" />
+                                    <p:ajax listener="#{controllerHrPegawai.onLoadProvinsiKtp()}" update="kabupaten" event="change"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="kabupaten"  value="Kota/Kabupaten" />
+                                <p:selectOneMenu id="kabupaten" value="#{controllerHrPegawai.item.kabupaten_ktp}" style="margin-bottom: 20px;">
+                                    <f:selectItems value="#{options.kabupaten}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="kodepos"  value="Kode pos" />
+                                <p:inputText id="kodepos" value="#{controllerHrPegawai.item.kodepos_ktp}" style="margin-bottom: 20px;"/>
+                            </p:panelGrid>
+
+
+                            <p:panelGrid columns="2"  columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;" >
+                                <h:panelGroup/>
+                                <p:outputLabel  value="Alamat Domisili" />
+                                <h:panelGroup/>
+                                <p:selectBooleanCheckbox  value="#{controllerHrPegawai.item.alamatsama}" itemLabel="Sesuai dengan KTP" style="width: 200px">
+                                    <p:ajax event="change" update="alamatdomisili daerahdomisili" />
+                                </p:selectBooleanCheckbox>
+
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" id="alamatdomisili"  columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;" >
+                                <h:panelGroup/>
+                                <p:inputTextarea  rows="3" value="#{controllerHrPegawai.item.alamat_domisili}" rendered="#{controllerHrPegawai.item.alamatsama eq false}">
+
+                                </p:inputTextarea>
+                            </p:panelGrid>
+                            <p:panelGrid id="daerahdomisili" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; margin-left: 40px;" >
+                                <p:outputLabel for="provinsidomisili"  value="Provinsi" rendered="#{controllerHrPegawai.item.alamatsama eq false}"/>
+                                <p:selectOneMenu id="provinsidomisili" value="#{controllerHrPegawai.item.provinsi_domisili}" style="margin-bottom: 20px;" rendered="#{controllerHrPegawai.item.alamatsama eq false}">
+                                    <f:selectItems value="#{options.provinsi}" />
+                                    <p:ajax listener="#{controllerHrPegawai.onLoadProvinsiDomisili()}" update="kabupatendomisili" event="change"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="kabupatendomisili"  value="Kota/Kabupaten" rendered="#{controllerHrPegawai.item.alamatsama eq false}"/>
+                                <p:selectOneMenu id="kabupatendomisili" value="#{controllerHrPegawai.item.kabupaten_domisili}" style="margin-bottom: 20px;" rendered="#{controllerHrPegawai.item.alamatsama eq false}">
+                                    <f:selectItems value="#{options.kabupatenDomisili}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="kodeposdomisili"  value="Kode pos" rendered="#{controllerHrPegawai.item.alamatsama eq false}"/>
+                                <p:inputText id="kodeposdomisili" value="#{controllerHrPegawai.item.kodepos_domisili}" style="margin-bottom: 20px;" rendered="#{controllerHrPegawai.item.alamatsama eq false}"/>
+                            </p:panelGrid>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

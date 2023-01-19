@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerDo.dataDoDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+
+        <p:column headerText="Kode Barang" >
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Qty" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" required="true" readonly="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Satuan" styleClass="centerColumnContent">
+            <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText>
+        </p:column>
+        <p:column headerText="Packing Number" >
+            <p:cellEditor>
+                <f:facet name="output"> <h:outputText id="opacking" value="#{item.packing_number}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="packing" value="#{item.packing_number}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Segel">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText id="osegel" value="#{item.segel}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="segel" value="#{item.segel}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Kemasan">
+            <p:cellEditor>
+                <f:facet name="output"> <h:outputText id="okemasan" value="#{item.kemasan}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="kemasan" value="#{item.kemasan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Keterangan" >
+            <p:cellEditor>
+                <f:facet name="output"> <h:outputText id="oketerangan" value="#{item.keterangan}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="keterangan" value="#{item.keterangan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        
+
+    </p:dataTable>
+
+</ui:composition>

@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerCutiKaryawan.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerCutiKaryawan.update()}"   icon="ui-icon-update" value="Lihat Detil"  id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerCutiKaryawan.item}" target="#{controllerCutiKaryawan.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerCutiKaryawan.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>List pengajuan cuti</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="pdf">
+                            <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="pdf" target="singleDT" fileName="customerlist" />
+                        </h:commandLink>
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="customerlist"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerCutiKaryawan.dataCuti}" selectionMode="single" reflow="true"
+                                 selection="#{controllerCutiKaryawan.item}" rowKey="#{item.id}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerCutiKaryawan.update()}" global="false" />
+                        <p:column headerText="NIK" sortBy="#{item.id_pegawai}" filterBy="#{item.id_pegawai}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_pegawai}" />
+                        </p:column>
+                        <p:column headerText="Nama" sortBy="#{item.nama_pegawai}"  filterBy="#{item.nama_pegawai}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_pegawai}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Cuti" >
+                            <h:outputText value="#{item.tanggal}" />
+                        </p:column>
+                        <p:column headerText="Lama" >
+                            <h:outputText value="#{item.lama}" />
+                        </p:column>
+                        <p:column headerText="Tipe cuti" >
+                            <h:outputText value="#{item.nama_cuti}" />
+                        </p:column>
+                        <p:column headerText="Status">
+                            <h:outputText value="#{item.keterangan}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus  Pengajuan cuti" />
+                    <h:outputText value="#{controllerCutiKaryawan.item.nama_cuti}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerCutiKaryawan.delete(controllerCutiKaryawan.item.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

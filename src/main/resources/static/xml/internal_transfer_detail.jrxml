@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="internal_transfer_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="0" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="ce0166f9-6adb-472d-97c9-b470c647fe73">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select internal_transfer.* ,internal_transfer_detail.*, barang.*, peg_pengirim.nama as nama_pengirim,peg_penerima.nama as nama_penerima,satuan_besar.satuan_besar from internal_transfer
+join internal_transfer_detail on internal_transfer.nomor=internal_transfer_detail.nomor
+join barang on internal_transfer_detail.id_barang=barang.id_barang
+join satuan_besar on barang.id_satuan_besar=satuan_besar.id_satuan_besar
+left join pegawai as peg_pengirim on internal_transfer.pengirim=peg_pengirim.id_pegawai
+left join pegawai as peg_penerima on internal_transfer.penerima=peg_penerima.id_pegawai
+where internal_transfer.nomor=$P{nomor}]]>
+	</queryString>
+	<field name="nomor" class="java.lang.String"/>
+	<field name="id_gudang_asal" class="java.lang.String"/>
+	<field name="id_gudang_tujuan" class="java.lang.String"/>
+	<field name="pengirim" class="java.lang.String"/>
+	<field name="penerima" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="approve_by" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="tanggal_terima" class="java.sql.Date"/>
+	<field name="tanggal_kirim" class="java.sql.Date"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="nomor_io" class="java.lang.String"/>
+	<field name="driver" class="java.lang.String"/>
+	<field name="sipb" class="java.lang.String"/>
+	<field name="jam_kirim" class="java.lang.String"/>
+	<field name="jam_terima" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="telpon" class="java.lang.String"/>
+	<field name="urut" class="java.lang.Integer"/>
+	<field name="id_barang" class="java.lang.String"/>
+	<field name="qty" class="java.math.BigDecimal"/>
+	<field name="terima" class="java.math.BigDecimal"/>
+	<field name="nama_barang" class="java.lang.String"/>
+	<field name="id_kategori_barang" class="java.lang.String"/>
+	<field name="id_satuan_besar" class="java.lang.String"/>
+	<field name="id_satuan_kecil" class="java.lang.String"/>
+	<field name="barcode" class="java.lang.String"/>
+	<field name="id_jenis_barang" class="java.lang.String"/>
+	<field name="images" class="java.lang.Object"/>
+	<field name="nama_alias" class="java.lang.String"/>
+	<field name="isi_satuan" class="java.math.BigDecimal"/>
+	<field name="id_family" class="java.lang.String"/>
+	<field name="penampung" class="java.lang.Boolean"/>
+	<field name="nama_pengirim" class="java.lang.String"/>
+	<field name="nama_penerima" class="java.lang.String"/>
+	<field name="satuan_besar" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="3" width="33" height="20" backcolor="#CCCCCC" uuid="95d07b63-12d4-4333-a53c-0012d5570744"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="33" y="3" width="206" height="20" backcolor="#CCCCCC" uuid="8161bc9e-decd-4718-b5e6-dcfc8f78715b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nama Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="239" y="3" width="100" height="20" backcolor="#CCCCCC" uuid="1725a2f6-7b8e-4483-9e07-0e65ae402b5d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Kode Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="339" y="3" width="80" height="20" backcolor="#CCCCCC" uuid="a8d50f80-39f3-4d85-93fd-cbf50eb10b82"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="419" y="3" width="65" height="20" backcolor="#CCCCCC" uuid="ec7a53b1-e894-41b9-a7b6-d99e184a4f72"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Terima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="484" y="3" width="67" height="20" backcolor="#CCCCCC" uuid="806d041b-62f6-4bdc-9c0a-7671f2dc2e44"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Satuan]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="33" height="20" isPrintWhenDetailOverflows="true" uuid="f59a2226-144a-48df-9bf4-d03a40be5ac0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{urut}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="33" y="0" width="206" height="20" isPrintWhenDetailOverflows="true" uuid="c6f0cece-0f44-41fc-b8ba-266bd1b7d956"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="239" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="319212c9-7933-4a3e-bfde-9d23fc487d82"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_barang}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="339" y="0" width="80" height="20" isPrintWhenDetailOverflows="true" uuid="fee8fd5d-3393-4034-a46f-ef4a76b62004"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="419" y="0" width="65" height="20" isPrintWhenDetailOverflows="true" uuid="fdd53dad-5e42-4539-8f55-f5bdaccef353"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="484" y="0" width="67" height="20" isPrintWhenDetailOverflows="true" uuid="f9c39a27-bb27-44df-b64f-b915e08ba0ae"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{satuan_besar}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="122" splitType="Stretch">
+			<textField>
+				<reportElement x="33" y="83" width="100" height="20" uuid="01523744-11e8-4a1f-a4bc-769ffaa81256"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_pengirim}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="83" width="100" height="20" uuid="21c6d208-8eab-475b-9a37-210440a8b854"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_penerima}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="33" y="20" width="100" height="12" uuid="4e488183-2dd1-4a1b-8904-fd2f98acf613"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Pengirim]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="407" y="20" width="100" height="12" uuid="c32d6b01-18fc-477e-a055-d73f5aa11d28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Penerima]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

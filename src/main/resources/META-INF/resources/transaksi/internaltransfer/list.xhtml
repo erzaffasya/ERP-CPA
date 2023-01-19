@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Internal Transfer</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerInternalTransfer.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INTERNALTRANSFER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton process="singleDT"  icon="ui-icon-search" value="View"  />
+                            <p:button href="../internalorder/list.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerInternalTransfer.update()}"   icon="ui-icon-update" value="Edit" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerInternalTransfer.item}" target="#{controllerInternalTransfer.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerInternalTransfer.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Internal Transfer </h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Internal Transfer"/>
+                        </h:commandLink>
+                    </div>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerInternalTransfer.dataInternalTransfer}" selectionMode="single" reflow="true"
+                                 selection="#{controllerInternalTransfer.item}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="i">
+                        <p:ajax event="rowDblselect" listener="#{controllerInternalTransfer.update()}" global="false" />
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{i + 1}" />
+                        </p:column>
+                        <p:column headerText="IT No" sortBy="#{item.nomor}" >
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Gudang Asal" sortBy="#{item.gudang_asal}">
+                            <h:outputText value="#{item.gudang_asal}" />
+                        </p:column>
+                        <p:column headerText="Gudang Tujuan" sortBy="#{item.gudang_tujuan}">
+                            <h:outputText value="#{item.gudang_tujuan}" />
+                        </p:column>
+                        <p:column headerText="Nomor IO" sortBy="#{item.nomor_io}" filterBy="#{item.nomor_io}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_io}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" >
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}" /> 
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}" />
+                            <h:outputText value="Receipt" rendered="#{item.status eq 'R'}" />
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C' or item.status eq 'X'} " />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Internal Transfer" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus InternalTransfer No SPK :" />
+                    <h:outputText value="#{controllerInternalTransfer.item.nomor}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerInternalTransfer.delete(controllerInternalTransfer.item.nomor)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

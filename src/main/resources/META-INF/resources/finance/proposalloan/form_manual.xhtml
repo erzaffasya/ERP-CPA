@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+        
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel for="month" value="Periode :" />
+            <p:datePicker id="month" view="month" value="#{controllerProposalLoanPaid.datestart}" pattern="MMMM yyyy" yearNavigator="true" yearRange="2000:2030" style="width: 100%">
+                <p:ajax event="dateSelect" listener="#{controllerProposalLoanPaid.selectPeriode()}" update="detil growl"/>
+            </p:datePicker>
+            <p:outputLabel value="Keterangan" for="@next" />    
+            <p:inputText id="keterangan" value="#{controllerProposalLoanPaid.item.description1}" />
+        </p:panelGrid>
+        <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+            <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris" rendered="#{!controllerPenawaran.item.status}">
+                <p:ajax  listener="#{controllerProposalLoanPaid.extendManual}"  update="detil" />
+            </p:commandButton>
+        </p:panelGrid>
+        <p:dataTable id="detil" var="item" value="#{controllerProposalLoanPaid.dataProposalLoanPaidDetailMAnual}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+
+            <p:column headerText="Nama" >
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{item.nama}" id="onama"/></f:facet>
+                    <f:facet name="input">
+                        <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                          var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                          scrollHeight="250" required="true" requiredMessage="Nama pegawai harus diisi !!!"   >
+                            <p:ajax event="itemSelect" listener="#{controllerProposalLoanPaid.onPegawaiSelect(item,ri)}" update="detil nama"/>
+                        </p:autoComplete>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Jenis pinjaman" >
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{item.loan_type}" id="otipe"/> </f:facet>
+                    <f:facet name="input">
+                        <p:autoComplete dropdown="true"   id="loanType" value="#{loanTypeAutoComplete.loanType}" completeMethod="#{loanTypeAutoComplete.completeLoanTypeContains}"
+                                        var="loantype" itemLabel="#{loantype.loan_type}" itemValue="#{loantype}" converter="#{loanTypeConverter}"
+                                        scrollHeight="250" required="true" requiredMessage="Tipe pinjaman harus diisi !!!"   >
+                            <p:ajax event="itemSelect" listener="#{controllerProposalLoanPaid.onTypeSelect(item,ri)}" update="detil"/>
+                        </p:autoComplete>
+                    </f:facet>
+                </p:cellEditor>
+
+            </p:column>
+            <p:column headerText="Keterangan" >
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{item.description}" /></f:facet>
+                    <f:facet name="input"><p:inputText value="#{item.description}" /></f:facet>   
+                </p:cellEditor>
+            </p:column>
+            <p:column headerText="Jumlah bayar" >
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{item.amount}"  ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                    <f:facet name="input"><p:inputNumber  value="#{item.amount}" decimalPlaces="0"/> </f:facet>   
+                </p:cellEditor>
+            </p:column>
+            <p:column style="width:32px">
+                <p:commandButton  icon="fa fa-trash"  >
+                    <p:ajax  listener="#{controllerProposalLoanPaid.onDeleteClickedManual(item)}"  update="detil" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    
+</ui:composition>

@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Order Penjualan</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPenjualan.item.no_penjualan}" />
+        <f:viewAction action="#{controllerPenjualan.onLoadReguler()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INVOICE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerPenjualan.cetakReguler()}" />
+                            
+                                <p:commandButton id="simpan"
+                                                 actionListener="#{controllerPenjualan.ubahReguler('D')}"
+                                                 value="Simpan" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-floppy-o"
+                                                 rendered="#{controllerPenjualan.item.status eq 'D'}"
+                                                 />
+                                <p:commandButton id="approve"
+                                                 actionListener="#{controllerPenjualan.ubahReguler('A')}"
+                                                 value="Approve" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="fa  fa-check"
+                                                 rendered="#{controllerPenjualan.item.status eq 'D'}"
+                                                 />
+                           
+                            <p:commandButton id="reject" update=":form:display" 
+                                             onclick="PF('dlg3').show();" 
+                                             icon="fa  fa-close" value="Cancel"
+                                             rendered="#{controllerPenjualan.item.status eq 'A' }"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                                    <ui:include src="form_atas_reguler.xhtml"/>
+                                    <ui:include src="form_detail_reguler.xhtml"/>
+                                    <ui:include src="form_bawah_reguler.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel Invoice" widgetVar="dlg3" resizable="false" id="canceldo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                  <p:editor  id="pesan" widgetVar="editor4" value="#{controllerPenjualan.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerPenjualan.ubahStatus('C')}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="@form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

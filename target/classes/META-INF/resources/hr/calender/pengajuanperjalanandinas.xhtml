@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vendor</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPerjalananDinas.initMyItem()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Pengajuan perjalanan dinas</h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Nama karywan"/>
+                                <p:outputLabel   value="#{controllerPerjalananDinas.item.nama_pegawai}"/>
+
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="waktucuti"  value="Lama perjalanan dinas"/>
+                                <p:selectOneButton id="waktucuti" value="#{controllerPerjalananDinas.item.waktu}" required="true">
+                                    <f:selectItem itemLabel="Satu hari" itemValue="1" />
+                                    <f:selectItem itemLabel="Beberapa hari" itemValue="2" />
+                                    <p:ajax event="change" update="pntgl" />
+                                </p:selectOneButton>
+                            </p:panelGrid>
+                            <p:panelGrid columns="3"  columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:panelGroup/>
+                                <p:calendar id="tanggalawal" value="#{controllerPerjalananDinas.item.tanggal_awal}"  required="true" requiredMessage="Tanggal  harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="3" id="pntgl" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:panelGroup rendered="#{controllerPerjalananDinas.item.waktu eq '2'}"/>
+                                <p:calendar id="tanggalakhir" value="#{controllerPerjalananDinas.item.tanggal_akhir}"  showOn="button" required="true" requiredMessage="Tanggal  harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerPerjalananDinas.item.waktu eq '2'}"/>
+
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="tujuan"  value="Tujuan Perjalanan Dinas"/>
+                                <p:inputText id="tujuan" value="#{controllerPerjalananDinas.item.tujuan}" required="true"/>
+                                <p:outputLabel for="alasan"  value="Alasan perjalanan dinas"/>
+                                <p:inputTextarea id="alasan" value="#{controllerPerjalananDinas.item.keterangan}" cols="5" rows="4" required="true"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:button href="pengajuanperjalanandinas.jsf" value="Batalkan" styleClass="blue-grey-btn"/>
+                                <p:commandButton id="simpan"
+                                                 actionListener="#{controllerPerjalananDinas.addMyBusinessTrip()}"
+                                                 value="Ajukan" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form growl"
+                                                 icon="fa  fa-floppy-o"
+                                                 />
+                            </p:panelGrid>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

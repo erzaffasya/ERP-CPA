@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vendor</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPengguna.item.id_lama}" />
+        <f:viewAction action="#{controllerPengguna.onChangePassword()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <script>
+            function checkPassPwd1() {
+                var field = $('#frmPassword\\:pwd1');
+                var button = $('#button1');
+
+                if (field.attr('type') === 'password') {
+                    field.attr('type', 'text');
+                    button.removeClass('fa fa-eye');
+                    button.addClass('fa fa-eye-slash');
+
+                } else {
+                    field.attr('type', 'password');
+                    button.removeClass('fa fa-eye-slash');
+                    button.addClass('fa fa-eye');
+                }
+            }
+            
+            function checkPassPwd2() {
+                var field = $('#frmPassword\\:pwd2');
+                var button = $('#button2');
+
+                if (field.attr('type') === 'password') {
+                    field.attr('type', 'text');
+                    button.removeClass('fa fa-eye');
+                    button.addClass('fa fa-eye-slash');
+
+                } else {
+                    field.attr('type', 'password');
+                    button.removeClass('fa fa-eye-slash');
+                    button.addClass('fa fa-eye');
+                }
+            }
+            function checkPassPwd3() {
+                var field = $('#frmPassword\\:pwd3');
+                var button = $('#button3');
+
+                if (field.attr('type') === 'password') {
+                    field.attr('type', 'text');
+                    button.removeClass('fa fa-eye');
+                    button.addClass('fa fa-eye-slash');
+
+                } else {
+                    field.attr('type', 'password');
+                    button.removeClass('fa fa-eye-slash');
+                    button.addClass('fa fa-eye');
+                }
+            }
+        </script>
+        <h:form id="frmPassword">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <h:inputHidden value="#{controllerPengguna.item.id_lama}" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12  ui-lg-12">
+                                <h1>Ganti PIN</h1>
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <p:outputLabel for="@next" value="Pegawai" />
+                                    <p:inputText id="pegawai" value="#{controllerPengguna.item.nama}" readonly="true"/>
+                                    <h:panelGroup/>
+                                    <p:outputLabel for="@next" value="Username"/>
+                                    <p:inputText id="usernamenya" value="#{controllerPengguna.item.usernamenya}"  required="true"/>
+                                    <h:panelGroup/>
+                                    <p:outputLabel for="@next" value="PIN lama"/>
+                                    <p:password id="pwd1" value="#{controllerPengguna.item.pinold}"  required="true"/>
+                                    <button type="button" id="button1" onclick="checkPassPwd1()" class="fa fa-eye fa-lg"></button>
+                                    <p:outputLabel for="@next" value="PIN Baru"/>
+                                    <p:password id="pwd2" value="#{controllerPengguna.item.pinnya}" feedback="true" required="true" match="pwd3"/>
+                                    <button type="button" id="button2" onclick="checkPassPwd2()" class="fa fa-eye fa-lg"></button>
+                                    <p:outputLabel for="@next" value="Konfirmasi Pin"/>
+                                    <p:password  id="pwd3" value="#{controllerPengguna.item.pinconfirm}" feedback="true" required="true"/>
+                                    <button type="button" id="button3" onclick="checkPassPwd3()" class="fa fa-eye fa-lg"></button>
+                                    <p:commandButton id="simpan"
+                                                     actionListener="#{controllerPengguna.ubahPin()}"
+                                                     value="Simpan" 
+                                                     ajax="true"
+                                                     process="@form"
+                                                     update="@form"
+                                                     icon="fa  fa-floppy-o"
+                                                     >
+                                        <f:param name="i" value="10" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

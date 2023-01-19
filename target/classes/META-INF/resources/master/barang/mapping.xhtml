@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Produk</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerBarang.initMapping()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAPPINGBARANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Mapping  Produk</h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="@next" value="Nama Produk"/>
+                                <p:autoComplete  id="barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                                 var="brg" itemLabel="#{brg.nama_barang}" itemValue="#{brg}" converter="#{barangConverter}"
+                                                 scrollHeight="250" >
+                                    <p:ajax  event="itemSelect" listener="#{controllerBarang.onBarangFromSelect()}" update="materialcodenya aliasnya satuannya isisatuannya satuankecilnya detil"/>
+                                    <p:column headerText="Nama Barang" >
+                                        <h:outputText value="#{brg.nama_barang}" />
+                                    </p:column>
+                                    <p:column headerText="Nama Alias" >
+                                        <h:outputText value="#{brg.nama_alias}" />
+                                    </p:column>
+                                    <p:column headerText="Material Code" >
+                                        <h:outputText value="#{brg.id_barang}" />
+                                    </p:column>
+                                    <p:column headerText="Satuan" >
+                                        <h:outputText value="#{brg.satuan_besar}" />
+                                    </p:column>
+                                    <p:column headerText="Isi Satuan" >
+                                        <h:outputText value="#{brg.isi_satuan} #{brg.satuan_kecil}" />
+                                    </p:column>
+                                </p:autoComplete> 
+                                <p:outputLabel for="@next" value="Material Code"/>
+                                <p:outputLabel id="materialcodenya" value="#{controllerBarang.item.id_barang}"/>
+                                <p:outputLabel for="@next" value="Nama Alias"/>
+                                <p:outputLabel id="aliasnya" value="#{controllerBarang.item.nama_alias}"/>
+                                <p:outputLabel for="@next" value="Satuan"/>
+                                <p:outputLabel id="satuannya" value="#{controllerBarang.item.satuan_besar}"/>
+                                <p:outputLabel for="@next" value="Isi Satuan"/>
+                                <p:outputLabel id="isisatuannya" value="#{controllerBarang.item.isi_satuan}"/>
+                                <p:outputLabel for="@next" value="Satuan Kecil"/>
+                                <p:outputLabel id="satuankecilnya" value="#{controllerBarang.item.satuan_kecil}"/>
+                            </p:panelGrid>
+
+                            <p:dataTable id="detil" var="item" value="#{controllerBarang.dataBarang}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+                                <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{ri + 1}" />
+                        </p:column>
+                                <p:column headerText="Nama Barang" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{item.nama_barang}" id="onama_barang" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:autoComplete  id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                                             var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                                             scrollHeight="250" >
+                                                <p:ajax  event="itemSelect" listener="#{controllerBarang.onBarangSelect(item,ri)}" update="id_barang alias satuan_besar satuan_kecil isi detil"/>
+
+                                                <p:column headerText="Nama Barang" >
+                                                    <h:outputText value="#{barang.nama_barang}" />
+                                                </p:column>
+                                                <p:column headerText="Nama Alias" >
+                                                    <h:outputText value="#{barang.nama_alias}" />
+                                                </p:column>
+                                                <p:column headerText="Material Code" >
+                                                    <h:outputText value="#{barang.id_barang}" />
+                                                </p:column>
+                                                <p:column headerText="Satuan" >
+                                                    <h:outputText value="#{barang.satuan_besar}" />
+                                                </p:column>
+                                                <p:column headerText="Isi Satuan" >
+                                                    <h:outputText value="#{barang.isi_satuan} #{barang.satuan_kecil}" />
+                                                </p:column>
+                                            </p:autoComplete>    
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Kode Barang">
+                                    <h:outputText value="#{item.id_barang}" id="id_barang"/>
+                                </p:column>
+                                <p:column headerText="Nama Alias">
+                                    <h:outputText value="#{item.nama_alias}" id="alias"/>
+                                </p:column>
+
+                                <p:column headerText="Satuan" >
+                                    <h:outputText id="satuan_besar" value="#{item.satuan_besar}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="Isi Satuan" >
+                                    <h:outputText id="isi" value="#{item.isi_satuan}"></h:outputText>
+                                </p:column>
+                                <p:column headerText="Satuan Kecil" >
+                                    <h:outputText id="satuan_kecil" value="#{item.satuan_kecil}"></h:outputText>
+                                </p:column>
+                                <p:column style="width:32px" rendered="#{!controllerPenawaran.item.status}">
+                                    <p:commandButton  icon="fa fa-trash"  >
+                                        <p:ajax  listener="#{controllerBarang.onDeleteClicked(item)}"  update="detil" />
+                                    </p:commandButton>
+
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="pegawai" value="Pegawai" />
+        <p:autoComplete   id="pegawai" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiPenggunaContains}"
+                          var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                          scrollHeight="250" required="true"    >
+            <p:ajax event="itemSelect" listener="#{controllerPengguna.onPegawaiSelect}" update="jabatan departemen kantor"/>
+            <p:column headerText="Nama " >
+                <h:outputText value="#{pegawai.nama}" />
+            </p:column>
+            <p:column headerText="Jabatan" >
+                <h:outputText value="#{pegawai.jabatan}" />
+            </p:column>
+            <p:column headerText="Departemen" >
+                <h:outputText value="#{pegawai.departemen}" />
+            </p:column>
+            <p:column headerText="Kantor/Cabang" >
+                <h:outputText value="#{pegawai.kantor}" />
+            </p:column>
+        </p:autoComplete>  
+        <p:outputLabel for="jabatan" value="Jabatan"/>
+        <p:inputText id="jabatan" value="#{controllerPengguna.item.jabatan}" readonly="true"/>
+        <p:outputLabel for="departemen" value="Departemen"/>
+        <p:inputText id="departemen" value="#{controllerPengguna.item.departemen}" readonly="true"/>
+        <p:outputLabel for="kantor" value="Kantor/Cabang"/>
+        <p:inputText id="kantor" value="#{controllerPengguna.item.kantor}" readonly="true"/>
+        <p:outputLabel for="usernamenya" value="Username"/>
+        <p:inputText id="usernamenya" value="#{controllerPengguna.item.usernamenya}"  required="true"/>
+        <p:outputLabel for="password" value="Password"/>
+        <p:password id="password" value="#{controllerPengguna.item.passwordnya}" feedback="true" required="true"/>
+        <p:outputLabel for="@next" value="Pin"/>
+        <p:password id="pinnya" value="#{controllerPengguna.item.pinnya}" feedback="true" required="true"/>
+        <p:outputLabel for="isaktif" value="Aktif"/>
+        <p:selectBooleanCheckbox id="isaktif" value="#{controllerPengguna.item.enabled}" />
+
+    </p:panelGrid>
+</ui:composition>

@@ -1,0 +1,146 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Internal Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerInternalOrder.onLoadListGudang()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INTERNALORDER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerInternalOrder.view()}"   icon="ui-icon-update" value="View"  id="btn-edit"/>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerInternalOrder.view()}"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Internal Order </h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Internal Order"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerInternalOrder.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerInternalOrder.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerInternalOrder.status}" rendered="#{page.myPegawai.id_jabatan_new ne 110}">
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Cheked DSM" itemValue="F" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                            <f:selectItem itemLabel="IT Process" itemValue="P" />
+                            <f:selectItem itemLabel="IT Completed" itemValue="C" />
+                        </p:selectOneMenu>  
+                        
+                        <p:selectOneMenu id="status" value="#{controllerInternalOrder.status}" rendered="#{page.myPegawai.id_jabatan_new eq 110}">
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Cheked DSM" itemValue="F" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                            <f:selectItem itemLabel="Reject" itemValue="R" />
+                            <f:selectItem itemLabel="IT Process" itemValue="P" />
+                            <f:selectItem itemLabel="IT Completed" itemValue="C" />
+                            <f:selectItem itemLabel="Cancel" itemValue="X" />
+                        </p:selectOneMenu>        
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerInternalOrder.onLoadListGudang()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerInternalOrder.dataInternalOrder}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerInternalOrder.item}" rowKey="#{item.nomor_io}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="i">
+                        <p:ajax event="rowDblselect" listener="#{controllerInternalOrder.view()}" global="false" />
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{i + 1}" />
+                        </p:column>
+                        <p:column headerText="Nomor IO" sortBy="#{item.nomor_io}" filterBy="#{item.nomor_io}" filterMatchMode="contains" >
+                            <h:outputText value="#{item.nomor_io}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="IO Approve" sortBy="#{item.approve_tanggal}" >
+                            <h:outputText value="#{item.approve_tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Kantor" sortBy="#{item.kantor}" >
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Gudang Asal" sortBy="#{item.gudang_asal}">
+                            <h:outputText value="#{item.gudang_asal}" />
+                        </p:column>
+                        <p:column headerText="Gudang Tujuan" sortBy="#{item.gudang_tujuan}">
+                            <h:outputText value="#{item.gudang_tujuan}" />
+                        </p:column>
+                        <p:column headerText="Dibuat oleh" sortBy="#{item.nama_kontak}" filterBy="#{item.nama_kontak}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_kontak}" />
+                        </p:column>
+                        <p:column headerText="No. IP" sortBy="#{item.nomor_ip}" filterBy="#{item.nomor_ip}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_ip}" />
+                        </p:column>
+                        <p:column headerText="Tanggal IP" sortBy="#{item.tanggal_ip}" >
+                            <h:outputText value="#{item.tanggal_ip}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="No. IT" sortBy="#{item.nomor_it}" filterBy="#{item.nomor_it}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_it}" />
+                        </p:column>
+                        <p:column headerText="Tanggal IT" sortBy="#{item.create_it}" >
+                            <h:outputText value="#{item.create_it}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="IT Complete" sortBy="#{item.approved_it}" >
+                            <h:outputText value="#{item.approved_it}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" >
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}" /> 
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}" />
+                            <h:outputText value="Cheked DSM" rendered="#{item.status eq 'F'}" />
+                            <h:outputText value="Reject DSM" rendered="#{item.status eq 'K'}" />
+                            <h:outputText value="Approve" rendered="#{item.status eq 'A'}" />
+                            <h:outputText value="Reject" rendered="#{item.status eq 'R'}" /> 
+                            <h:outputText value="IT Process" rendered="#{item.status eq 'P'}" /> 
+                            <h:outputText value="IT Completed" rendered="#{item.status eq 'C'}" /> 
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'X'}" /> 
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

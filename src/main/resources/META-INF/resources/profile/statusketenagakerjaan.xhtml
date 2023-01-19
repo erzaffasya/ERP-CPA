@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewAction action="#{controllerHrPegawai.onLoadListPkwtt()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12 ui-lg-12">
+                                <div class="ui-g-12 ui-lg-1" ></div>
+                                <div class="ui-g-12 ui-lg-3" >
+                                    <ui:include src="leftprofile.xhtml"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-lg-8">  
+                                    <div class="ui-g-12 ui-lg-8">    
+                                        <h4>PKWT</h4>        
+                                    </div>
+                                    <div class="ui-g-12 ui-lg-12">
+                                        <div class="ui-g-12 ui-lg-4">
+                                            <p:calendar id="awal" value="#{controllerHrPegawai.item.pkwt}"  pattern="dd-MM-yyyy" mask="99-99-9999"/>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-lg-8">    
+                                        <h4>PKWTT</h4>        
+                                    </div>
+                                    
+                                    <div class="ui-g-12 ui-lg-12">
+                                        <p:dataTable id="pkwtt" var="pa" value="#{controllerHrPegawai.dataPkwtt}" rowIndexVar="index" selectionMode="single" reflow="true" 
+                                                     selection="#{controllerHrPegawai.pkwtt}" rowKey="#{pa.id_pkwtt}">
+                                            <p:column headerText="PKWTT Awal">
+                                                <h:outputText value="#{pa.awal}" >
+                                                    <f:convertDateTime pattern="dd MMMM yyyy" />
+                                                </h:outputText>    
+                                            </p:column>
+                                            <p:column headerText="PKWTT Akhir">
+                                                <h:outputText value="#{pa.akhir}" >
+                                                    <f:convertDateTime pattern="dd MMMM yyyy" />
+                                                </h:outputText>    
+                                            </p:column>
+                                            <p:column headerText="Keterangan">
+                                                <h:outputText value="#{pa.keterangan}" />
+
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                    <div class="ui-g-12 ui-lg-8">    
+                                        <h4>Probation</h4>        
+                                    </div>
+                                    <div class="ui-g-12 ui-lg-12">
+                                        <p:dataTable id="probation" var="pb" value="#{controllerHrPegawai.dataProbation}" rowIndexVar="index" selectionMode="single" reflow="true" 
+                                                     selection="#{controllerHrPegawai.probation}" rowKey="#{pb.id_pkwtt}">
+                                            <p:column headerText="Probation Awal">
+                                                <h:outputText value="#{pb.awal}" >
+                                                    <f:convertDateTime pattern="dd MMMM yyyy" />
+                                                </h:outputText>    
+                                            </p:column>
+                                            <p:column headerText="Probation Akhir">
+                                                <h:outputText value="#{pb.akhir}" >
+                                                    <f:convertDateTime pattern="dd MMMM yyyy" />
+                                                </h:outputText>    
+                                            </p:column>
+                                            <p:column headerText="Keterangan">
+                                                <h:outputText value="#{pb.keterangan}" />
+
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog  widgetVar="dlg3" resizable="false" id="pkwttDlg"
+                       showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda yakin akan menghapus data PKWTT ini" />
+                    <h:outputText value="#{controllerHrPegawai.pkwtt.awal}" />
+                    <p:commandButton id="deleteButton" actionListener="#{controllerHrPegawai.deletePkwtt(controllerHrPegawai.pkwtt.id_pkwtt,controllerHrPegawai.pkwtt.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl :form:pkwtt :form:probation" value="Delete" />
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" />
+
+
+                </h:panelGrid>
+            </p:dialog>    
+            
+            
+            <p:dialog  widgetVar="dlg1" resizable="false" id="probationdialog"
+                       showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display1" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda yakin akan menghapus data probation ini " />
+                    <h:outputText value="#{controllerHrPegawai.probation.awal}" />
+                    <p:commandButton id="delete" actionListener="#{controllerHrPegawai.deletePkwtt(controllerHrPegawai.probation.id_pkwtt,controllerHrPegawai.probation.id_pegawai)}" onclick="PF('dlg1').hide();" 
+                                     update=":form:growl :form:pkwtt :form:probation" value="Delete" />
+                    <p:commandButton id="cancel" onclick="PF('dlg1').hide();" value="Cancel" />
+
+
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

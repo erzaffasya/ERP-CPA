@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Umur Invoice Per Customer </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerReportAr.item.customer_code}" />
+        <f:viewAction action="#{controllerReportAr.onLoadListInvoiceCustomer()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>DAFTAR INVOICE #{controllerReportAr.item.customer} </h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="pdf">
+                                <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="pdf" target="singleDT" fileName="umurinvoice"  options="#{controllerReportAr.pdfOpt}" preProcessor="#{controllerReportAr.preProcessPDF}"/>
+                        </h:commandLink>
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50" />
+                                <p:dataExporter type="xls" target="singleDT" fileName="umurinvoice" options="#{controllerReportAr.excelOpt}" postProcessor="#{controllerReportAr.postProcessXLS}"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportAr.dataAccOsAr}"  rowIndexVar="index"
+                                  paginator="true" rows="100" paginatorPosition="bottom" 
+                                   >
+                        <p:column style="width:50px;">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.invoice_number}"  headerText="Invoice No.">
+                            <h:outputText value="#{item.invoice_number}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.invoice_date}" headerText="Invoice Date.">
+                            <h:outputText value="#{item.invoice_date}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.cabang}" headerText="Cabang">
+                            <h:outputText value="#{item.cabang}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.nomor_po}" headerText="Nomor Po" >
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.umur}" headerText="Umur Invoice (Day)">
+                            <h:outputText value="#{item.umur}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.day1}" style="text-align: right;" headerText="1-30 Days">
+                            <h:outputText value="#{item.day1}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.day2}" style="width:100px; text-align: right;" headerText="31-60 Days">
+                            <h:outputText value="#{item.day2}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.day3}" style="width:100px; text-align: right;" headerText="61-90 Days">
+                            <h:outputText value="#{item.day3}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.day4}" style="width:100px; text-align: right;" headerText="91-120 Days">
+                            <h:outputText value="#{item.day4}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.day5}" style="width:100px; text-align: right;" headerText="> 120 Days">
+                            <h:outputText value="#{item.day5}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

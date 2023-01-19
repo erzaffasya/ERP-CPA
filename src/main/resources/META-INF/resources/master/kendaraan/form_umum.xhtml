@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="@next" value="Jenis Kendaraan"/>
+        <p:selectOneMenu id="idjenis" value="#{controllerKendaraan.item.id_jenis}" >
+            <f:selectItem itemLabel="Pilih Jenis Kendaraan" itemValue=""/>
+            <f:selectItems value="#{optionKendaraan.jenis}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="@next" value="Nopol"/>
+        <p:inputText id="nopol" value="#{controllerKendaraan.item.nopol}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nomor BPKB"/>
+        <p:inputText id="no_bpkb" value="#{controllerKendaraan.item.no_bpkb}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nomor STNK"/>
+        <p:inputText id="no_stnk" value="#{controllerKendaraan.item.no_stnk}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nomor Uji"/>
+        <p:inputText id="no_uji" value="#{controllerKendaraan.item.no_uji}" required="true"/>
+
+        <p:outputLabel for="@next" value="Tanggal Jatuh Tempo"/>
+        <p:calendar id="tgl_jatuh_tempo" pattern="dd/MM/yyyy"  value="#{controllerKendaraan.item.tgl_jatuh_tempo}" required="true" requiredMessage="Tanggal harus diisi"/>
+
+        <p:outputLabel for="@next" value="Nomor Rangka"/>
+        <p:inputText id="no_rangka" value="#{controllerKendaraan.item.no_rangka}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nomor Mesin"/>
+        <p:inputText id="no_mesin" value="#{controllerKendaraan.item.no_mesin}" required="true"/>
+
+        <p:outputLabel for="@next" value="Merk"/>
+        <p:inputText id="merk" value="#{controllerKendaraan.item.merk}" required="true"/>
+
+        <p:outputLabel for="@next" value="Tahun Perakitan"/>
+        <p:inputNumber id="thn_perakitan" value="#{controllerKendaraan.item.thn_perakitan}" required="true"/>
+
+        <p:outputLabel for="@next" value="Tahun Pembelian"/>
+        <p:inputNumber id="thn_pembelian" value="#{controllerKendaraan.item.thn_pembelian}" required="true"/>
+
+        <p:outputLabel for="@next" value="Warna"/>
+        <p:inputText id="warna" value="#{controllerKendaraan.item.warna}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nomor Armada"/>
+        <p:inputText id="no_armada" value="#{controllerKendaraan.item.no_armada}" required="true"/>
+
+        <p:outputLabel for="@next" value="Odometer"/>
+        <p:inputText id="odometer" value="#{controllerKendaraan.item.odometer}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nomor GPS"/>
+        <p:inputNumber id="no_gps" value="#{controllerKendaraan.item.no_gps}" required="true"/>
+
+        <p:outputLabel for="@next" value="Nama Driver"/>
+        <p:inputText id="nama_driver" value="#{controllerKendaraan.item.nama_driver}" required="true"/>
+
+        <p:outputLabel for="@next" value="Foto Unit"/>
+        <p:inputText id="foto_unit" value="#{controllerKendaraan.item.foto_unit}" required="true"/>
+
+    </p:panelGrid> 
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; "> 
+
+    </p:panelGrid>
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; "> 
+
+    </p:panelGrid>
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; "> 
+
+    </p:panelGrid>
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; "> 
+
+    </p:panelGrid>
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; "> 
+
+    </p:panelGrid>
+</ui:composition>

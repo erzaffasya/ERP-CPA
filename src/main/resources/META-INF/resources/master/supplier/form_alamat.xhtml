@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="alamat" value="Alamat"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:textEditor id="alamat" widgetVar="editor2" value="#{controllerSupplier.item.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+                <f:facet name="toolbar">
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                </f:facet>
+            </p:textEditor>
+        </h:panelGroup>
+        <p:outputLabel for="kota" value="Kota/Kabupaten"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="kota" value="#{controllerSupplier.item.kota}" />
+        </h:panelGroup>
+        <p:outputLabel for="propinsi" value="Propinsi "/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="propinsi" value="#{controllerSupplier.item.propinsi}" />
+        </h:panelGroup>
+        <p:outputLabel for="negara" value="Negara"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="negara" value="#{controllerSupplier.item.negara}" />
+        </h:panelGroup>
+        <p:outputLabel for="kode_pos" value="Kode Pos"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="kode_pos" value="#{controllerSupplier.item.kode_pos}" />
+        </h:panelGroup>
+    </p:panelGrid>
+</ui:composition>

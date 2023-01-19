@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerPackinglist.dataPackinglistDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:columnGroup type="header">
+            <p:row>
+                <p:column  headerText="Product"  />
+                <p:column  headerText="Material Code" style="width:100px;" />
+                <p:column  colspan="2" headerText="Uom" style="width:120px;"/>
+                <p:column  headerText="Packaging" style="width:60px;"/>
+                <p:column  headerText="Qty Order" style="width:80px;"/>
+                <p:column  headerText="Back Order" style="width:80px;"/>
+                <p:column colspan="2" headerText="Qty Delivery" style="width:140px;"/>
+                <p:column  headerText="Remarks" />
+            </p:row>
+
+        </p:columnGroup>
+        <p:column  style="width:300px">
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+
+        <p:column  style="width:100px">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column >
+            <div style="text-align:right;"><h:outputText value="#{item.isi_satuan}" id="oisi_satuan"> <f:convertNumber pattern="#,##0.00" /></h:outputText> </div>
+        </p:column>
+        <p:column >
+            <div style="text-align:center;"><h:outputText value="#{item.satuan_kecil}" id="osatuan_kecil"/></div>
+        </p:column>
+        <p:column >
+            <div style="text-align:center;"><h:outputText value="#{item.satuan_besar}" id="opackaging"/></div>
+        </p:column>
+        <p:column >
+            <div style="text-align:right;"><h:outputText value="#{item.diorder}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column >
+            <div style="text-align:right;"><h:outputText value="#{item.sisa}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText id="oqty" value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" required="true">
+                        <p:ajax listener="#{controllerPackinglist.periksaDelivery(item, ri)}" update="growl qty oqty "/> 
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column >
+            <div style="text-align:center;"> <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText></div>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:left;"> <h:outputText id="oketerangan" value="#{item.keterangan}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="keterangan" value="#{item.keterangan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

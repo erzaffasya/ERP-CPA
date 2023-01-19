@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable id="detil" var="item"  value="#{controllerPo.dataPoDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+        <p:column headerText="Kode Barang" style="width:100px">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Qty" style="width:120px;">
+            <div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Satuan" style="width:120px;">
+            <div style="text-align:center;"> <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}"></h:outputText></div>
+        </p:column>
+        <p:column headerText="Unit Price" style="width:100px">
+            <div style="text-align:right;"><h:outputText value="#{item.harga}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Disc %" style="width:100px">
+            <div style="text-align:right;"><h:outputText id="odiskonpersen" value="#{item.diskonpersen}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> 
+        </p:column>
+        <p:column headerText="Disc (Rp)" style="width:100px">
+            <div style="text-align:right;"><h:outputText id="odiskonrp" value="#{item.diskonrp}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Amount" style="width:130px">
+            <div style="text-align:right;"><h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

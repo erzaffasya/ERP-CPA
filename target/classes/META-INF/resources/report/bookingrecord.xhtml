@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Mutasi Barang</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSo.selectBookingRecord()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('BOOKINGRECORD')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Product Booking Record</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="bookingrecord" fileName="Product Booking Record"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="bookingrecord" var="item" value="#{controllerSo.dataSoDetail}"  rowIndexVar="index" 
+                                 paginator="true" rows="50" paginatorPosition="bottom">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2"   headerText="No." style="width:50px;"/>
+                                <p:column rowspan="2"   headerText="PO Date" style="width:80px;"/>
+                                <p:column rowspan="2"   headerText="Product" style="width:280px;"/>
+                                <p:column rowspan="2"   headerText="Customer" style="width:280px;"/>
+                                <p:column rowspan="2"  headerText="SO No." style="width:150px;"/>
+                                <p:column rowspan="2"  headerText="PO No." style="width:150px;"/>
+                                <p:column colspan="3"  headerText="QTY" />
+                                <p:column rowspan="2"  headerText="Gudang" style="width:90px;"/>
+                                <p:column rowspan="2"  headerText="" style="width:35px;"/>
+                            </p:row>
+                            <p:row>
+                                <p:column  headerText="Order" style="width:80px;"/>
+                                <p:column  headerText="Supplied" style="width:80px;"/>
+                                <p:column  headerText="O/S" style="width:80px;"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column style="width:50px;">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.tgl_ref}" >
+                            <h:outputText value="#{item.tgl_ref}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.nama_barang}" >
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.customer}" >
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.no_so}">
+                            <h:outputText value="#{item.no_so}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.referensi}">
+                            <h:outputText value="#{item.referensi}" />
+                        </p:column>
+                        <p:column sortBy="#{item.qty}" style="text-align: right;">
+                            <h:outputText value="#{item.qty}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.diambil}" style="text-align: right;">
+                            <h:outputText value="#{item.diambil}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.sisa}" style="width:100px; text-align: right;" >
+                            <h:outputText value="#{item.sisa}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.gudang}">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column  >
+                            <p:commandButton  icon="fa fa-edit"  >
+                                <p:ajax  listener="#{controllerSo.viewSo(item.no_so)}"   />
+                            </p:commandButton>
+
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

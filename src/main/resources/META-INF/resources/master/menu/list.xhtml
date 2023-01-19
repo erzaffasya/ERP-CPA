@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerMenu.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerMenu.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerMenu.item}" target="#{controllerMenu.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Menu</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerMenu.dataMenu}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerMenu.item}" rowKey="#{item.id}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        
+                        <p:column headerText="ID" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id}" />
+                        </p:column>
+                        <p:column headerText="Menu" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="contains">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column headerText="Icon" sortBy="#{item.icon}" filterBy="#{item.icon}" filterMatchMode="contains">
+                            <h:outputText value="#{item.icon}" />
+                        </p:column>
+                        <p:column headerText="Outcome" sortBy="#{item.outcome}" filterBy="#{item.outcome}" filterMatchMode="contains">
+                            <h:outputText value="#{item.outcome}" />
+                        </p:column>
+                        <p:column headerText="Urut" sortBy="#{item.urut}" filterBy="#{item.urut}" filterMatchMode="contains">
+                            <h:outputText value="#{item.urut}" />
+                        </p:column>
+                        <p:column headerText="Parent" sortBy="#{item.parent}" filterBy="#{item.parent}" filterMatchMode="contains">
+                            <h:outputText value="#{item.parent}" />
+                        </p:column>
+                        <p:column headerText="Jenis" sortBy="#{item.jenis}" filterBy="#{item.jenis}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jenis}" />
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.keterangan}" filterBy="#{item.keterangan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.keterangan}" />
+                        </p:column>
+                        <p:column headerText="Roles" sortBy="#{item.roles}" filterBy="#{item.roles}" filterMatchMode="contains">
+                            <h:outputText value="#{item.roles}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="MENU" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Menu :" />
+                    <h:outputText value="#{controllerMenu.item.name}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerMenu.delete(controllerMenu.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

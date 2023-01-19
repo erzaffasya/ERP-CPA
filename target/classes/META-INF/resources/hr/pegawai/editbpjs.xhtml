@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadBpjs()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INSURANCE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="insurance.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerHrPegawai.ubahBpjs()}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12" >
+                        <div class="card card-w-title" >
+                            <h1 style="margin-left: 40px;">Edit BPJS</h1>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Nama"/>
+                                <p:inputText id="level" value="#{controllerHrPegawai.item.nama}" readonly="true"/>
+                                <p:outputLabel for="nip" value="NIK Karyawan"/>
+                                <p:inputMask id="nip" value="#{controllerHrPegawai.item.nip}"  mask="99-9999-99-9999"/>
+                            </p:panelGrid>
+                            
+                            <p:panelGrid id="panelbpjs" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Jabatan"/>
+                                <p:inputText  value="#{controllerHrPegawai.item.jabatan}" />
+                                <p:outputLabel for="level" value="Level"/>
+                                <p:inputText id="level" value="#{controllerHrPegawai.item.level}" readonly="true"/>
+                                <p:outputLabel for="golongan" value="Golongan"/>
+                                <p:inputText id="golongan" value="#{controllerHrPegawai.item.golongan}" readonly="true"/>
+                                <p:outputLabel  value="Departemen"/>
+                                <p:inputText  value="#{controllerHrPegawai.item.departemen}" />
+                                <p:outputLabel  value="Kantor"/>
+                                <p:inputText  value="#{controllerHrPegawai.item.kantor}" />
+                                
+                                <h:panelGroup/>
+                                <p:commandButton type="button" value="Kalkulasi BPJS" icon="ui-icon-print" style="width: 400px;" rendered="#{controllerHrPegawai.item.tunjangan_jabatan ne null  and  controllerHrPegawai.item.gaji_pokok ne null}">
+                                    <p:ajax listener="#{controllerHrPegawai.onloadHitungBpjsKesehatan()}" process="@this" update="panelbpjs"/>
+                                </p:commandButton>    
+                                <p:commandButton type="button" value="Kalkulasi BPJS" icon="ui-icon-print" style="width: 400px;" disabled="true" rendered="#{controllerHrPegawai.item.tunjangan_jabatan eq null  or  controllerHrPegawai.item.gaji_pokok eq null}">
+                                    <p:ajax listener="#{controllerHrPegawai.onloadHitungBpjsKesehatan()}" process="@this" update="panelbpjs"/>
+                                </p:commandButton>    
+                                <h:panelGroup/>
+                                <h1>BPJS Ketenagakerjaan</h1>
+                                <p:outputLabel  value="Nomor BPJS Ketenagakerjaan" for="notk"/>
+                                <p:inputText value="#{controllerHrPegawai.item.bpjs_tk}" id="notk"/>
+                                <p:outputLabel  value="Jaminan Keselamatan Kerja" for="jkk"/>
+                                <p:inputNumber id="jkk" value="#{controllerHrPegawai.item.jkk}" decimalPlaces="0" required="true"/>
+                                <p:outputLabel  value="Jaminan Hari Tua ditanggung  Perusahaan" for="jhtperusahaan"/>
+                                <p:inputNumber value="#{controllerHrPegawai.item.jht_perusahaan}" decimalPlaces="0" id="jhtperusahaan" required="true"/>
+                                <p:outputLabel  value="Jaminan Hari Tua ditanggung Pekerja" for="jhtpekerja"/>
+                                <p:inputNumber value="#{controllerHrPegawai.item.jht_pekerja}" decimalPlaces="0" id="jhtpekerja" required="true"/>
+                                <p:outputLabel  value="Jaminan Kematian" for="jkm"/>
+                                <p:inputNumber value="#{controllerHrPegawai.item.jkm}" decimalPlaces="0" id="jkm" required="true"/>
+                                <p:outputLabel  value="Jaminan Pensiun ditanggung  Perusahaan" for="jpperusahaan"/>
+                                <p:inputNumber value="#{controllerHrPegawai.item.jp_perusahaan}" decimalPlaces="0" id="jpperusahaan" required="true"/>
+                                <p:outputLabel  value="Jaminan Pensiun ditanggung  Pekerja" for="jppekerja"/>
+                                <p:inputNumber value="#{controllerHrPegawai.item.jp_pekerja}" decimalPlaces="0" id="jppekerja" required="true"/>
+                                <h:panelGroup/>
+                                <h1>BPJS Kesehatan</h1>
+                                <p:outputLabel  value="Nomor BPJS Kesehatan" for="noks"/>
+                                <p:inputText value="#{controllerHrPegawai.item.bpjs_kes}" id="noks"/>
+                                <p:outputLabel  value="Ditanggung Perusahaan" for="kesperusahaan"/>
+                                <p:inputNumber id="kesperusahaan" value="#{controllerHrPegawai.item.kesehatan_perusahaan}" decimalPlaces="0" required="true"/>
+                                <p:outputLabel  value="Ditanggung Pekerja" for="kespekerja"/>
+                                <p:inputNumber value="#{controllerHrPegawai.item.kesehatan_pekerja}" decimalPlaces="0" id="kespekerja" required="true"/>
+                                
+                                <h:panelGroup/>
+                                <h1>Prudential</h1>
+                                <p:outputLabel  value="Nomor " for="prudential"/>
+                                <p:inputText value="#{controllerHrPegawai.item.prudential}" id="prudential"/>
+                                <p:outputLabel  value="Ditanggu Perusahaan" for="@next"/>
+                                <p:inputNumber id="iuranprudentialperusahaan" value="#{controllerHrPegawai.item.iuran_prudential_perusahaan}" decimalPlaces="0" required="true"/>
+                                <p:outputLabel  value="Ditanggung Pekerja" for="@next"/>
+                                <p:inputNumber id="iuranprudential" value="#{controllerHrPegawai.item.iuran_prudential}" decimalPlaces="0" required="true"/>
+                                
+                                <h:panelGroup/>
+                                <h1>Allianz</h1>
+                                <p:outputLabel  value="Nomor " for="allianz"/>
+                                <p:inputText value="#{controllerHrPegawai.item.allianz}" id="allianz"/>
+                                <p:outputLabel  value="Ditanggung Perusahaan" for="@next"/>
+                                <p:inputNumber id="iuranallianz" value="#{controllerHrPegawai.item.iuran_allianz_perusahaan}" decimalPlaces="0" required="true"/>
+                                <p:outputLabel  value="Ditanggung Pekerja" for="@next"/>
+                                <p:inputNumber id="iuranallianzpekerja" value="#{controllerHrPegawai.item.iuran_allianz}" decimalPlaces="0" required="true"/>
+                            </p:panelGrid>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

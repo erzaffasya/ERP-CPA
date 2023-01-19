@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="shipto" value="Shipto"/>
+        <p:inputText id="shipto" value="#{controllerShipto.item.shipto}" required="true"   />
+        <p:outputLabel for="alamat" value="Alamat"/>
+        <p:textEditor id="alamat" widgetVar="editor2" value="#{controllerShipto.item.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>
+</ui:composition>

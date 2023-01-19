@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama tanggungan"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerHrPegawai.tanggungan.nama}" required="true"/>
+        
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="hubungan" value="Hubungan"/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="hubungan" value="#{controllerHrPegawai.tanggungan.hubungan}" required="true">
+            <f:selectItems value="#{options.comboHubunganKeluarga}" />
+        </p:selectOneMenu>
+        
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="tgllahir" value="Tanggal lahir"/>
+        <h:panelGroup/>
+        <p:calendar id="tgllahir" value="#{controllerHrPegawai.tanggungan.tgl_lahir}" required="true" pattern="dd-MM-yyyy" mask="99-99-9999"/>
+    
+        <p:outputLabel  value="4."/>
+        <p:outputLabel for="identitas" value="No. identitas"/>
+        <h:panelGroup/>
+        <p:inputText id="identitas" value="#{controllerHrPegawai.tanggungan.no_identitas}"/>
+        
+        <p:outputLabel  value="5."/>
+        <p:outputLabel for="kawin" value="Status perkawinan"/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="kawin" value="#{controllerHrPegawai.tanggungan.status_perkawinan}" >
+            <f:selectItems value="#{options.statusPernikahan}" />
+        </p:selectOneMenu>
+        
+        <p:outputLabel  value="6."/>
+        <p:outputLabel for="working" value="Status kerja"/>
+        <h:panelGroup/>
+        <p:selectBooleanButton id="working" value="#{controllerHrPegawai.tanggungan.kerja}" onLabel="Kerja" offLabel="Tidak bekerja"  />
+    </p:panelGrid>
+</ui:composition>

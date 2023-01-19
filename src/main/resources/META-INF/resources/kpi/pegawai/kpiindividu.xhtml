@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerKpiPegawai.initItem()}" />
+    </f:metadata>    
+    <ui:define name="title">Data</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            .old {
+                background-color: #fca752 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+        </style>
+
+    </ui:define>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KPIINDIVIDU')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="formA" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>KEY PERFORMANCE INDICATOR INDIVIDU</h1>
+                    <p:panelGrid id="panel1" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none;  ">
+                        <p:outputLabel for="nama"  value="Nama Pegawai"/>
+                        <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                          var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                          scrollHeight="250" required="true" requiredMessage="Nama pegawai harus diisi !!!" style="width: 98%;">
+                            <p:ajax event="itemSelect" listener="#{controllerKpiPegawai.onPegawaiSelect}" update="detil panel3" />
+                        </p:autoComplete>
+                    </p:panelGrid>
+                    <p:panelGrid id="panel2" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="bulan" value="Periode" />
+                        <p:selectOneMenu id="bulan" value="#{controllerKpiPegawai.month}">
+                            <f:selectItems value="#{options.comboBulan}" />
+                            <p:ajax event="change" listener="#{controllerKpiPegawai.onLoadList()}" update="detil panel3"/> 
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerKpiPegawai.year}" maxlength="4">
+                            <p:ajax event="change" listener="#{controllerKpiPegawai.onLoadList()}" update="detil panel3"/> 
+                        </p:inputText>
+                    </p:panelGrid>
+
+
+                    <p:dataTable id="detil" var="item" value="#{controllerKpiPegawai.dataKpiPegawaiDetail}" sortBy="#{item.id_category}}" expandableRowGroups="true"  
+                                 editable="true"  editMode="cell" widgetVar="cellCars" rowIndexVar="ri" rowKey="#{item.actual}" 
+                                 rowStyleClass="#{(item.id_unit eq 4 and controllerKpiPegawai.month ne 3 and controllerKpiPegawai.month ne 6 and controllerKpiPegawai.month ne 9 and controllerKpiPegawai.month ne 12)
+                                                  or (item.id_unit eq 5 and controllerKpiPegawai.month ne 12) ? 'old' : null}">
+                        <p:headerRow>
+                            <p:column colspan="8">
+                                <h:outputText value="#{item.category}" />
+                            </p:column>
+                        </p:headerRow>
+                        <p:column headerText="Indicator">
+                            <h:outputText value="#{item.indicator}" />
+                        </p:column>
+                        <p:column headerText="Bukti">
+                            <h:outputText value="#{item.evidence}" />
+                        </p:column>
+                        <p:column headerText="Ukuran">
+                            <h:outputText value="#{item.unit}" />
+                        </p:column>
+                        <p:column headerText="Bobot" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.bobot}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Target" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.target}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Aktual" styleClass="rightColumnContent" >
+
+                            <p:cellEditor rendered="#{item.id_unit eq 1 or item.id_unit eq 2 or item.id_unit eq 3 
+                                                      or (item.id_unit eq 4 and (controllerKpiPegawai.month eq 3 or controllerKpiPegawai.month eq 6 or controllerKpiPegawai.month eq 9 or controllerKpiPegawai.month eq 12))
+                                                      or (item.id_unit eq 5 and controllerKpiPegawai.month eq 12)}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{item.actual}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber value="#{item.actual}" id="target" decimalPlaces="2" >
+                                        <p:ajax listener="#{controllerKpiPegawai.calculateResult(item, ri)}" update="detil panel3" />
+                                    </p:inputNumber>    
+                                </f:facet>
+                            </p:cellEditor>
+                            <h:outputText value="#{item.actual}" rendered="#{(item.id_unit eq 4 and controllerKpiPegawai.month ne 3 and controllerKpiPegawai.month ne 6 and controllerKpiPegawai.month ne 9 and controllerKpiPegawai.month ne 12)
+                                                   and (item.id_unit eq 5 and controllerKpiPegawai.month ne 12)}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Persen" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.persen}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Point" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.point}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:summaryRow >
+                            <p:column colspan="3" style="text-align:right;background-color: white; color: black;">
+                                <h:outputText value="Jumlah :" />
+                            </p:column>
+                            <p:column style="text-align:right;background-color: white; color: black;">
+                                <h:outputText value="#{controllerKpiPegawai.getAcummulatedValue(item.category)}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                            </p:column>
+                            <p:column colspan="3" style="text-align:right;background-color: white; color: black;"/>
+                            <p:column style="text-align:right;background-color: white; color: black;">
+                                <h:outputText value="#{controllerKpiPegawai.getAcummulatedPoint(item.category)}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                            </p:column>
+                        </p:summaryRow>
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right;font-weight: bold;" footerText="Total Bobot : "/>
+                                <p:column style="text-align:right;font-weight: bold;" footerText="#{controllerKpiPegawai.footerBobot}"/>
+                                <p:column colspan="3" style="text-align:right;font-weight: bold;" footerText="Total Pont : "/>
+                                <p:column  style="text-align:right;font-weight: bold;" footerText="#{controllerKpiPegawai.footerPoint}"/>    
+                            </p:row>
+                        </p:columnGroup>
+
+                    </p:dataTable>
+                    <p:panelGrid id="panel3" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid" >
+                    <p:commandButton id="simpan"
+                                     actionListener="#{controllerKpiPegawai.tambah('D')}"
+                                     value="Simpan Draft" 
+                                     ajax="true"
+                                     process="@form"
+                                     icon="fa  fa-floppy-o"
+                                     update="detil panel3 growl"
+                                     rendered="#{controllerKpiPegawai.item.status ne 'A'}"
+                                     />
+                    <p:commandButton id="posting"
+                                     actionListener="#{controllerKpiPegawai.tambah('A')}"
+                                     value="Posting KPI" 
+                                     ajax="true"
+                                     process="@form"
+                                     icon="fa  fa-floppy-o"
+                                     update="detil panel3 growl"
+                                     rendered="#{controllerKpiPegawai.item.status ne 'A'}"
+                                     />
+                    </p:panelGrid>
+
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

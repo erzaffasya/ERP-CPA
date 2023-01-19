@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Sales Order Consignment</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. So."/>
+        <p:inputText id="nomor" value="#{controllerSo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl So"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerSo.item.tanggal}"  mask="99/99/9999" readonly="true" />
+        <p:outputLabel  value="Po Type"/>
+        <p:inputText  value="Consignment" readonly="true"/>
+        <p:outputLabel for="customer" value="Customer "/>
+        <p:inputText id="customer"  value="#{controllerSo.item.customer}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>   
+        <p:inputText id="no_po" value="#{controllerSo.item.referensi}" readonly="true"/>
+        <p:outputLabel for="tgl_ref" value="Tgl PO"/>
+        <p:calendar pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" id="tgl_ref" value="#{controllerSo.item.tgl_ref}" readonly="true"/>
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:inputText id="kode_mata_uang" value="#{controllerSo.item.kode_mata_uang}" readonly="true" />
+        
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:inputText id="gudang" value="#{controllerSo.item.gudang}" readonly="true" />
+    </p:panelGrid>
+    
+
+</ui:composition>

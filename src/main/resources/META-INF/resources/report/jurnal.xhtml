@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Daftar Jurnal</ui:define>
+    <f:metadata>
+
+        <f:viewAction action="#{controllerLaporanJurnal.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('JURNAL')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:commandButton process="@form" update="" icon="ui-icon-search" value="View"  />
+
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Jurnal</h1>
+
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel value="Pencarian"/>
+
+
+                    </p:panelGrid>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerLaporanJurnal.dataAccGlTrans}" >
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column  headerText="Kode Account" style="width:100px;"/>
+                                <p:column  headerText="Account" style="width:400px;"/>
+                                <p:column  headerText="Debet" style="width:120px;"/>
+                                <p:column  headerText="Kredit" style="width:120px;"/>
+                                
+                            </p:row>
+                        </p:columnGroup>
+                        <p:subTable var="it" value="#{item.accGlDetails}">
+                            <f:facet name="header">
+                                <p:panelGrid columns="8" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                    <p:outputLabel value="Gl Number"/>
+                                    <p:outputLabel value=": #{item.gl_number}"/>
+                                    <p:outputLabel value="Referece"/>
+                                    <p:outputLabel value=": #{item.reference}"/>
+                                    <p:outputLabel value="Date"/>
+                                    <h:outputText value="#{item.gl_date}" >
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                                    </h:outputText>    
+                                    <p:outputLabel value="Journal"/>
+                                    <p:outputLabel value=": #{item.journal_code}"/>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-11" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                    <p:outputLabel value="Note"/>
+                                    <p:outputLabel value=": #{item.note}"/>
+                                </p:panelGrid>
+                            </f:facet>
+                            <p:column  >
+                                <h:outputText value="#{it.id_account}" />
+                            </p:column>
+                            <p:column  >
+                                <h:outputText value="#{it.account}" />
+                            </p:column>
+                            <p:column   >
+                                <h:outputText value="" rendered="#{!it.is_debit}"/>
+                                <div style="text-align:right;"><h:outputText value="#{it.value}" rendered="#{it.is_debit}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                            </p:column>
+
+                            <p:column  >
+                                <h:outputText value="" rendered="#{it.is_debit}"/>
+                                <div style="text-align:right;"><h:outputText value="#{it.value}" rendered="#{!it.is_debit}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                            </p:column>
+                            <p:column  >
+                                <h:outputText value="#{it.keterangan}" />
+                            </p:column>
+                            
+                        </p:subTable>    
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

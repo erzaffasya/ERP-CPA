@@ -1,0 +1,55 @@
+Catatan yang harus diperhatikan kalau mau pakai project lama atau buat project baru:
+
+1. 	Gunakan pom.xml yang ini, baru kalau ada tambahan dependency lain itu ditambahkan setelahnya.
+
+2. 	Di application.properties ditambahkan 
+	openejb.cdi.activated=true
+	jsf.PROJECT_STAGE=Production
+	
+3. 	Package turunan wajib dibawah package UltimaApp
+	contoh : package UltimaApp adalah net.sra.prime.ultima, maka turunannya harus dibawah net.sra.prime.ultima.... 
+	misalnya, net.sra.prime.ultima.controller, net.sra.prime.ultima.views, net.sra.prime.ultima.db, dst
+	
+4. 	Pada faces-config.xml, lihat pada :
+   
+    <component>
+        <component-type>org.primefaces.component.UltimaMenu</component-type>
+        <component-class>net.sra.prime.ultima.primefaces.ultima.component.menu.UltimaMenu</component-class>
+    </component>
+    
+    <render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.UltimaMenuRenderer</renderer-type>
+            <renderer-class>net.sra.prime.ultima.primefaces.ultima.component.menu.UltimaMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+
+   
+   
+    component-class diisi sesuai package yang dibuat, misalnya net.sra.prime.ultima.primefaces.ultima.component.menu 
+	atau net.sra.prime.super.primefaces.ultima.component.menu atau net.sra.prime.bebas.primefaces.ultima.component.menu
+	sedangkan org.primefaces.component jangan diubah
+
+5. 	Semua @ManageBean bisa diubah ke @Named dan harus ada annotation @ConversationScoped, @RequestScoped, @SessionScoped atau @ApplicationScoped
+	dan harus implements java.io.Serializable
+	
+	Semua @ConversationScoped, @RequestScoped, @SessionScoped atau @ApplicationScoped diambil dari package javax.enterprise.context
+
+6.	Jika memakai @ManageBean, maka pada method @Postconstruct public void init() wajib ada syntaks ini :
+
+	ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+	ServletContext servletContext = (ServletContext) externalContext.getContext();
+	WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext).getAutowireCapableBeanFactory().autowireBean(this);
+	
+7. FacesConverter ubah ke Named	
+
+8. Ubah converter="hero" jadi converter="#{heroConverter}" :
+
+   heroConverter = nama class yg depannya jadi huruf kecil
+
+9. Kalau ada pesan ini, bungkus saja dengan <h:form></h:form> :
+
+   The form component needs to have a UIForm in its ancestry. Suggestion: enclose the necessary components within <h:form>
+   
+10.	Tambahan, jika nemu @Named tapi belum implements java.io.Serializable, rian tambahkan sendiri saja ya.		

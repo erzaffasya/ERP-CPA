@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mpenawaran-detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="87db01ca-78a3-4550-b44f-ace3caca118c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="no_penawaran" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_barang" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from penawaran_detail where no_penawaran=$P{no_penawaran}
+and id_barang=$P{id_barang}]]>
+	</queryString>
+	<field name="no_penawaran" class="java.lang.String"/>
+	<field name="urut" class="java.lang.Integer"/>
+	<field name="id_gudang" class="java.lang.String"/>
+	<field name="id_barang" class="java.lang.String"/>
+	<field name="qty" class="java.math.BigDecimal"/>
+	<field name="harga" class="java.math.BigDecimal"/>
+	<field name="jumlah_harga" class="java.math.BigDecimal"/>
+	<field name="harga_asli" class="java.math.BigDecimal"/>
+	<field name="diskon" class="java.math.BigDecimal"/>
+	<field name="id_pajak" class="java.lang.Integer"/>
+	<field name="id_satuan_kecil" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="43" y="2" width="100" height="20" uuid="21e04cc2-8d16-4cf2-b5ea-3e1ce52ae97e"/>
+				<text><![CDATA[urut]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="2" width="100" height="20" uuid="5186d7b8-e589-4dd5-8c1b-41b3bd73d3e5"/>
+				<text><![CDATA[id_barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="2" width="100" height="20" uuid="87ee7dcf-3894-4cb6-aa63-92b88943762c"/>
+				<text><![CDATA[qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="457" y="2" width="100" height="20" uuid="1e1ea7d2-e9ef-4af8-9fb8-cefda49d8c1e"/>
+				<text><![CDATA[harga]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="43" y="1" width="100" height="20" uuid="d6f961bc-225d-43ae-b775-0362f0a05b48"/>
+				<textFieldExpression><![CDATA[$F{urut}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="201" y="1" width="100" height="20" uuid="43d17570-d6c3-491e-bbb8-cca93c2d758c"/>
+				<textFieldExpression><![CDATA[$F{id_barang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="332" y="1" width="100" height="20" uuid="c3dd4007-e5b8-4a71-8075-4a5ecad0a38b"/>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="457" y="1" width="100" height="20" uuid="97cbdb2c-c7f3-4fdc-85d4-ace8eafa2c20"/>
+				<textFieldExpression><![CDATA[$F{harga}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{controllerProposalLoanPaid.initItem()}" />
+    </f:metadata>
+    <ui:define name="title">Pembayaran pinjaman karyawan</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PROPOSALLOANPAID')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Reset" icon="ui-icon-plus" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerProposalLoanPaid.tambah('D')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             />
+
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Tambah pembayaran pinjaman karyawan</h1>
+                            <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="month" value="Periode :" />
+                                <p:datePicker id="month" view="month" value="#{controllerProposalLoanPaid.datestart}" pattern="MMMM yyyy" yearNavigator="true" yearRange="2000:2030" style="width: 100%">
+                                    <p:ajax event="dateSelect" listener="#{controllerProposalLoanPaid.selectPeriode()}" update="singleDT growl"/>
+                                </p:datePicker>
+                                <p:outputLabel value="Keterangan" for="@next" />    
+                                <p:inputText id="keterangan" value="#{controllerProposalLoanPaid.item.description1}" />
+                            </p:panelGrid>
+
+                            <p:dataTable id="singleDT" var="item" value="#{controllerProposalLoanPaid.dataProposalLoanPaidDetail}" 
+                                         editable="true" editMode="cell">
+                                <p:column headerText="No. Pinjaman" >
+                                    <h:outputText value="#{item.loan_number}"/> 
+                                </p:column>
+                                <p:column headerText="Nama" >
+                                    <h:outputText value="#{item.nama}"/> 
+                                </p:column>
+
+                                <p:column headerText="Jenis pinjaman" >
+                                    <h:outputText value="#{item.loan_type}"/> 
+                                </p:column>
+                                <p:column headerText="Keterangan" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{item.description}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{item.description}" /></f:facet>   
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Jumlah bayar" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{item.amount}"  ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                                        <f:facet name="input"><p:inputNumber  value="#{item.amount}" decimalPlaces="0"/> </f:facet>   
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:commandButton  icon="fa fa-trash"  >
+                                        <p:ajax  listener="#{controllerProposalLoanPaid.onDeleteClicked(item)}"  update="singleDT" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+
+    <ui:define name="title">Data</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerLabaRugi.tipe}" />
+        <f:viewAction action="#{controllerLabaRugi.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('LABARUGI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            Ï
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Laba Rugi</h1>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel for="awal" value="Periode"/>
+                        <p:selectOneMenu id="awal" value="#{controllerLabaRugi.awal}">
+                            <f:selectItems value="#{controllerLabaRugi.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel for="akhir" value="sd"/>
+                        <p:selectOneMenu id="akhir" value="#{controllerLabaRugi.akhir}">
+                            <f:selectItems value="#{controllerLabaRugi.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerLabaRugi.tahun}" maxlength="4" />
+                        <p:outputLabel for="kantor" value="Kantor Cabang"/>
+                        <c:choose>
+                            <c:when test="${page.myKantor.ho}">
+                                <p:selectOneMenu id="kantor" value="#{controllerLabaRugi.id_kantor}" >
+                                    <f:selectItem itemLabel="All" itemValue=""/>
+                                    <f:selectItems value="#{options.comboKantor}" />
+                                </p:selectOneMenu>
+                            </c:when>
+                            <c:otherwise>
+                                <p:selectOneMenu id="kantor" value="#{controllerLabaRugi.id_kantor}" disabled="true"> 
+                                    <f:selectItems value="#{options.comboKantor}" />
+                                </p:selectOneMenu>
+                            </c:otherwise>
+                        </c:choose>    
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerLabaRugi.onLoadList()}"   icon="ui-icon-search" value="Search" update="labarugi"/>
+                    </p:panelGrid>    
+                    <div class="ui-button-group" style="text-align: right;">
+                        <p:commandButton id="xlsx" ajax="false" value="Excel">  
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="xlsx" target="labarugi" fileName="LabaRugi" 
+                                         facetFontSize="15"  
+                                         facetFontStyle="BOLD" cellFontColor="#000000" cellFontSize="12"  datasetPadding="1"  
+                                         cellFontStyle="NORMAL"/>  
+                        </p:commandButton>
+                        <p:commandButton action="#{controllerLabaRugi.getReport}" value="Laba Rugi Format Baru"  ajax="false" styleClass="ui-button-outlined p-mr-2 p-mb-2"/>
+                    </div>   
+                    <p:dataTable var="item" value="#{controllerLabaRugi.dataAccount}"  reflow="true" id="labarugi"
+                                 >
+                        <p:column headerText="Kode Account" style="width: 200px;">
+                            <h:outputText value="#{item.id_account}" />
+                        </p:column>
+
+                        <p:column headerText="Akun Perkiraan" >
+                            <h:outputText value="#{item.account}" />
+                        </p:column>
+                        <p:column headerText="Jumlah"  style="text-align:right; width: 150px;">
+                            <h:outputText value="#{item.debit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vendor</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerHariLibur.initItem()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('UPLOADABSEN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <div class="ui-g" >
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Upload Absen</h1>
+                    <h:form id="teachingForm" >
+                        <p:growl id="growl" showDetail="true" sticky="true" />
+                        <p:fileUpload fileUploadListener="#{controllerAbsensi.handleFileUploadXls}" mode="advanced" dragDropSupport="false"
+                                      update="growl teachingForm" fileLimit="3" sizeLimit="100000000"  allowTypes="/(\.|\/)(gif|jpe?g|png|csv|xls|xlsx)$/"/>
+
+                    </h:form>   
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

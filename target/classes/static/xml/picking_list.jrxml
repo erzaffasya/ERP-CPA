@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="picking_list" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" isIgnorePagination="true" uuid="b7a268cf-4165-43ac-8d73-7667b9618a5b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/indrayoga/ireport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="shelllogo" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select packinglist.*,customer.*,so.referensi,so.nomor as nomor_penjualan,pegawai.nama from packinglist
+left join so on packinglist.no_so=so.nomor
+left join customer on packinglist.id_customer=customer.id_kontak
+left join pegawai on packinglist.kode_user=pegawai.id_pegawai
+where packinglist.nomor=$P{nomor}]]>
+	</queryString>
+	<field name="nomor" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="id_customer" class="java.lang.String"/>
+	<field name="kepada" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="kode_user" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="id_salesman" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="id_gudang" class="java.lang.String"/>
+	<field name="telpon" class="java.lang.String"/>
+	<field name="hp" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="deliverypoint" class="java.lang.String"/>
+	<field name="no_so" class="java.lang.String"/>
+	<field name="id_kontak" class="java.lang.String"/>
+	<field name="customer" class="java.lang.String"/>
+	<field name="no_npwp" class="java.lang.String"/>
+	<field name="telepon" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="alamat_penagihan" class="java.lang.String"/>
+	<field name="id_kategori_customer" class="java.lang.Integer"/>
+	<field name="nama_bank" class="java.lang.String"/>
+	<field name="no_rekening" class="java.lang.String"/>
+	<field name="pemegang_rekening" class="java.lang.String"/>
+	<field name="kena_pajak" class="java.lang.Boolean"/>
+	<field name="isaktif" class="java.lang.Boolean"/>
+	<field name="batas_kredit" class="java.math.BigDecimal"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="alamat_npwp" class="java.lang.String"/>
+	<field name="id_sektor" class="java.lang.String"/>
+	<field name="top" class="java.lang.Integer"/>
+	<field name="id_kantor" class="java.lang.String"/>
+	<field name="referensi" class="java.lang.String"/>
+	<field name="nomor_penjualan" class="java.lang.String"/>
+	<field name="nama" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="109" splitType="Stretch">
+			<image>
+				<reportElement x="1" y="1" width="139" height="55" uuid="5c51f1a0-1d8f-4529-907a-e4c47895696b"/>
+				<imageExpression><![CDATA[$P{shelllogo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="441" y="0" width="114" height="56" uuid="da77e65d-05a1-4448-8d31-dc672f624d5e"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="1" y="89" width="198" height="20" uuid="8baec044-4325-40a2-bcb8-76b2cda04b8e"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Picking List Gudang]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="3" y="29" width="110" height="20" uuid="043fec29-b093-47a8-a321-c3751f521ab6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Order Penjualan No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="49" width="110" height="20" uuid="63a19e51-ac58-422b-acb8-d787a6b95935"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ PO No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="277" y="29" width="110" height="20" uuid="94d6ab81-4a49-471f-a92c-011e8fac006b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Tgl PL.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="277" y="49" width="110" height="20" uuid="2bf54c8f-a541-440d-9bc1-a8bdc06690b1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ Customer]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="113" y="49" width="164" height="20" uuid="bd5441a2-2426-4bad-8eae-a463beebdbc0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{referensi}==null?"": ": "+$F{referensi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="399" y="29" width="156" height="20" uuid="e78c8c5c-abdf-4802-8d62-731c8dda9490"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tanggal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="29" width="164" height="20" uuid="43633c85-f6c8-469d-8979-9afb5f39687d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nomor_penjualan}==null?"": ": "+$F{nomor_penjualan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="387" y="49" width="168" height="20" uuid="42a85845-599c-457f-bd34-91274fb0b41b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{customer}==null?"": ": "+$F{customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="9" width="442" height="20" uuid="0f65f9f2-dc5c-42ef-bf56-96793763fc34"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[": "+$F{nomor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="9" width="110" height="20" uuid="34140faf-382f-4094-8d2a-bca71a04f622"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ No. Picking List]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="29" width="12" height="20" uuid="85a72029-e71a-4f54-97b6-fbbdd45eb763"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement x="2" y="0" width="553" height="61" uuid="23f104b4-52c3-4f69-ade5-786376932fcc"/>
+				<subreportParameter name="nomor">
+					<subreportParameterExpression><![CDATA[$P{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "picking_list_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="115" splitType="Stretch">
+			<staticText>
+				<reportElement x="366" y="0" width="189" height="20" uuid="38840412-cb4a-4355-b67f-8ffbf753dcd0"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Created By]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="366" y="74" width="189" height="20" uuid="5113d21e-d8b8-485c-9ba3-27c016d54001"/>
+				<textElement>
+					<font size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

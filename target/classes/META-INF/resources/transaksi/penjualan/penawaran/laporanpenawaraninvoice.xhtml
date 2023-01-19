@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="title">Daftar Penawaran</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPenawaran.onLoadListPenawaranInvoice()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Realisasi Penawaran</h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPenawaran.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPenawaran.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel for="salesman" value="Salesman"/>
+                        <p:selectOneMenu id="salesman" value="#{controllerPenawaran.id_salesman}"   rendered="#{page.myPegawai.id_jabatan eq 4 or page.myPegawai.id_jabatan eq 5 or page.myPegawai.id_jabatan eq 24 or page.myPegawai.id_jabatan eq 27 or page.myPegawai.id_jabatan eq 28 or page.myPegawai.id_jabatan eq 37 or page.myPegawai.id_jabatan eq 78}">
+                            <f:selectItems value="#{options.comboMarketing}" />
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="salesman" value="#{controllerPenawaran.id_salesman}"  disabled="true" rendered="#{page.myPegawai.id_jabatan ne 4 and page.myPegawai.id_jabatan ne 5 and page.myPegawai.id_jabatan ne 24 and page.myPegawai.id_jabatan ne 27 and page.myPegawai.id_jabatan ne 28  and page.myPegawai.id_jabatan ne 37   and page.myPegawai.id_jabatan ne 78}">
+                            <f:selectItems value="#{options.comboMarketing}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerPenawaran.onLoadListPenawaranInvoice()}"   icon="ui-icon-search" value="Search" update="detil growl"/>
+
+                    </p:panelGrid>
+
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="detil" fileName="RealisasiPenawaran"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="detil" var="item" value="#{controllerPenawaran.dataPenawaranDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+                        <p:column headerText="No. Penawran" sortBy="#{item.nomor}" style="width:170px;">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal"  style="width:120px;">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" style="width:100px;">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Marketing" sortBy="#{item.salesman}" style="width:100px;">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="Material Code" sortBy="#{item.id_barang}" style="width:70px;">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}" style="width:100px;">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.qty}" style="width:50px; text-align: right">
+                            <h:outputText value="#{item.qty}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="No SO" sortBy="#{item.id_lama}" style="width:170px;">
+                            <h:outputText value="#{item.id_lama}" />
+                        </p:column>
+                        <p:column headerText="Jml Order" sortBy="#{item.jml_order}" style="width:50px; text-align: right">
+                            <h:outputText value="#{item.jml_order}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="No Invoice" sortBy="#{item.no_invoice}" style="width:170px;">
+                            <h:outputText value="#{item.no_invoice}" />
+                        </p:column>
+                        <p:column headerText="Jumlah" sortBy="#{item.jml_invoice}" style="width:50px; text-align: right">
+                            <h:outputText value="#{item.jml_invoice}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Selisih" sortBy="#{item.selisih}" style="width:50px; text-align: right">
+                            <h:outputText value="#{item.selisih}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

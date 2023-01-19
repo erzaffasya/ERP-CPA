@@ -1,0 +1,13 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="kode" value="Kode"/>
+        <p:inputText id="kode" readonly="false" value="#{controllerKategoriBarangConsumable.item.kode}" required="true"/>
+        <p:outputLabel for="nama_kategori" value="Nama Kategori Barang"/>
+        <p:inputText id="nama_kategori" value="#{controllerKategoriBarangConsumable.item.kategori_barang}" required="true"/>
+    </p:panelGrid>
+</ui:composition>

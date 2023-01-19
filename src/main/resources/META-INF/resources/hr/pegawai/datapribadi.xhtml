@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+            <f:viewAction action="#{controllerHrPegawai.onLoadDataDiri()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12  ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12  ui-lg-12">
+                                <div class="ui-g-12  ui-lg-1" ></div>
+                                <div class="ui-g-12  ui-lg-3" >
+                                    <ui:include src="leftprofile.xhtml"/>
+                                    <div style="margin-bottom: 20px;">
+                                        <p:link outcome="/hr/pegawai/editdatapribadi" value="Ubah profil" style="margin-right:20px; margin-bottom: 20px;">
+                                            <f:param name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+                                        </p:link>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12  ui-lg-8">    
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                        <p:outputLabel  value="Nama Lengkap" />
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nama}"/>
+                                        <p:outputLabel  value="Nama Panggilan" />
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nama_panggilan}"/>
+                                        <p:outputLabel  value="Tempat &amp; tanggal Lahir "/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.ttl}" />
+                                        <p:outputLabel  value="NIK KTP"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nik_ktp}"/>
+                                        <p:outputLabel  value="Gender"/>
+                                        <p:outputLabel  value="Laki-laki" rendered="#{controllerHrPegawai.item.jenis_kelamin eq 'l'}"/>
+                                        <p:outputLabel  value="Perempuan" rendered="#{controllerHrPegawai.item.jenis_kelamin eq 'p'}"/>
+                                        <p:outputLabel  value=" " rendered="#{controllerHrPegawai.item.jenis_kelamin eq null}"/>
+                                        <p:outputLabel  value="Status perkawinan"/>
+                                        <p:outputLabel  value="Belum kawin" rendered="#{controllerHrPegawai.item.status_pernikahan eq '1'}"/>
+                                        <p:outputLabel  value="Kawin" rendered="#{controllerHrPegawai.item.status_pernikahan eq '2'}"/>
+                                        <p:outputLabel  value="Cerai hidup" rendered="#{controllerHrPegawai.item.status_pernikahan eq '3'}"/>
+                                        <p:outputLabel  value="Cerai mati" rendered="#{controllerHrPegawai.item.status_pernikahan eq '4'}"/>
+                                        <p:outputLabel  value="Agama"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.agama}"/>
+                                        <p:outputLabel  value="Golongan darah"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.golongan_darah}"/>
+                                        <p:outputLabel  value="Tinggi badan"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.tinggi_badan} Cm" />
+                                        <p:outputLabel  value="Berat badan"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.berat_badan} Kg" />
+                                        <p:outputLabel  value="Anak ke"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.anak_ke}" />
+                                        <p:outputLabel  value="No. HP"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.hp}" />
+                                        <h:panelGroup/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.hp2}" />
+                                        <p:outputLabel  value="WhatsApp"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.wa}" />
+                                        <p:outputLabel  value="Email"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.email}" />
+                                        <p:outputLabel  value="Alamat sesuai KTP"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.alamat_ktp}" />
+                                        <p:outputLabel  value="Kota/kabupaten"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nama_kabupaten_ktp}" />
+                                        <p:outputLabel  value="Provinsi"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nama_provinsi_ktp}" />
+                                        <p:outputLabel  value="Kode pos"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.kodepos_ktp}" />
+                                        <p:outputLabel  value="Tanggal berakhir KTP"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.tanggal_berakhir_identitas}" />
+                                        <p:outputLabel  value="Alamat tempat tinggal"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.alamat_domisili}" />
+                                        <p:outputLabel  value="Kota/kabupaten"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nama_kabupaten_domisili}" />
+                                        <p:outputLabel  value="Provinsi"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.nama_provinsi_domisili}" />
+                                        <p:outputLabel  value="Kode pos"/>
+                                        <p:outputLabel  value="#{controllerHrPegawai.item.kodepos_domisili}" />
+
+                                    </p:panelGrid>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+    </ui:define>
+</ui:composition>

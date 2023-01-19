@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Cuti"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerCuti.item.nama_cuti}" required="true" title="Isi dengan nama kebijakan cuti"/>
+        <p:tooltip id="toolTipFocus" for="nama" showEvent="focus" hideEvent="blur" />
+    </p:panelGrid>
+    <p:panelGrid id="pd1" columns="3" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="bagian" value="Bagian dari cuti"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="bagian" value="#{controllerCuti.item.master}" rendered="#{controllerCuti.item.status}" disabled="true">
+            <f:selectItems value="#{controllerCuti.comboCutiMaster}" />
+        </p:selectOneMenu>
+        <p:selectOneMenu id="bagian2" value="#{controllerCuti.item.master}" rendered="#{!controllerCuti.item.status}" required="true">
+            <f:selectItems value="#{controllerCuti.comboCutiMaster}" />
+            <p:ajax listener="#{controllerCuti.onMasterSelect()}" update="kepada" event="change"/>
+        </p:selectOneMenu>
+        <p:selectBooleanCheckbox  value="#{controllerCuti.item.status}" itemLabel="Cuti baru" style="width: 200px">
+            <p:ajax event="change" update="pd1 kepada" listener="#{controllerCuti.onStatusSelect()}"/>
+        </p:selectBooleanCheckbox>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-11" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel  value="Untuk cuti ini, saldo setiap staf adalah" />
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:inputNumber id="saldo" value="#{controllerCuti.item.saldo}"  style="margin-top: 20px;" decimalPlaces="0"/>
+        <p:outputLabel  value="Hari/tahun"/>
+        <p:selectBooleanCheckbox  value="#{controllerCuti.item.batasan}" itemLabel="Atau tanpa batasan" style="width: 300px"/>
+        
+    </p:panelGrid>
+    <p:panelGrid columns="2" id="prs1" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="4."/>
+        <p:outputLabel  value="Cuti ini harus mendapatkan persetujuan dari"/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="persetujuan1" value="#{controllerCuti.item.persetujuan1}" style="margin-top: 10px;">
+            <f:selectItems value="#{controllerCuti.comboPersetujuan1}" />
+            <p:ajax event="change" update="prs1"/>
+        </p:selectOneMenu>
+        <h:panelGroup rendered="#{controllerCuti.item.persetujuan1 eq '2'}"/>
+        <p:outputLabel  value="Yakni oleh" rendered="#{controllerCuti.item.persetujuan1 eq '2'}"/>
+        <h:panelGroup rendered="#{controllerCuti.item.persetujuan1 eq '2'}"/>
+        <p:selectOneMenu id="jabatan1" value="#{controllerCuti.item.jabatan_persetujuan1}" style="margin-top: 10px;" rendered="#{controllerCuti.item.persetujuan1 eq '2'}">
+            <f:selectItems value="#{controllerCuti.combojabatan1}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    <p:panelGrid columns="2" id="prs2" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="5."/>
+        <p:outputLabel  value="Setelah mendapatkan persetujuan maka"/>
+        <h:panelGroup/>
+        <p:selectOneMenu id="persetujuan2" value="#{controllerCuti.item.persetujuan2}" style="margin-top: 10px;">
+            <f:selectItems value="#{controllerCuti.comboPersetujuan2}" />
+            <p:ajax event="change" update="prs2"/>
+        </p:selectOneMenu>
+        <h:panelGroup rendered="#{controllerCuti.item.persetujuan2 eq '2'}"/>
+        <p:outputLabel  value="Yakni oleh" rendered="#{controllerCuti.item.persetujuan2 eq '2'}"/>
+        <h:panelGroup rendered="#{controllerCuti.item.persetujuan2 eq '2'}"/>
+        <p:selectOneMenu id="jabatan2" value="#{controllerCuti.item.jabatan_persetujuan2}" style="margin-top: 10px;" rendered="#{controllerCuti.item.persetujuan2 eq '2'}">
+            <f:selectItems value="#{controllerCuti.combojabatan1}" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="6."/>
+        <p:outputLabel for="kepada" value="Cuti ini diberikan kepada"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerCuti.masterJabatans}" var="jabatan" effect="bounce"
+                    itemValue="#{jabatan}" itemLabel="#{jabatan.jabatan}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{jabatanConverter}" responsive="true">
+            <f:facet name="sourceCaption">Nama jabatan</f:facet>
+            <f:facet name="targetCaption">Jabatan yang diberikan</f:facet>
+            <p:column style="width:85%;">
+                <h:outputText value="#{jabatan.jabatan}" />
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

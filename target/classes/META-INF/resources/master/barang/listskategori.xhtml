@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Daftar Kategori Produk</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <p:dataTable var="item" value="#{controllerKategoriBarang.dataKategoriBarang}">
+                <p:column headerText="Kode">
+                    <h:outputText value="#{item.id_kategori_barang}" />
+                </p:column>
+                <p:column headerText="Kategori">
+                    <h:outputText value="#{item.kategori_barang}" />
+                </p:column>
+
+                <p:column style="width:32px;text-align: center">
+                    <p:commandButton icon="ui-icon-search" actionListener="#{controllerKategoriBarang.selectKategoriBarangFromDialog(item)}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+
+</html>

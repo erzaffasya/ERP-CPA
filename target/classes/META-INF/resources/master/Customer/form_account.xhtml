@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton  actionListener="#{controllerCustomer.extendAccount()}" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" 
+                          value="Tambah Baris" process="@this"  update="detilaccount" />
+    </p:panelGrid>
+
+    <p:dataTable id="detilaccount" var="item"  value="#{controllerCustomer.dataCustomerAccount}" editable="true" editMode="cell"  rowIndexVar="i">
+        <f:facet name="header">Daftar Account Piutang</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{i + 1}" />
+        </p:column>
+
+        <p:column headerText="Kode Account" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_account}" id="oid_account"/></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete   id="id_account" value="#{accountAutoComplete.account}" completeMethod="#{accountAutoComplete.completeAccountContains}"
+                                      var="account" itemLabel="#{account.id_account}" itemValue="#{account}" converter="#{accountConverter}"
+                                      scrollHeight="250" required="true">
+                        <p:ajax event="itemSelect" listener="#{controllerCustomer.onAccountSelected(item, ri)}" update="id_account oid_account oaccount account"/>
+                        <p:column headerText="Kode" >
+                            <h:outputText value="#{account.id_account}" />
+                        </p:column>
+                        <p:column headerText="Account" >
+                            <h:outputText value="#{account.account}" />
+                        </p:column>
+
+                    </p:autoComplete>   
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Kode" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nm_account}" id="oaccount"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="account" value="#{item.nm_account}"  />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Kantor Cabang" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nm_kantor}" id="okantor"/></f:facet>
+                <f:facet name="input">
+                    <p:selectOneMenu id="id_kantor" value="#{item.id_kantor}">
+                        <f:selectItems value="#{options.comboKantor}" />
+                        <p:ajax listener="#{controllerCustomer.onKantorSelected(item, i)}" update="okantor"/>
+                    </p:selectOneMenu>
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:50px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerCustomer.onDeleteAccountClicked(item)}"  update="detilaccount" />
+            </p:commandButton>
+
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

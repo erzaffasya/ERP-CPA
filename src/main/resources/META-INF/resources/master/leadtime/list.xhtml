@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">Leadtime</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerLeadtime.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('LEADTIME')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerLeadtime.update()}"   icon="ui-icon-update" value="Edit"  id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerLeadtime.item}" target="#{controllerLeadtime.item}" />
+                            </p:commandButton>
+                            
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerLeadtime.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Leadtime</h1>
+                    
+                    <p:dataTable id="tbl-detil" var="item" value="#{controllerLeadtime.dataLeadtime}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerLeadtime.item}" rowKey="#{item.origin}"  rowIndexVar="ri">
+
+                        <p:column headerText="Origin" sortBy="#{item.origin}"  filterBy="#{item.origin}" filterMatchMode="contains">
+                            <h:outputText value="#{item.origin}" />
+                        </p:column>    
+                        <p:column headerText="Destinations" sortBy="#{item.destination}"  filterBy="#{item.destination}" filterMatchMode="contains">
+                            <h:outputText value="#{item.destination}" />
+                        </p:column>
+                        <p:column headerText="Region" sortBy="#{item.region}"  filterBy="#{item.region}" filterMatchMode="contains">
+                            <h:outputText value="#{item.region}" />
+                        </p:column>
+                        <p:column headerText="Normaly Leadtime" sortBy="#{item.normaly}" >
+                            <h:outputText value="#{item.normaly}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Spare Leadtime" sortBy="#{item.spare}">
+                            <h:outputText value="#{item.spare}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Total Leadtime System" sortBy="#{item.total}">
+                            <h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:fileUpload fileUploadListener="#{controllerLeadtime.handleFileUploadXls}" mode="advanced" dragDropSupport="false" id="uploadnya"
+                                          update="growl tbl-detil" fileLimit="5" sizeLimit="100000000"  allowTypes="/(\.|\/)(gif|jpe?g|png|csv|xls|xlsx)$/" >
+                                
+                            </p:fileUpload>  
+                </div>
+            </div>
+            
+              <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Leadtime :" />
+                    #{controllerLeadtime.item.origin} - #{controllerLeadtime.item.destination}
+                    <p:commandButton id="deleteButton" actionListener="#{controllerLeadtime.delete()}" onclick="PF('dlg3').hide();" 
+                                     update=":form:tbl-detil" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

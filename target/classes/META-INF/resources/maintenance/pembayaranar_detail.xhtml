@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerPembayaranPiutang.dataPembayaranPiutangDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" reflow="true" tableStyle="table-layout: auto;">
+
+        <f:facet name="header">Daftar Invoice</f:facet>
+        <p:column headerText="No  Invoice" >
+            <h:outputText value="#{item.no_invoice}"/>
+        </p:column>
+        <p:column headerText="No. Ar" >
+            <h:outputText id="invoice" value="#{item.no_penjualan}" />
+        </p:column>
+        <p:column headerText="Saldo" styleClass="rightColumnContent">
+            <h:outputText value="#{item.jumlah_tagihan}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="DPP" styleClass="rightColumnContent">
+            <h:outputText value="#{item.dpp}" id="odpp"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="PPN" styleClass="rightColumnContent">
+            <h:outputText value="#{item.ppn}" id="oppn"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Jumlah Dibayar" styleClass="rightColumnContent">
+            <h:outputText value="#{item.jumlah_bayar}" id="obayar"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Keterangan">
+            <h:outputText value="#{item.keterangan}"/>
+        </p:column>
+        
+    </p:dataTable>
+
+</ui:composition>

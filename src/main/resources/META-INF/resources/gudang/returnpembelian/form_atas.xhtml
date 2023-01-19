@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No Return"/>
+        <p:inputText id="nomor" value="#{controllerReturnPembelianGudang.item.no_return_pembelian_gudang}"  required="true" requiredMessage="Nomor Peembelian harus diisi !!"/>
+        <p:outputLabel for="nomor_po" value="PO No."/>
+        <p:autoComplete   id="nomor_po" value="#{penerimaanGudangAutoComplete.penerimaan}" completeMethod="#{penerimaanGudangAutoComplete.completePenerimaanContains}"
+                          var="po" itemLabel="#{po.no_penerimaan}" itemValue="#{po}" converter="#{penerimaanGudangConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Receipt Number  harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerReturnPembelianGudang.onPoSelect}" update="detil nm_supplier gudang keterangan reff"/>
+            <p:column headerText="Receipt No." >
+                <h:outputText value="#{po.no_penerimaan}" />
+            </p:column>
+            <p:column headerText="Receipt Date">
+                <h:outputText value="#{po.tgl_penerimaan}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="PO Number" >
+                <h:outputText value="#{po.nomor_po}" />
+            </p:column>
+            <p:column headerText="Vendor" >
+                <h:outputText value="#{po.nama_supplier}" />
+            </p:column>
+            <p:column headerText="Do No." >
+                <h:outputText value="#{po.referensi}" />
+            </p:column>
+            <p:column headerText="Gudang" >
+                <h:outputText value="#{po.gudang}" />
+            </p:column>
+            
+        </p:autoComplete>  
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar id="tanggal"  value="#{controllerReturnPembelianGudang.item.tanggal}"  />
+
+        <p:outputLabel  value="Supplier :"/>
+        <p:inputText id="nm_supplier"  value="#{controllerReturnPembelianGudang.item.nama_supplier}" readonly="true"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerReturnPembelianGudang.item.id_gudang}">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+        
+        <p:outputLabel  value="Nomor Do"/>
+        <p:inputText id="reff"  value="#{controllerReturnPembelianGudang.item.referensi}"/>
+        
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="Keterangan"/>
+        <p:inputText  id="keterangan" value="#{controllerReturnPembelianGudang.item.keterangan}"/>
+    </p:panelGrid>
+    
+
+
+</ui:composition>

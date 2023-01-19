@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+
+
+    <ui:define name="title">View Payroll</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPayroll.onLoadList()}" />
+    </f:metadata>       
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>View Payroll</h1>
+
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="bulan" value="Periode"/>
+                        <p:selectOneMenu id="bulan" value="#{controllerPayroll.bulan}">
+                            <f:selectItems value="#{options.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerPayroll.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerPayroll.onLoadList()}"   icon="ui-icon-search" value="View Payroll" update="growl report"/>
+                    </p:panelGrid>
+                    <p:dataTable id="report" var="item" value="#{controllerPayroll.dataPayrollDetail}" selectionMode="single" reflow="true" 
+                                 selection="#{controllerPayroll.item}" rowKey="#{item.id}" rowIndexVar="index" >
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="NIK" />
+                                <p:column headerText="Nama"/>
+                                <p:column headerText="total gaji"/>
+                                
+                                <p:column headerText=" "/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column ><h:outputText value="#{item.nip}"/></p:column>
+                        <p:column ><h:outputText value="#{item.nama_pegawai}"/></p:column>
+                        <p:column ><h:outputText value="#{item.thp}"  ><f:convertNumber pattern="#,##0" /></h:outputText></p:column>
+                        <p:column>
+                            <p:commandButton 
+                                actionListener="#{controllerPayroll.onDetilSelect(item.id,item.id_pegawai)}"  
+                                oncomplete="PF('sidebar5').show()"
+                                value="Detail" 
+                                process="@this" 
+                                update="report  :form:detil :form:judul">
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            
+            <p:sidebar widgetVar="sidebar5" fullScreen="true" baseZIndex="10000">
+
+                <p:panelGrid id="judul" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                    <h:panelGroup/>
+                    <p:panelGrid id="detil" columns="5" columnClasses="ui-grid-col-4,ui-grid-col-2,ui-grid-col-1,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                        <p:outputLabel  value="A. GAJI POKOK" style="font-size: 16px; font-weight: bold;"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.gaji_pokok}" style="font-size: 16px; font-weight: bold; text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="E. POTONGAN" style="font-size: 16px; font-weight: bold;"/>
+                        <h:panelGroup/>
+                        
+                        <p:outputLabel  value="B. TUNJANGAN TETAP" style="font-size: 16px; font-weight: bold;"/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. BPJS - Premi Karyawan"/>
+                        <h:panelGroup/>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. Tunjangan Jabatan"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.tunjangan_jabatan}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; a. Ketenagakerjaan"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.bpjs_ketenagakerjaan}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="C. TUNJANGAN TIDAK TETAP" style="font-size: 16px; font-weight: bold;"/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; a. Jaminan pensiun"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.bpjs_pensiun}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. Over Time [OT]"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.overtime}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; c. Kesehatan"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.bpjs_kesehatan}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                       
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;02. Insentif Over Job - Non OT"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.insentif_penjualan}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;02. Asuransi komersil"/>
+                        <h:panelGroup/>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;03. Tj. Uang Makan dan Transport"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.umt}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; a. Prudential"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.prudential}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;04. Insentif Kehadiran"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.insentif_kehadiran}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; b. Alianz"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.alianz}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;05. Insentif Produktivitas"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.insentif_produktifitas}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;03. Hutang/cicilan"/>
+                        <h:panelGroup/>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;06. Tunjangan Komunikasi"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.tunjangan_komunikasi}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; a. KTA"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.hutang_kta}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;07. Tunjangan BBM"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.tunjangan_bbm}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; b. Lain-lain"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.hutang_dll}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;08. Insentif Produktivitas [KPI]"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.insentif_produktifitas}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;04. Absensi"/>
+                        <h:panelGroup/>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;09. Tunjangan Hari Raya"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.thr}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; a. Unpaid leave (UL)"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.potongan_absensi}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                    
+                        <p:outputLabel  value="D. LAIN-LAIN" style="font-size: 16px; font-weight: bold;"/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;05. Pph"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.pph21_upah}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;01. Komisi penjualan"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.komisi_penjualan}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="&#160;&#160;&#160;&#160;&#160;05. Lain-lain"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.pph21_upah}" style="text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                        <p:outputLabel  value="Sub.  Total ( A+B+C )" style="font-size: 16px; font-weight: bold;"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.total_gaji}" style="font-size: 16px; font-weight: bold; text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Total Potongan" style="font-size: 16px; font-weight: bold;"/>
+                        <p:outputLabel  value="#{controllerPayroll.itemdetail.total_potongan}" style="font-size: 16px; font-weight: bold; text-align: right;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                        
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:panelGrid id="totalthp" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                      <p:outputLabel  value="NETT SALLARY" style="font-size: 20px; font-weight: bold; text-align: right;"/>  
+                      <p:outputLabel id="thp"  value="#{controllerPayroll.itemdetail.thp}" style="font-size: 20px; font-weight: bold; text-align: left;"><f:convertNumber pattern="#,##0" /></p:outputLabel>
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:sidebar>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

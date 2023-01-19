@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="permintaan_pembelian" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" isIgnorePagination="true" uuid="2b1a9821-c4f5-4021-b262-10b5d80841b8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/indrayoga/ireport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nama_perusahaan" class="java.lang.String"/>
+	<parameter name="check" class="java.awt.Image">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tanggal_cetak" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT permintaan_pembelian.*,
+	pembuat.nama as nama_pembuat,checked.nama as nama_checker,
+	setuju.nama as setuju1,setuju2.nama as setuju2,pesan_check.pesan as pesan_check,pesan_setuju1.pesan as pesan_setuju1,pesan_setuju2.pesan as pesan_setuju2
+  FROM public.permintaan_pembelian
+	LEFT JOIN pegawai as pembuat ON permintaan_pembelian.dibuat=pembuat.id_pegawai
+	LEFT JOIN pegawai as checked on permintaan_pembelian.checked_name=checked.id_pegawai
+	LEFT JOIN pegawai as setuju on permintaan_pembelian.disetujui=setuju.id_pegawai
+	LEFT JOIN pegawai as setuju2 on permintaan_pembelian.approved2=setuju2.id_pegawai
+	LEFT JOIN permintaan_pembelian_pesan as pesan_check
+		on permintaan_pembelian.no_pp=pesan_check.no_pp and permintaan_pembelian.checked_name=pesan_check.dari
+	LEFT JOIN permintaan_pembelian_pesan as pesan_setuju1
+		on permintaan_pembelian.no_pp=pesan_setuju1.no_pp and permintaan_pembelian.checked_name=pesan_setuju1.dari
+	LEFT JOIN permintaan_pembelian_pesan as pesan_setuju2
+		on permintaan_pembelian.no_pp=pesan_setuju2.no_pp and permintaan_pembelian.checked_name=pesan_setuju2.dari
+	WHERE permintaan_pembelian.no_pp=$P{nomor}]]>
+	</queryString>
+	<field name="no_pp" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="dibuat" class="java.lang.String"/>
+	<field name="disetujui" class="java.lang.String"/>
+	<field name="diterima" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="checked" class="java.lang.Boolean"/>
+	<field name="approved" class="java.lang.Boolean"/>
+	<field name="checked_name" class="java.lang.String"/>
+	<field name="tgl_disetujui" class="java.sql.Date"/>
+	<field name="tgl_diterima" class="java.sql.Date"/>
+	<field name="status_cheked" class="java.lang.Boolean"/>
+	<field name="status_approved" class="java.lang.Boolean"/>
+	<field name="status_dibuat" class="java.lang.Boolean"/>
+	<field name="tgl_cheked" class="java.sql.Date"/>
+	<field name="approved2" class="java.lang.String"/>
+	<field name="tgl_approved2" class="java.sql.Date"/>
+	<field name="status_approved2" class="java.lang.Boolean"/>
+	<field name="jenis" class="java.lang.String">
+		<fieldDescription><![CDATA[1- utama
+2- potongan]]></fieldDescription>
+	</field>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="nama_pembuat" class="java.lang.String"/>
+	<field name="nama_checker" class="java.lang.String"/>
+	<field name="setuju1" class="java.lang.String"/>
+	<field name="setuju2" class="java.lang.String"/>
+	<field name="pesan_check" class="java.lang.String"/>
+	<field name="pesan_setuju1" class="java.lang.String"/>
+	<field name="pesan_setuju2" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="32" width="802" height="47" uuid="b090753e-a75c-4575-bb7c-049ce02c5b75"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nama_perusahaan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="108" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="802" height="20" uuid="6a2c45b5-3245-454b-904a-1a860e78e74f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{jenis}=='P')?"PERMINTAAN PEMBELIAN":"PENGAJUAN DANA"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="46" width="72" height="20" uuid="c4288414-bfa7-48e7-9199-69b0b31c8631"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Nomor          :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="86" width="72" height="20" isPrintWhenDetailOverflows="true" uuid="e4d3755f-ee94-47f3-bf80-ea29784b6fad"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Keterangan  :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="72" y="46" width="226" height="20" uuid="48fa003b-7e77-4024-93bc-142c19a03231"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_pp}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="72" y="86" width="730" height="20" isPrintWhenDetailOverflows="true" uuid="c034ac3c-c72c-439e-8ccf-31babbbfc6ff"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{keterangan}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="66" width="72" height="20" uuid="8114f338-0b43-42ae-82c0-9515dd90eb41"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Tanggal        : ]]></text>
+			</staticText>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="72" y="66" width="188" height="20" uuid="8d726c35-f15a-4b95-9016-6fac7ae1fdf0"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="0" width="801" height="61" uuid="48bdbe26-194a-4c24-b757-db586a544857"/>
+				<subreportParameter name="nomor">
+					<subreportParameterExpression><![CDATA[$P{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "permintaan_pembelian_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="130" splitType="Stretch">
+			<staticText>
+				<reportElement x="431" y="21" width="92" height="59" uuid="2c901ce5-68d5-44bb-8e49-d822dd5989f4"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="523" y="21" width="93" height="59" uuid="b9b4da58-afb1-4f72-bb83-767d5da91e0f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="523" y="1" width="93" height="20" uuid="b54d4800-8623-4009-ba82-8ab9404d7ffe"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Dicheck Oleh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="709" y="1" width="93" height="20" uuid="bcf9ba9d-85fa-4cba-be2e-dae6a1f31cec"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Disetujui Oleh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="1" width="92" height="20" uuid="9337bbcc-5139-469b-9fee-3eb0292121e3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Dibuat Oleh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="709" y="21" width="93" height="59" uuid="9d1c1eaf-e573-415c-b384-4f8ecaf0cb70"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="616" y="1" width="93" height="20" uuid="cab35821-a7d4-4a66-b372-6a31db6a4ff3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Disetujui Oleh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="616" y="21" width="93" height="59" uuid="1949f2db-bc08-4470-8ccf-7fb6d51cf503"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="431" y="80" width="92" height="20" uuid="6698767e-a4bf-4f2f-8284-372b154319b4"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_pembuat}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="523" y="80" width="93" height="20" uuid="df254e1a-339b-4faf-bb18-6dfb86f2ebdf"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_checker}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="709" y="80" width="93" height="20" uuid="8800cbb4-dc4b-4ace-af17-1c6352465b9e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{setuju1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="616" y="80" width="93" height="20" uuid="37a5ca90-fe1b-4356-8557-4e3352c56829"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{setuju2}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="431" y="21" width="92" height="59" uuid="7e72daac-74fe-4f26-8e87-c01187861450">
+					<printWhenExpression><![CDATA[$F{status_dibuat}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{check}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="524" y="21" width="92" height="59" uuid="021678ba-9423-4fe9-a052-6124b2b9da88">
+					<printWhenExpression><![CDATA[$F{status_cheked}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{check}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="617" y="21" width="92" height="59" uuid="d747bb92-e581-4059-87a3-abb008e6333b">
+					<printWhenExpression><![CDATA[$F{status_approved2}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{check}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="710" y="21" width="92" height="59" uuid="350e7f81-aefb-497e-b4e9-63a44c16a8b2">
+					<printWhenExpression><![CDATA[$F{status_approved}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{check}]]></imageExpression>
+			</image>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="24" splitType="Stretch">
+			<elementGroup/>
+			<textField pattern="dd MMMMM yyyy h.mm a">
+				<reportElement x="685" y="2" width="100" height="20" uuid="cd4d0832-802d-474c-80b4-b5818a6165aa"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="585" y="2" width="100" height="20" uuid="db845a9a-f198-4715-8432-85fbeb82cfe4"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Dicetak tanggal :  ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

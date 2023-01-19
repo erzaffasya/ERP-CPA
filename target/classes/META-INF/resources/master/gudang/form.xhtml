@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="id_gudang" value="Id Gudang"/>
+        <p:inputMask id="id_gudang" value="#{controllerGudang.item.id_gudang}" required="true"   mask="***" />
+        <h:panelGroup/>
+        <p:outputLabel for="inisial" value="Inisial"/>
+        <p:inputText id="inisial" value="#{controllerGudang.item.inisial}" required="true" />
+        <h:panelGroup/>
+        <p:outputLabel for="gudang" value="Nama Gudang"/>
+        <p:inputText id="gudang" value="#{controllerGudang.item.gudang}" required="true"/>
+        <h:panelGroup/>
+        <p:outputLabel for="parent" value="Parent"/>
+        <p:selectOneMenu id="parent" value="#{controllerGudang.item.parent}">
+            <f:selectItems value="#{options.comboGudangAll}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <p:outputLabel for="kantor" value="Kantor/Cabang"/>
+        <p:selectOneMenu id="kantor" value="#{controllerGudang.item.id_kantor}" >
+            <f:selectItems value="#{options.comboKantor}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <p:outputLabel for="pegawai" value="Kontak Person"/>
+        <p:selectOneMenu id="pegawai" value="#{controllerGudang.item.id_kontak}">
+            <f:selectItems value="#{controllerHrPegawai.comboPegawai}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <p:outputLabel for="dsm" value="DSM"/>
+        <p:selectOneMenu id="dsm" value="#{controllerGudang.item.dsm}">
+            <f:selectItems value="#{controllerHrPegawai.comboPegawai}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>
+        <p:outputLabel for="telpon" value="Telpon"/>
+        <p:inputText id="telpon" value="#{controllerGudang.item.telpon}"/>
+        <h:panelGroup/>
+        <p:outputLabel for="alamat" value="Alamat"/>
+        <p:textEditor id="alamat" widgetVar="editor2" value="#{controllerGudang.item.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup/>
+        <p:outputLabel for="account_persediaan" value="Account Persediaan" />
+        <p:autoComplete   id="account_persediaan" value="#{accountAutoComplete.account}" completeMethod="#{accountAutoComplete.completeAccountContains}"
+                          var="account" itemLabel="#{account.account}" itemValue="#{account}" converter="#{accountConverter}"
+                          scrollHeight="250"     >
+            <p:ajax event="itemSelect" listener="#{controllerGudang.onAccountPersediaanSelect}" update="id_account_persediaan"/>
+            <p:column headerText="Kode" >
+                <h:outputText value="#{account.id_account}" />
+            </p:column>
+            <p:column headerText="Account" >
+                <h:outputText value="#{account.account}" />
+            </p:column>
+            <p:column headerText="Parent" >
+                <h:outputText value="#{account.account_parent}" />
+            </p:column>
+        </p:autoComplete>   
+        <p:outputLabel id="id_account_persediaan" value="#{controllerGudang.item.account_persediaan}" /> 
+        
+    </p:panelGrid>
+</ui:composition>

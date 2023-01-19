@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{controllerAbsenPeriode.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Attendance Activities</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PERIODE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <style type="text/css">
+            .ui-datatable .ui-datatable-data td {
+                background-color: white;
+            }
+
+
+        </style>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Setting Periode Absen</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel  value="Tahun" />
+                        <p:inputText value="#{controllerAbsenPeriode.tahun}"  maxlength="4" placeholder="9999" >
+                            <p:ajax event="keyup" update="detil" listener="#{controllerAbsenPeriode.onLoadList()}" />
+                        </p:inputText>
+                    </p:panelGrid>
+
+                    <p:dataTable id="detil" var="item" value="#{controllerAbsenPeriode.dataAbsenPeriode}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+                        <p:column headerText="Bulan">
+                            <h:outputText value="#{item.month_name}"/>
+                        </p:column>
+                        <p:column headerText="Awal">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.start}"><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText></f:facet>
+                                <f:facet name="input">
+                                    <p:calendar  value="#{item.start}"  pattern="dd-MM-yyyy" mask="99-99-9999" maxlength="10" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Akhir">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.end_date}"><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText></f:facet>
+                                <f:facet name="input">
+                                    <p:calendar  value="#{item.end_date}"  pattern="dd-MM-yyyy" mask="99-99-9999" maxlength="10" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                    </p:dataTable>
+                    <p:panelGrid columns="1" columnClasses="ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:commandButton id="simpan"
+                                         actionListener="#{controllerAbsenPeriode.tambah()}"
+                                         value="Simpan" 
+                                         ajax="true"
+                                         process="@form"
+                                         update="@form"
+                                         icon="fa  fa-floppy-o"
+                                         />
+                    </p:panelGrid>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Kategori Supplier</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerKategoriSupplier.item.id_lama}" />
+        <f:viewAction action="#{controllerKategoriSupplier.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KATEGORISUPLIER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <h:inputHidden value="#{controllerKategoriSupplier.item.id_lama}" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Input Kategori Supplier</h1>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                <p:outputLabel for="kategorisupplier" value="Kategori Supplier"/>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="kategorisupplier" value="#{controllerKategoriSupplier.item.nm_kategori_supplier}" required="true"/>
+                                    <label>Kategori Supplier</label>
+                                </h:panelGroup>
+
+
+                                <p:commandButton id="simpan"
+                                                 actionListener="#{controllerKategoriSupplier.ubah()}"
+                                                 value="Simpan" 
+                                                 ajax="true"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="glyphicon-floppy-disk"
+                                                 style="margin-right: 5px;"/>
+
+                            </p:panelGrid>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

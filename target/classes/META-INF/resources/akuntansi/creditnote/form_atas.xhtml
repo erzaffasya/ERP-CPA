@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Invoice CreditNote</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Number"/>
+        <p:inputText id="nomor" value="#{controllerCreditNote.item.nomor}" readonly="true"/>
+        <p:outputLabel for="no_penjualan" value="Invoice Number"/>
+        <p:autoComplete   id="no_penjualan" value="#{invoiceAutoComplete.penjualan}" completeMethod="#{invoiceAutoComplete.completePenjualanContains}"
+                          var="penjualan" itemLabel="#{penjualan.no_penjualan}" itemValue="#{penjualan}" converter="#{invoiceConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nomor Invoice harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerCreditNote.onPenjualanSelect}" update="detil no_po no_do customer top faktur due_date totaljumlah diskon dpp ppn grandtotal growl jurnal id_salesman"/>
+            <p:column headerText="Nomor Penawaran" >
+                <h:outputText value="#{penjualan.no_penjualan}" />
+            </p:column>
+            <p:column headerText="Customer" >
+                <h:outputText value="#{penjualan.customer}" />
+            </p:column>
+            <p:column headerText="Marketing" >
+                <h:outputText value="#{penjualan.salesman}" />
+            </p:column>
+            <p:column headerText="Tanggal">
+                <h:outputText value="#{penjualan.tanggal}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="Grand Total">
+                <div style="text-align:right;"><h:outputText value="#{penjualan.grandtotal}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+            </p:column>
+        </p:autoComplete>    
+        <p:outputLabel for="tanggal" value="Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerCreditNote.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Credit Note Date harus diisi !!" />
+        <p:outputLabel for="no_do" value="Do. Number"/>
+        <p:inputText id="no_do" value="#{controllerCreditNote.item.no_do}" readonly="true"/>
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:inputText id="customer" value="#{controllerCreditNote.item.customer}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerCreditNote.item.no_po}" immediate="true" />
+
+
+        <p:outputLabel  value="Term Of Payment" for="top"/>
+        <p:inputNumber id="top" value="#{controllerCreditNote.item.top}" decimalPlaces="0" readonly="true" required="true"/>
+        <p:outputLabel for="faktur" value="No Faktur Pajak:"/>
+        <p:inputText id="faktur" value="#{controllerCreditNote.item.faktur}" />
+        <p:outputLabel for="due_date" value="Due Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="due_date" value="#{controllerCreditNote.item.due_date}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Due Date harus diisi !!" />
+        <p:outputLabel  value="Marketing "/>
+        <p:selectOneMenu id="id_salesman"  value="#{controllerCreditNote.item.id_salesman}" disabled="true">
+            <f:selectItems value="#{options.comboMarketingAll}" />
+        </p:selectOneMenu>    
+        <h:panelGroup/>
+    </p:panelGrid>
+</ui:composition>

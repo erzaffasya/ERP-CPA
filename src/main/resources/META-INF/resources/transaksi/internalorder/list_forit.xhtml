@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Internal Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerInternalOrder.onLoadListForIt()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerInternalOrder.viewForIt()}"   icon="ui-icon-update" value="View"  id="btn-edit"/>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerInternalOrder.viewForIt()}"/>
+                            
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Internal Order </h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerInternalOrder.dataInternalOrder}" selectionMode="single" reflow="true"
+                                 selection="#{controllerInternalOrder.item}" rowKey="#{item.nomor_io}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="i">
+                        <p:ajax event="rowDblselect" listener="#{controllerInternalOrder.viewForIt()}" global="false" />
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{i + 1}" />
+                        </p:column>
+                        <p:column headerText="Nomor IO" sortBy="#{item.nomor_io}" filterBy="#{item.nomor_io}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_io}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Kantor" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Gudang Asal" sortBy="#{item.gudang_asal}" filterBy="#{item.gudang_asal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang_asal}" />
+                        </p:column>
+                        <p:column headerText="Gudang Tujuan" sortBy="#{item.gudang_tujuan}" filterBy="#{item.gudang_tujuan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang_tujuan}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}" /> 
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}" />
+                            <h:outputText value="Approve" rendered="#{item.status eq 'A'}" />
+                            <h:outputText value="Reject" rendered="#{item.status eq 'R'}" /> 
+                            <h:outputText value="IT Process" rendered="#{item.status eq 'P'}" /> 
+                            <h:outputText value="IT Completed" rendered="#{item.status eq 'C'}" /> 
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'X'}" /> 
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

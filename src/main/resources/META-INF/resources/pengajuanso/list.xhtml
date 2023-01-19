@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">Daftar Sales Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSo.onLoadListPengajuan()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PENGAJUANSO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Pengajuan Sales Order</h1>
+
+                    <p:panelGrid id="pnnotifikasi" columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                        <p:dataTable id="notifikasi" value="#{controllerSo.dataNotifikasi}" var="nt" rendered="#{controllerSo.dataNotifikasi.size() > 0}">
+                            <f:facet name="header">
+                                <div style="text-align: left; font-size: 20px;">Notfikasi untuk diselesaikan</div>
+                            </f:facet>
+
+                            <p:column headerText="" >
+                                <p:link outcome="edit_consignment" value="SO #{nt.nomor} dari #{nt.customer} memerlukan persetujuan" rendered="#{nt.jenis eq 'c'}">
+                                    <f:param name="id" value="#{nt.nomor}" />
+                                </p:link>
+                                <p:link outcome="editmanual" value="SO #{nt.nomor} dari #{nt.customer} memerlukan persetujuan" rendered="#{nt.jenis eq 'm'}">
+                                    <f:param name="id" value="#{nt.nomor}" />
+                                </p:link>
+                                <p:link outcome="edit" value="SO #{nt.nomor} dari #{nt.customer} memerlukan persetujuan" rendered="#{nt.jenis ne 'c' and nt.jenis ne 'm'}">
+                                    <f:param name="id" value="#{nt.nomor}" />
+                                </p:link>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerSo.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerSo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerSo.onLoadListPengajuan()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+
+                    <p:dataTable id="singleDT" var="item" value="#{controllerSo.dataSo}"  tableStyle="table-layout: auto;" paginator="true" rows="10" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column headerText="No. Sales Order" sortBy="#{item.nomor}"  filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <p:link outcome="edit_consignment" value="#{item.nomor}" rendered="#{item.jenis eq 'c'}">
+                                <f:param name="id" value="#{item.nomor}" />
+                            </p:link>
+                            <p:link outcome="editmanual" value="#{item.nomor}" rendered="#{item.jenis eq 'm'}">
+                                <f:param name="id" value="#{item.nomor}" />
+                            </p:link>
+                            <p:link outcome="edit" value="#{item.nomor}" rendered="#{item.jenis ne 'c' and item.jenis ne 'm'}">
+                                <f:param name="id" value="#{item.nomor}" />
+                            </p:link>
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}"  filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="No. Penawaran" sortBy="#{item.no_penawaran}"   filterBy="#{item.no_penawaran}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_penawaran}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.grandtotal}"   filterBy="#{item.grandtotal}" filterMatchMode="contains" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.grandtotal}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Dibuat oleh" sortBy="#{item.user}" filterBy="#{item.user}" filterMatchMode="contains">
+                            <h:outputText value="#{item.user}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}"  filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="Packinglist Draft" rendered="#{item.status eq 'C'}"/>
+                            <h:outputText value="Packinglist Completed" rendered="#{item.status eq 'P'}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'R'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

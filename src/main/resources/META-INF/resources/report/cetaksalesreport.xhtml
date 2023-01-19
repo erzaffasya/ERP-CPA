@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id_gudang" value="#{controllerCetakSalesReport.id_gudang}" />
+        <f:viewParam name="id_kantor" value="#{controllerCetakSalesReport.id_kantor}" />
+        <f:viewParam name="tgl_awal" value="#{controllerCetakSalesReport.tgl_awal}" />
+        <f:viewParam name="tgl_akhir" value="#{controllerCetakSalesReport.tgl_akhir}" />
+        <f:viewAction action="#{controllerCetakSalesReport.awal()}" />
+    </f:metadata>
+    <ui:define name="title">Sales Report</ui:define>
+    <ui:define name="content">
+        <script src="/js/pdfobject.min.js"></script>
+        <script>
+
+        
+            var urlPDF = "/public/SalesReport.pdf";
+
+            var options = {
+                pdfOpenParams: {
+                    navpanes: 0,
+                    toolbar: 1,
+                    statusbar: 0,
+                    view: "FitV"
+                },
+                forcePDFJS: true,
+                PDFJS_URL: urlPDF
+            };
+
+            var executePDF = function () {
+                var myPDF = PDFObject.embed(urlPDF, "#bebas", options);
+            };
+
+            $(document).ready(function () {
+                var w = $(window).height();
+                $("#bebas").height(w - 240);
+            });
+
+            var urlXLS = "/public/SalesReport.xlsx";
+
+            var executeXLS = function () {
+                window.location.href = urlXLS;
+            };
+
+            jQuery(document).ready(function () {
+                executePDF();
+            });
+
+
+        </script>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <p:commandButton onclick="executeXLS()" 
+                             update="@([id$=growl])"
+                             icon="ui-icon-update" 
+                             value="Export to Excel"/>
+
+            
+        </h:form>
+        <div id="bebas" style="height: 100px;"></div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <p:outputLabel for="id_satuan_kecil" value="Kode"/>
+    <h:panelGroup styleClass="md-inputfield">
+        <p:inputMask id="id_satuan_kecil" value="#{controllerSatuanKecil.item.id_satuan_kecil}" required="true"   mask="***" />
+    </h:panelGroup>
+    <p:outputLabel for="satuan" value="Satuan"/>
+    <h:panelGroup styleClass="md-inputfield">
+        <p:inputText id="satuan" value="#{controllerSatuanKecil.item.satuan_kecil}" required="true"/>
+    </h:panelGroup>
+
+
+</ui:composition>

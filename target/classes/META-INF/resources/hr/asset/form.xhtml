@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama Pegawai"/>
+        <h:panelGroup/>
+        <p:autoComplete   id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                          var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                          scrollHeight="250" required="true"    >
+            <p:ajax event="itemSelect" listener="#{controllerAsset.onPegawaiSelect}" />
+        </p:autoComplete>
+        <p:outputLabel  value="2."/>
+        <p:outputLabel for="serial" value="Serial Number"/>
+        <h:panelGroup/>
+        <p:inputText id="serial" value="#{controllerAsset.item.id_asset}" required="true"/>
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="brg" value="Deskripsi"/>
+        <h:panelGroup/>
+        <p:inputText id="brg" value="#{controllerAsset.item.nama_barang}" required="true"/>
+
+        <p:outputLabel  value="4."/>
+        <p:outputLabel for="tanggal" value="Tanggal Peminjaman"/>
+
+    </p:panelGrid>
+    <p:panelGrid columns="3" id="pn" columnClasses="ui-grid-col-1,ui-grid-col-6,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:calendar id="tanggal" value="#{controllerAsset.item.tanggal_pinjam}" required="true" pattern="dd-MM-yyyy" mask="99-99-9999"/>
+        <p:selectBooleanCheckbox  value="#{controllerAsset.item.status}" itemLabel="Sudah kembali" style="width: 200px">
+            <p:ajax event="change" update="panelreturn"/>
+        </p:selectBooleanCheckbox>
+        
+    </p:panelGrid>    
+    <p:panelGrid id="panelreturn" columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+        <p:outputLabel  value="5." rendered="#{controllerAsset.item.status}"/>
+        <p:outputLabel for="tanggalkembali" value="Tanggal Pengembalian" rendered="#{controllerAsset.item.status}"/>
+        <h:panelGroup rendered="#{controllerAsset.item.status}"/>
+        <p:calendar id="tanggalkembali" value="#{controllerAsset.item.tanggal_kembali}"  pattern="dd-MM-yyyy" mask="99-99-9999" rendered="#{controllerAsset.item.status}"/>
+    </p:panelGrid>
+</ui:composition>

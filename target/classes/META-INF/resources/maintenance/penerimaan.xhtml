@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Daftar Penerimaan Barang</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPenerimaanGudang.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAINTENANCEPENERIMAAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerPenerimaanGudang.updateMaintenance()}"   icon="ui-icon-update" value="Edit"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Penerimaan Barang</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Penerimaan Barang"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPenerimaanGudang.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPenerimaanGudang.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="Status "/>
+                        <p:selectOneMenu id="status" value="#{controllerPenerimaanGudang.status}" >
+                            <f:selectItem itemLabel="All" itemValue="9" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                            <f:selectItem itemLabel="Cancel" itemValue="C" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerPenerimaanGudang.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPenerimaanGudang.dataPenerimaan}" selectionMode="single" reflow="true"
+                                 selection="#{controllerPenerimaanGudang.item}" rowKey="#{item.no_penerimaan}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Nomor Penerimaan" sortBy="#{item.no_penerimaan}" style="width:200px;" filterBy="#{item.no_penerimaan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_penerimaan}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Penerimaan" sortBy="#{item.tgl_penerimaan}" style="width:120px;" filterBy="#{item.tgl_penerimaan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tgl_penerimaan}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Nomor PO" sortBy="#{item.nomor_po}" style="width:200px;" filterBy="#{item.nomor_po}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column headerText="Supplier" sortBy="#{item.nama_supplier}" filterBy="#{item.nama_supplier}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_supplier}" />
+                        </p:column>
+                        <p:column headerText="Referensi" sortBy="#{item.referensi } " style="width:180px;" filterBy="#{item.referensi}" filterMatchMode="contains">
+                            <h:outputText value="#{item.referensi} / " />
+                            <h:outputText value="#{item.tanggal_referensi}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" style="width:120px;" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq false}"/>
+                            <h:outputText value="Approve" rendered="#{item.status eq true}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq null}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

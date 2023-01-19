@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="id" value="Kode"/>
+        <p:inputText id="id" value="#{controllerKantor.item.id_kantor_cabang}" maxlength="3" required="true"/>
+        <p:outputLabel for="isaktif" value="Aktif"/>
+        <p:selectBooleanCheckbox id="isaktif" value="#{controllerKantor.item.aktif}" />
+        <p:outputLabel for="nama" value="Kantor"/>
+        <p:inputText id="nama" value="#{controllerKantor.item.nama}" required="true"/>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="alamat" value="Alamat"/>
+        <p:textEditor id="alamat" widgetVar="editor1" value="#{controllerKantor.item.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="telepon" value="Telpon"/>
+        <p:inputText id="telepon" value="#{controllerKantor.item.telpon}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="fax" value="Fax"/>
+        <p:inputText id="fax" value="#{controllerKantor.item.fax}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="email" value="Email"/>
+        <p:inputText id="email" value="#{controllerKantor.item.email}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:outputLabel for="account_penjualan" value="Account Penjualan" />
+        <p:autoComplete   id="account_penjualan" value="#{accountAutoComplete.account}" completeMethod="#{accountAutoComplete.completeAccountContains}"
+                          var="account" itemLabel="#{account.account}" itemValue="#{account}" converter="#{accountConverter}"
+                          scrollHeight="250" required="true"    >
+            <p:ajax event="itemSelect" listener="#{controllerKantor.onAccountPenjualanSelect}" update="id_account_penjualan"/>
+            <p:column headerText="Kode" >
+                <h:outputText value="#{account.id_account}" />
+            </p:column>
+            <p:column headerText="Account" >
+                <h:outputText value="#{account.account}" />
+            </p:column>
+            <p:column headerText="Parent" >
+                <h:outputText value="#{account.account_parent}" />
+            </p:column>
+        </p:autoComplete>   
+        <p:outputLabel id="id_account_penjualan" value="#{controllerKantor.item.account_penjualan}" /> 
+        <h:panelGroup/>
+        <p:outputLabel for="account_hpp" value="Account HPP" />
+        <p:autoComplete   id="account_hpp" value="#{accAutoComplete.account}" completeMethod="#{accAutoComplete.completeAccountContains}"
+                          var="account" itemLabel="#{account.account}" itemValue="#{account}" converter="#{accountConverter}"
+                          scrollHeight="250" required="true"    >
+            <p:ajax event="itemSelect" listener="#{controllerKantor.onAccountHppSelect}" update="id_account_hpp"/>
+            <p:column headerText="Kode" >
+                <h:outputText value="#{account.id_account}" />
+            </p:column>
+            <p:column headerText="Account" >
+                <h:outputText value="#{account.account}" />
+            </p:column>
+            <p:column headerText="Parent" >
+                <h:outputText value="#{account.account_parent}" />
+            </p:column>
+        </p:autoComplete>   
+        <p:outputLabel id="id_account_hpp" value="#{controllerKantor.item.account_hpp}" /> 
+        
+        
+    </p:panelGrid>
+</ui:composition>

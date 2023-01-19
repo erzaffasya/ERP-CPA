@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+
+        <h:panelGroup />
+        <h:outputText value="Dibuat oleh" />
+        <h:outputText value="Disetujui oleh" />
+        <h:panelGroup />
+        <h:outputText  rendered="#{controllerInternalOrder.item.status ne 'D'}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerInternalOrder.item.status eq 'D'}" />
+        
+        <h:outputText  rendered="#{controllerInternalOrder.item.status eq 'A' or controllerInternalOrder.item.status eq 'P' or controllerInternalOrder.item.status eq 'C' or controllerInternalOrder.item.status eq 'X'}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerInternalOrder.item.status eq 'R'}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+        <h:outputText  rendered="#{controllerInternalOrder.item.status eq 'D' or controllerInternalOrder.item.status eq 'S' }" />
+        
+        <h:panelGroup />
+        <p:inputText value="#{controllerInternalOrder.item.dibuat_nama}" readonly="true"/>
+        <p:inputText value="#{controllerInternalOrder.item.approve_name}" readonly="true"/>
+
+        <h:panelGroup />
+        <h:outputText value="#{controllerInternalOrder.item.jabatan}" />
+        <h:outputText value="#{controllerInternalOrder.item.jabatan_approved}" />
+    </p:panelGrid>    
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;" rendered="#{controllerInternalOrder.item.status eq 'X'}">
+    <p:outputLabel  value="Tanggal Cancel"/>
+    <p:inputText id="tglcancel" value="#{controllerInternalOrder.item.tgl_cancel}" />
+    <p:outputLabel  value="Alasan"/>
+        <p:textEditor id="syarat" widgetVar="editor2" value="#{controllerInternalOrder.item.pesan}" height="100" style="margin-bottom:10px" >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>    
+
+
+
+</ui:composition>

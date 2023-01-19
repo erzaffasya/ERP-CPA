@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Sales Contract</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerHargaJual.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('HARGAJUAL')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerHargaJual.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerHargaJual.item}" target="#{controllerHargaJual.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Sales Contract</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Sales Contract"/>
+                        </h:commandLink>
+                    </div>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerHargaJual.dataHargaJual}" selectionMode="single" reflow="true"
+                                 selection="#{controllerHargaJual.item}" rowKey="#{item.no_kontrak}" paginator="true" rows="10" paginatorPosition="bottom">
+                        <p:column headerText="Nomor" sortBy="#{item.no_kontrak}" style="width:320px;">
+                            <h:outputText value="#{item.no_kontrak}" />
+                        </p:column>
+                        <p:column headerText="tanggal" sortBy="#{item.tanggal}" style="width:120px;">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.nama_kontrak}">
+                            <h:outputText value="#{item.nama_kontrak}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Mulai"  style="width:150px;">
+                            <h:outputText value="#{item.tgl_mulai}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Tanggal Selesai"  style="width:150px;">
+                            <h:outputText value="#{item.tgl_selesai}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Sales Contract Nomor :" />
+                    <h:outputText value="#{controllerHargaJual.item.no_kontrak}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerHargaJual.delete(controllerHargaJual.item.no_kontrak)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

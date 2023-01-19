@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Delivery Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerDo.onLoadListMaintenance()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MAINTENANCEDO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            
+                            <p:commandButton actionListener="#{controllerDo.updateMaintenance()}"   icon="ui-icon-update" value="Edit" update="growl" rendered="#{page.myPegawai.id_jabatan != 22}"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus" rendered="#{page.myPegawai.id_jabatan != 22}" >
+                                <f:setPropertyActionListener value="#{controllerDo.item}" target="#{controllerDo.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Delivery Order</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar DO"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerDo.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerDo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerDo.statusdo}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Received" itemValue="R" />
+                            <f:selectItem itemLabel="Invoice" itemValue="I" />
+                            <f:selectItem itemLabel="Cancel" itemValue="C" />
+                        </p:selectOneMenu>        
+                        
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerDo.onLoadListMaintenance()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerDo.dataDo}" selectionMode="single" reflow="true"
+                                 selection="#{controllerDo.item}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="ri">
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{ri + 1}" />
+                        </p:column>
+                        <p:column headerText="No. DO" sortBy="#{item.nomor}" style="width:150px;" filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" style="width:120px;" filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Pickinglist" sortBy="#{item.no_pl}" filterBy="#{item.no_pl}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_pl}" />
+                        </p:column>
+                        <p:column headerText="Customer" sortBy="#{item.customer}" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="Received" rendered="#{item.status eq 'R'}"/>
+                            <h:outputText value="Invoice" rendered="#{item.status eq 'I'}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C'}"/>
+                        </p:column>
+                        <p:column headerText="Receipt Date" sortBy="#{item.received_date}" style="width:120px;" filterBy="#{item.received_date}" filterMatchMode="contains">
+                            <h:outputText value="#{item.received_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Penerima" sortBy="#{item.received_name}" filterBy="#{item.received_name}" filterMatchMode="contains">
+                            <h:outputText value="#{item.received_name}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="DO" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;" >
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus So :" rendered="#{controllerDo.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerDo.item.nomor}" style="font-weight:bold" rendered="#{controllerDo.item.status eq 'D'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerDo.delete(controllerDo.item.nomor)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerDo.item.status eq 'D'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerDo.item.status eq 'D'}"/>
+                    
+                    <h:outputText value="Data tidak bisa dihapus !!!" rendered="#{controllerDo.item.status ne 'D'}"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerDo.item.status ne 'D'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                >
+
+
+    <ui:define name="title">Daftar Gaji</ui:define>
+
+    <ui:define name="content">
+
+        <h:form id="reportsForm">
+
+            <p:media id="testpdf" value="#{pdf.streamedContent}" width="190" height="250" player="pdf"/>  
+            <p:commandButton value="Show PDF"  actionListener="#{controllerPayroll.createPdf()}"  icon="ui-icon-disk"  />
+
+            
+        </h:form>        
+
+    </ui:define>
+
+</ui:composition>

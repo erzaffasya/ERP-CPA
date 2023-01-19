@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Overtime Karyawan</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPayrollOvertime.onLoadList('komisi')}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PAYROLLKOMISI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah" />
+                            <p:commandButton actionListener="#{controllerPayrollOvertime.update()}"   icon="ui-icon-update" value="Edit" update="growl" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPayrollOvertime.item}" target="#{controllerPayrollOvertime.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPayrollOvertime.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Pengajuan Komisi dan Bonus</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar PayrollOvertime"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Status "/>
+                        <p:selectOneMenu id="status" value="#{controllerPayrollOvertime.status}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Send" itemValue="P" />
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerPayrollOvertime.onLoadList('komisi')}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPayrollOvertime.dataPayrollOvertime}" selectionMode="single" reflow="true"
+                                 selection="#{controllerPayrollOvertime.item}" rowKey="#{item.month}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerPayrollOvertime.update()}" global="false" />
+                        <p:column headerText="Bulan" sortBy="#{item.month}" filterBy="#{item.month}" filterMatchMode="contains">
+                            <h:outputText value="#{options.getNamaBulan(item.month)}" />
+                        </p:column>
+                        <p:column headerText="Tahun" sortBy="#{item.year}" filterBy="#{item.year}" filterMatchMode="contains">
+                            <h:outputText value="#{item.year}" />
+                        </p:column>
+
+                        <p:column headerText="Total" sortBy="#{item.total}" filterBy="#{item.total}" filterMatchMode="contains">
+                            <h:outputText value="#{item.total}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'A'}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="PayrollOvertime" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda yakin akan menghapus Pengajuan Komisi dan Bonus Periode #{controllerPayrollOvertime.item.month}" />
+                    <h:outputText value="  #{controllerPayrollOvertime.item.year}" style="font-weight:bold" />                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPayrollOvertime.delete(controllerPayrollOvertime.item.year,controllerPayrollOvertime.item.month,'komisi')}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerPayrollOvertime.item.status eq 'D' }"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerPayrollOvertime.item.status eq 'D'}"/>
+
+                    <h:outputText value="Anda tidak dapat menghapus Pengajuan Komisi dan Bonus  ini !!!" rendered="#{controllerPayrollOvertime.item.status eq 'P' }"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerPayrollOvertime.item.status eq 'P'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="level" value="Level"/>
+        <p:selectOneMenu id="level" value="#{controllerAccount.item.level}">
+            <f:selectItems value="#{options.comboLevel}" />
+            <p:ajax listener="#{controllerAccount.onLevelSelect()}" update="parent id_account" />
+        </p:selectOneMenu>
+        <p:outputLabel for="parent" value="Parent"/>
+        <p:selectOneMenu id="parent" value="#{controllerAccount.item.parent}">
+            <f:selectItems value="#{options.comboParentAccount}" />
+            <p:ajax listener="#{controllerAccount.onParentSelect()}" update="id_account" />
+        </p:selectOneMenu>
+        <p:outputLabel for="id_account" value="Kode Account"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask id="id_account" value="#{controllerAccount.item.id_account}" required="true"   mask="********" />
+            <label>ID harus 8 karakter</label>
+        </h:panelGroup>
+
+        <p:outputLabel for="account" value="Account"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="account" value="#{controllerAccount.item.account}" required="true"/>
+        </h:panelGroup>
+    </p:panelGrid>
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:outputLabel for="pembayaran" value="Pembayaran"/>
+        <p:selectBooleanCheckbox id="pembayaran" value="#{controllerAccount.item.pembayaran}" />
+        <p:outputLabel for="aktif" value="Aktif"/>
+        <p:selectBooleanCheckbox id="aktif" value="#{controllerAccount.item.aktif}" />
+    </p:panelGrid>    
+</ui:composition>

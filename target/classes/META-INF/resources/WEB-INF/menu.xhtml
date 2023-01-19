@@ -1,0 +1,75 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pu="http://primefaces.org/ultima"
+    xmlns:sec="http://www.springframework.org/security/tags"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <h:form id="menuform"> 
+        <div class="layout-menu #{guestPreferences.menuClass}">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
+                        <div class="profile">
+                            <div ><img src="/img/pegawai/#{page.myPegawai.fotonya}" width="75"/></div>
+                            <a id="profile-options" href="#">
+                                <span class="profile-name">#{page.myName}</span>
+                                <i class="material-icons">&#xE313;</i>
+                            </a>
+                        </div>
+                        
+                        <ul id="profile-menu" class="ultima-menu">
+                            <li role="menuitem">
+                                <a href="/profile/datapribadi.jsf" class="ripplelink">
+                                    <i class="material-icons">&#xE7FD;</i>
+                                    <span>Profile</span>
+                                </a> 
+                            </li>
+                            <li role="menuitem">
+                                <a href="/hr/calender/attendance.jsf" class="ripplelink" >
+                                    <i class="material-icons">&#xE3EC;</i>
+                                    <span>Absen</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="/hr/calender/overtime.jsf" class="ripplelink">
+                                    <i class="fa fa-fw fa-bars"></i>
+                                    <span>Lembur</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="/hr/calender/timeoff.jsf" class="ripplelink">
+                                    <i class="fa fa-fw fa-bus"></i>
+                                    <span>Cuti</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="/hr/calender/perjalanandinas.jsf" class="ripplelink">
+                                    <i class="fa fa-fw fa-plane"></i>
+                                    <span>Perjalanan Dinas</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="/hr/calender/mysalary.jsf" class="ripplelink">
+                                    <i class="fa fa-fw fa-money"></i>
+                                    <span>Slip Gaji</span>
+                                </a>
+                            </li>
+                            
+                            <li role="menuitem">
+                                <h:commandLink actionListener="#{page.logout()}" class="ripplelink">
+                                    <i class="material-icons">&#xE8AC;</i>
+                                    <span>Logout</span>
+                                </h:commandLink>
+                            </li>
+                        </ul>
+                    </ui:fragment>
+                    <pu:menu model="#{menuView.model}"  style="width: 300px;" />
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

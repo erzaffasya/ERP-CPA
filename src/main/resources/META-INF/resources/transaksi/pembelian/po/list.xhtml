@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Data Purchase Order</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPo.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="../../pembelian/permintaan/list.jsf"   icon="ui-icon-add" value="Tambah PO Reguler"  />
+                            <p:button href="../../intruksipo/listadmin.jsf"   icon="ui-icon-add" value="Tambah PO Shell" />  
+                            <p:button href="add_manual.jsf"   icon="ui-icon-add" value="Tambah PO Non Shell"  />
+                            <p:commandButton actionListener="#{controllerPo.update()}"   icon="ui-icon-update" value="Edit"  rendered="#{page.myPegawai.id_pegawai ne 'CPA-002'}" id="btn-edit"/>
+                            <p:commandButton actionListener="#{controllerPo.view()}"   icon="ui-icon-update" value="Edit"  rendered="#{page.myPegawai.id_pegawai eq 'CPA-002'}"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus" >
+                                <f:setPropertyActionListener value="#{controllerPo.item}" target="#{controllerPo.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPo.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Purchase Order</h1>
+                     <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Purchase Order"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPo.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerPo.statuspo}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Draft" itemValue="D" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Check" itemValue="C" />
+                            <f:selectItem itemLabel="Approve" itemValue="A" />
+                            <f:selectItem itemLabel="Reject" itemValue="R" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerPo.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPo.dataPo}" selectionMode="single" reflow="true" rowIndexVar="index"
+                                 selection="#{controllerPo.item}" rowKey="#{item.nomor_po}" paginator="true" rows="25" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+                        <p:ajax event="rowDblselect" listener="#{controllerPo.update()}" global="false" />
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="PO Number" sortBy="#{item.nomor_po}"  filterBy="#{item.nomor_po}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column headerText="PO Date" sortBy="#{item.tanggal}"  filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Supplier" sortBy="#{item.nama_supplier}" filterBy="#{item.nama_supplier}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_supplier}" />
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Intruksi Po" sortBy="#{item.no_intruksi_po}"  filterBy="#{item.no_intruksi_po}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_intruksi_po}" />
+                        </p:column>
+                        <p:column headerText="No. Forecast" sortBy="#{item.no_forecast} "  filterBy="#{item.no_forecast}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_forecast}" />
+                        </p:column>
+                        <p:column headerText="No. PP" sortBy="#{item.no_pp} "  filterBy="#{item.no_pp}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_pp}" />
+                        </p:column>
+                        <p:column headerText="Dibuat" sortBy="#{item.nama_purchasing} "  filterBy="#{item.nama_purchasing}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_purchasing}" />
+                        </p:column>
+                        <p:column headerText="Send" sortBy="#{item.is_purchasing}" style="width:80px;text-align:center;">
+                            <h:outputText  rendered="#{item.is_purchasing eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText  rendered="#{item.is_purchasing eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText  rendered="#{item.is_purchasing eq null}"></h:outputText>
+                            <h:outputText value="#{item.purchasing_date}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="dicek" sortBy="#{item.is_checked1}" style="width:80px;text-align:center;">
+                            <h:outputText  rendered="#{item.is_checked1 eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText  rendered="#{item.is_checked1 eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText  rendered="#{item.is_checked1 eq null}" />
+                            <h:outputText value="#{item.checked1_date}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Direktur" sortBy="#{item.is_approve}" style="width:80px;text-align:center;" >
+                            <h:outputText rendered="#{item.is_approve eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText rendered="#{item.is_approve eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText rendered="#{item.is_approve eq null}" />
+                            <h:outputText value="#{item.approve_date}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.grandtotal}" style="text-align: right;">
+                            <h:outputText value="#{item.grandtotal}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Status" >
+                            <h:outputText value="Draft" rendered="#{!item.is_purchasing}"/>
+                            <h:outputText value="Send" rendered="#{item.is_purchasing eq true and item.is_checked1 eq null and item.checked1 ne null}"/>
+                            <h:outputText value="Check" rendered="#{item.is_checked1 and item.is_approve eq null}"/>
+                            <h:outputText value="Approve" rendered="#{item.is_approve}"/>
+                            <h:outputText value="Reject" rendered="#{item.is_approve eq false}"/>
+                        </p:column>
+
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Purchase Order" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Po :" rendered="#{!controllerPo.item.is_purchasing == true}"/>
+                    <h:outputText value="#{controllerPo.item.nomor_po}" style="font-weight:bold" rendered="#{!controllerPo.item.is_purchasing == true}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPo.delete(controllerPo.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{!controllerPo.item.is_purchasing == true}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{!controllerPo.item.is_purchasing == true}"/>
+                    
+                    <h:outputText style="font-weight:bold; color: red;" value="Anda Tidak Dapat menghapus  PO Nomor : #{controllerPo.item.nomor_po}" rendered="#{controllerPo.item.is_purchasing == true}"/>
+                    <p:commandButton id="odButton" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerPo.item.is_purchasing == true}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

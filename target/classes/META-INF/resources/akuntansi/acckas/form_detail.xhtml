@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    
+    <p:dataTable id="detil" var="item" value="#{controllerAccPettyCash.dataAccKasDetil}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header"></f:facet>
+        
+        <p:column headerText="Tanggal" sortBy="#{item.gl_date}" >
+            <h:outputText value="#{item.gl_date}" >
+                <f:convertDateTime pattern="dd-MM-yyyy" />
+            </h:outputText>    
+        </p:column>
+        <p:column headerText="GL Number" >
+            <h:outputText value="#{item.gl_number}" />
+        </p:column>
+        <p:column headerText="Nomor" groupRow="true">
+            <h:outputText value="#{item.reference}" />
+        </p:column>
+
+        <p:column headerText="Keterangan" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.keterangan}" id="ouraian"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="uraian" value="#{item.keterangan}" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Debit" style="width:150px">
+            <div style="text-align:right;">
+                <h:outputText value="#{item.debit}" rendered="#{item.is_debit == true}">
+                    <f:convertNumber pattern="#,##0.00" />
+                </h:outputText>
+            </div>
+        </p:column>
+        <p:column headerText="Kredit" style="width:150px">
+            <div style="text-align:right;">
+                <h:outputText value="#{item.credit}" rendered="#{item.is_debit == false}">
+                    <f:convertNumber pattern="#,##0.00" />
+                </h:outputText>
+            </div>
+        </p:column>
+        <p:column headerText="Saldo" style="width:150px">
+            <div style="text-align:right;">
+                <h:outputText value="#{item.saldo}" >
+                    <f:convertNumber pattern="#,##0.00" />
+                </h:outputText>
+            </div>
+        </p:column>
+        
+
+    </p:dataTable>
+
+</ui:composition>

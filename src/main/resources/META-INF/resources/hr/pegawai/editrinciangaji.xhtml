@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadHubunganKerja()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('SALARY')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+
+                <h:form >
+                    <p:growl id="growl" showDetail="true" sticky="true" />
+                    <div class="ui-g" >
+                        <div class="ui-g-12" >
+                            <p:toolbar >
+                                <f:facet name="left" >
+                                    <p:button href="salary.jsf" value="Daftar" icon="ui-icon-plus" />
+                                    <p:commandButton id="simpan"
+                                                     actionListener="#{controllerHrPegawai.ubahRincianGaji()}"
+                                                     value="Simpan" 
+                                                     ajax="true"
+                                                     process="@form"
+                                                     update="@form"
+                                                     icon="fa  fa-floppy-o"
+                                                     />
+                                </f:facet>
+                            </p:toolbar>
+
+                        </div>
+                    </div>
+                    <div class="ui-fluid">
+                        <div class="ui-g">
+                            <div class="ui-g-12" >
+                                <div class="card card-w-title" >
+                                    <h1 style="margin-left: 40px;">Edit rincian gaji</h1>
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                        <p:outputLabel for="nik" value="Kode"/>
+                                        <p:inputText id="nik" value="#{controllerHrPegawai.item.id_pegawai}" />
+                                        <p:outputLabel for="nip" value="NIK Karyawan"/>
+                                        <p:inputMask id="nip" value="#{controllerHrPegawai.item.nip}"  mask="99-9999-99-9999"/>
+                                        <p:outputLabel  value="Status"/>
+                                        <p:inputText  value="Permanen" rendered="#{controllerHrPegawai.item.statuskaryawan eq '1'}" />
+                                        <p:inputText  value="Kontrak" rendered="#{controllerHrPegawai.item.statuskaryawan eq '2'}" />
+                                        <p:inputText  value="Probation" rendered="#{controllerHrPegawai.item.statuskaryawan eq '3'}" />
+                                    </p:panelGrid>
+                                    <p:panelGrid id="waktukerja" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                        <p:outputLabel for="pkwt_akhir" id="lpkwt_akhir" value="Tanggal berakhir" rendered="#{controllerHrPegawai.item.statuskaryawan eq '2'}"/>
+                                        <p:calendar id="pkwt_akhir" value="#{controllerHrPegawai.item.pkwt_akhir}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.item.statuskaryawan eq '2'}"/>
+                                        <p:outputLabel for="probation_akhir" id="lprobation_akhir"  value="Tanggal berakhir" rendered="#{controllerHrPegawai.item.statuskaryawan eq '3'}"/>
+                                        <p:calendar id="probation_akhir" value="#{controllerHrPegawai.item.probation_akhir}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.item.statuskaryawan eq '3'}"/>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                        <p:outputLabel  value="Jabatan"/>
+                                        <p:inputText  value="#{controllerHrPegawai.item.jabatan}" />
+                                        <p:outputLabel for="level" value="Level"/>
+                                        <p:inputText id="level" value="#{controllerHrPegawai.item.level}" readonly="true"/>
+                                        <p:outputLabel for="golongan" value="Golongan"/>
+                                        <p:inputText id="golongan" value="#{controllerHrPegawai.item.golongan}" readonly="true"/>
+                                        <p:outputLabel  value="Departemen"/>
+                                        <p:inputText  value="#{controllerHrPegawai.item.departemen}" />
+                                        <p:outputLabel  value="Kantor"/>
+                                        <p:inputText  value="#{controllerHrPegawai.item.kantor}" />
+
+                                        <h:panelGroup/>
+                                        <h1>Rincian Gaji</h1>
+                                        <p:outputLabel  value="Gaji pokok" for="gajipokok"/>
+                                        <p:inputNumber id="gajipokok" value="#{controllerHrPegawai.item.gaji_pokok}" decimalPlaces="0"/>
+                                        <p:outputLabel  value="Tunjangan jabatan" for="tunjanganjabatan"/>
+                                        <p:inputNumber value="#{controllerHrPegawai.item.tunjangan_jabatan}" decimalPlaces="0" id="tunjanganjabatan"/>
+                                        <p:outputLabel  value="Tunjangan Uang makan dan transportasi" for="umt"/>
+                                        <p:inputNumber value="#{controllerHrPegawai.item.umt}" decimalPlaces="0" id="umt"/>
+                                        <p:outputLabel  value="Insentif kehadiran" for="insentifkehadiran"/>
+                                        <p:inputNumber value="#{controllerHrPegawai.item.insentif_kehadiran}" decimalPlaces="0" id="insentifkehadiran"/>
+                                        <p:outputLabel  value="Tunjangan komunikasi" for="tunjangankomunikasi"/>
+                                        <p:inputNumber value="#{controllerHrPegawai.item.tunjangan_komunikasi}" decimalPlaces="0" id="tunjangankomunikasi"/>
+                                        <p:outputLabel  value="Tunjangan bbm" for="tunjanganbbm"/>
+                                        <p:inputNumber value="#{controllerHrPegawai.item.tunjangan_bbm}" decimalPlaces="0" id="tunjanganbbm"/>
+
+                                    </p:panelGrid>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+</ui:composition>

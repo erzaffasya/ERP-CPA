@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerIntruksiPo.dataIntruksiPoDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+       <p:column headerText="No">
+            <h:outputText value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                    var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                    groupBy="#{barangAutoComplete.getBarangGroup(barang)}" scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerIntruksiPo.onBarangSelect(item,ri)}" update="onama_barang oid_barang osatuan_kecil" />
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{barang.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Material Code" >
+                            <h:outputText value="#{barang.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{barang.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Satuan" >
+                            <h:outputText value="#{barang.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" >
+                            <h:outputText value="#{barang.isi_satuan} #{barang.satuan_kecil}" />
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Material Code">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Proposal Open PO" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.qty}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan" styleClass="centerColumnContent">
+            <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}"/>
+        </p:column>
+        <p:column headerText="Keterangan">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.ket}" /></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="ket" value="#{item.ket}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column  styleClass="centerColumnContent">
+            <p:commandLink  value="hapus" >
+                <p:ajax  listener="#{controllerIntruksiPo.onDeleteClicked(item)}"  update="detil"/>
+            </p:commandLink>
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

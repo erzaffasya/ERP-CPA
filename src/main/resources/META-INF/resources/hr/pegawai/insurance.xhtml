@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INSURANCE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>BPJS dan Asuransi</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="pdf">
+                            <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="pdf" target="singleDT" fileName="customerlist" />
+                        </h:commandLink>
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="customerlist"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataPegawai}" selectionMode="single" reflow="true"
+                                 selection="#{controllerHrPegawai.item}" rowKey="#{item.id_pegawai}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="3" headerText="Nama" sortBy="#{item.nama}" filterBy="#{item.nama}" filterMatchMode="contains"/>
+                                <p:column rowspan="3" headerText="Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains"/>
+                                <p:column colspan="7" headerText="BPJS Ketenagakerjaan" />
+                                <p:column colspan="3" headerText="BPJS Kesehatan" />
+                                <p:column colspan="3" headerText="Prudential" />
+                                <p:column colspan="3" headerText="Allianz" />
+                                <p:column rowspan="3" headerText="" />
+                            </p:row>
+                            <p:row>
+                                <p:column rowspan="3" headerText="Nomor" />
+                                <p:column rowspan="3" headerText="JKK" />
+                                <p:column colspan="2" headerText="JHT" />
+                                <p:column rowspan="3" headerText="JKM" />
+                                <p:column colspan="2" headerText="JP(Jaminan Pensiun)" />
+                                <p:column rowspan="3" headerText="Nomor" />
+                                <p:column rowspan="2" headerText="Perusahaan" />
+                                <p:column rowspan="2" headerText="Karyawan" />
+                                <p:column rowspan="2" headerText="No. Polis" />
+                                <p:column rowspan="2" headerText="Perusahaan" />
+                                <p:column rowspan="2" headerText="Karyawan" />
+                                <p:column rowspan="2" headerText="No. Polis" />
+                                <p:column rowspan="2" headerText="Perusahaan" />
+                                <p:column rowspan="2" headerText="Karyawan" />
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="Perusahaan" />
+                                <p:column headerText="Karyawan" />
+                                <p:column headerText="Perusahaan" />
+                                <p:column headerText="Karyawan" />
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column >
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText  value="#{item.bpjs_tk}" />
+                        </p:column>
+                        <p:column >
+                            <h:outputText  value="#{item.jkk}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.jht_perusahaan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.jht_pekerja}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.jkm}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.jp_perusahaan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.jp_pekerja}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText  value="#{item.bpjs_kes}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.kesehatan_perusahaan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.kesehatan_pekerja}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText  value="#{item.prudential}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.iuran_prudential_perusahaan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.iuran_prudential}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column >
+                            <h:outputText  value="#{item.allianz}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.iuran_allianz_perusahaan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText  value="#{item.iuran_allianz}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <p:button href="./editbpjs.jsf?id=#{item.id_pegawai}"  value="Edit" style="width: 100px;"/>                 
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

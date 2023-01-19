@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Input  Pinjaman Karyawan</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-8,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Nomor" for="@next" />   
+            <p:inputText id="nomor" value="#{controllerLoan.item.loan_number}" readonly="true"/>
+        </p:panelGrid>    
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Tanggal" for="@next" />   
+            <p:calendar id="tanggal" value="#{controllerLoan.item.date}" required="true" requiredMessage="Tanggal harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        </p:panelGrid>    
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Nama kayrawan" for="@next" />    
+            <p:autoComplete   id="id_pegawai" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                              var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                              scrollHeight="250" required="true" requiredMessage="Nama karyawan harus diisi !!!"   >
+                <p:ajax listener="#{controllerLoan.selectPegawai()}" update="nip" event="itemSelect"/>
+            </p:autoComplete>    
+        </p:panelGrid>    
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="NIP" for="@next" />    
+            <p:inputText id="nip" value="#{controllerLoan.item.nip}"  readonly="true"/>
+        </p:panelGrid>    
+
+    </p:panelGrid>
+
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Jenis pinjaman" for="tipe" />    
+            <p:selectOneMenu id="tipe" value="#{controllerLoan.item.id_loan_type}" >
+                <f:selectItem itemLabel="Pilih jenis pinjaman" itemValue=""/>
+                <f:selectItems value="#{controllerLoan.optionLoanType}" />
+            </p:selectOneMenu >
+        </p:panelGrid>
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Jumlah pinjaman" for="@next" />    
+            <p:inputNumber id="amount" value="#{controllerLoan.item.amount}" decimalPlaces="0" required="true">
+                <p:ajax listener="#{controllerLoan.hitungCicilan()}" update="detil cicilannya"/>
+            </p:inputNumber>
+        </p:panelGrid>
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel for="@next" value="Lama cicilan" />
+            <p:spinner id="installment" value="#{controllerLoan.item.installment}">
+                <p:ajax listener="#{controllerLoan.hitungCicilan()}" update="detil cicilannya"/>
+            </p:spinner>
+        </p:panelGrid>
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Tanggal jatuh tempo" for="@next" />    
+            <p:calendar id="payment_date" value="#{controllerLoan.item.payment_date}" required="true" requiredMessage="Tanggal harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" >
+                <p:ajax event="dateSelect" listener="#{controllerLoan.hitungCicilan()}" update="detil cicilannya"/>
+            </p:calendar>
+        </p:panelGrid>
+    </p:panelGrid>
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+            <p:outputLabel value="Keterangan" for="@next" />    
+            <p:inputText id="keterangan" value="#{controllerLoan.item.description}" />
+        </p:panelGrid>
+    </p:panelGrid>
+    <p:panelGrid id="cicilannya"  columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:dataTable id="detil" var="item" value="#{controllerLoan.dataLoanDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+            <p:column headerText="Cicilan ke" style="width:100px">
+                <h:outputText value="#{item.sequence}" id="osequence"><f:convertNumber pattern="#,##0" /></h:outputText>
+            </p:column>
+            <p:column headerText="Tanggal jatuh tempo" >
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{item.overdue}"><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText></f:facet>
+                    <f:facet name="input">
+                        <p:calendar id="overdue" value="#{item.overdue}" required="true" requiredMessage="Tanggal harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <p:column headerText="Jumlah cicilan">
+                <p:cellEditor>
+                    <f:facet name="output"><div style="text-align:right;"><h:outputText id="odiskonrp" value="#{item.installment_amount}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                    <f:facet name="input">
+                        <p:inputNumber id="cicilan" value="#{item.installment_amount}" style="width:96%"  >
+                            <p:ajax listener="#{controllerLoan.hitungTotal()}" update="detil"/>
+                        </p:inputNumber>    
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <f:facet name="footer">
+                <div style="text-align: right;">Total : <h:outputText  value="#{controllerLoan.total}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+            </f:facet>
+        </p:dataTable> 
+    </p:panelGrid>
+</ui:composition>

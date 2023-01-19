@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">Forecast PO</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerForecast.onLoadForecastPo()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah" rendered="#{page.myPegawai.id_jabatan != 13}"/>
+                            
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Realisasi Forecast</h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode" />
+                        <p:calendar id="awal" value="#{controllerForecast.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerForecast.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        
+                        <p:outputLabel  value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerForecast.id_gudang}" >
+                            <f:selectItems value="#{options.comboGudang}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerForecast.onLoadForecastPo()}"   icon="ui-icon-search" value="Search" update="detil growl"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="detil" fileName="RealisasiForecast"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="detil" var="item" value="#{controllerForecast.dataForecastDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+                        <f:facet name="header">Perbandingan Forecast dan PO</f:facet>
+                        <p:column style="width: 50px;" headerText="No">
+                            <h:outputText value="#{ri + 1}" />
+                        </p:column>
+                        <p:column headerText="No Forecast">
+                            <h:outputText value="#{item.no_forecast}"/>
+                        </p:column>
+                        <p:column headerText="Material Code">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Gudang">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Jumlah">
+                            <h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Nomor PO">
+                            <h:outputText value="#{item.no_po}" />
+                        </p:column>
+                        <p:column headerText="Jumlah">
+                            <h:outputText value="#{item.openpo}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Selisih">
+                            <h:outputText value="#{item.selisih}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

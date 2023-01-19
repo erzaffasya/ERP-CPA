@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="title">Jurnal Umum</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerJurnalUmum.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('JURNALUMUM')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerJurnalUmum.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerJurnalUmum.item}" target="#{controllerJurnalUmum.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Jurnal Umum</h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode" for="awal"/>
+                        <p:calendar id="awal" value="#{controllerJurnalUmum.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d" for="akhir"/>
+                        <p:calendar id="akhir" value="#{controllerJurnalUmum.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Note"/>
+                        <p:inputText value="#{controllerJurnalUmum.note}" style="width: 100%;"/>
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerJurnalUmum.status}" >
+                            <f:selectItem itemLabel="Semua" itemValue=""/>
+                            <f:selectItem itemLabel="Draft" itemValue="false"/>
+                            <f:selectItem itemLabel="posting" itemValue="true"/>
+                        </p:selectOneMenu>
+                        <p:commandButton actionListener="#{controllerJurnalUmum.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar Jurnal Umum"/>
+                        </h:commandLink>
+                    </div>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerJurnalUmum.dataAccGlTrans}" selectionMode="single" reflow="true"
+                                 selection="#{controllerJurnalUmum.item}" rowKey="#{item.gl_number}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:column headerText="Reference" sortBy="#{item.gl_number}" filterBy="#{item.gl_number}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gl_number}" />
+                        </p:column>
+                        <p:column headerText="Date" sortBy="#{item.gl_date}" filterBy="#{item.gl_date}" filterMatchMode="contains">
+                            <h:outputText  value="#{item.gl_date}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Notes" sortBy="#{item.note}" filterBy="#{item.note}" filterMatchMode="contains">
+                            <h:outputText  value="#{item.note}" escape="false"/>
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.posting}">
+                            <h:outputText  value="Draft" rendered="#{item.posting == false}"/>
+                            <h:outputText  value="Posting" rendered="#{item.posting == true}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Warning" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Jurnal Umum Nomor :" rendered="#{controllerJurnalUmum.item.posting == false}"/>
+                    <h:outputText value="#{controllerJurnalUmum.item.gl_number}" style="font-weight:bold" rendered="#{controllerJurnalUmum.item.posting == false}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerJurnalUmum.delete(controllerJurnalUmum.item.gl_number)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerJurnalUmum.item.posting == false}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerJurnalUmum.item.posting == false}"/>
+
+                    <h:outputText value="Jurnal tidak bisa dihapus karena sudah diposting !!!" rendered="#{controllerJurnalUmum.item.posting == true}"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="Ok" rendered="#{controllerJurnalUmum.item.posting == true}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

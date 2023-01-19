@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Stok Opname</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .old {
+                background-color: #fca752 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .red-row {
+                background-color: red !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .noBorders tr, .noBorders td {
+                background: none !important;
+                border: none !important;
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerStokOpname.itemso.id}" />
+        <f:viewAction action="#{controllerStokOpname.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOKOPNAME')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <ui:include src="form.xhtml"/>
+                            <p:fileUpload fileUploadListener="#{controllerStokOpname.handleFileUploadXls}" mode="advanced" dragDropSupport="false" id="uploadnya"
+                                          update="growl tbl-detil" fileLimit="5" sizeLimit="100000000"  allowTypes="/(\.|\/)(gif|jpe?g|png|csv|xls|xlsx)$/" rendered="#{controllerStokOpname.itemso.isupload eq true}">
+                                <f:attribute name="idnya" value="#{controllerStokOpname.itemso.id}" />
+                            </p:fileUpload>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

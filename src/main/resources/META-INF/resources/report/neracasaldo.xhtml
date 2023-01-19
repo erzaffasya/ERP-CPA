@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+
+
+    <ui:define name="title">Neraca Saldo</ui:define>
+    <f:metadata>
+        <f:viewParam name="bulan" value="#{controllerNeracaSaldo.bulan}" />
+        <f:viewParam name="tahun" value="#{controllerNeracaSaldo.tahun}" />
+        <f:viewAction action="#{controllerNeracaSaldo.onLoadListNeracaSaldo()}" />
+
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('NERACASALDO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerNeracaSaldo.cetak()}" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Neraca Saldo</h1>
+
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+                        <p:outputLabel for="bulan" value="Periode"/>
+                        <p:selectOneMenu id="bulan" value="#{controllerNeracaSaldo.bulan}">
+                            <f:selectItems value="#{controllerNeracaSaldo.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerNeracaSaldo.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerNeracaSaldo.search()}"   icon="ui-icon-search" value="Search" update="singleDT"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerNeracaSaldo.dataAccGlDetail}" >
+
+                        <p:column  headerText="Kode Account">
+                            <h:outputText value="#{item.id_account}" />
+                        </p:column>
+                        <p:column headerText="Account">
+                            <h:outputText value="#{item.account}" />
+                        </p:column>
+                        <p:column   style="text-align:right;" headerText="Debit">
+
+                            <h:outputText value="#{item.debit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  style="text-align:right;" headerText="Credit">
+                            <h:outputText value="#{item.credit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:columnGroup type="footer" >
+                            <p:row>
+                                <p:column colspan="2" style="text-align:right" footerText="Grand Total : " >
+
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerNeracaSaldo.totaldebet}" >
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+                                    </f:facet>
+                                </p:column>
+                                <p:column style="text-align:right;" >
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{controllerNeracaSaldo.totalcredit}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+
+                                    </f:facet>
+                                </p:column>
+                            </p:row>
+                        </p:columnGroup>
+
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

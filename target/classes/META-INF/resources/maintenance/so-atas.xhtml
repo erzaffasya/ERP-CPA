@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Sales Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. So."/>
+        <p:inputText id="nomor" value="#{controllerSo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl So"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerSo.item.tanggal}" required="true" mask="99/99/9999"   requiredMessage="SO Date harus diisi !!" >
+            <p:ajax event="dateSelect" listener="#{controllerSo.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerSo.onTglChange}" update="growl tanggal" />
+        </p:calendar>    
+        <p:outputLabel for="nomor_penawaran" value="Penawaran No."/>
+        <p:autoComplete   id="nomor_penawaran" value="#{penawaranAutoComplete.penawaran}" completeMethod="#{penawaranAutoComplete.completePenawaranContains}"
+                          var="penawaran" itemLabel="#{penawaran.nomor}" itemValue="#{penawaran}" converter="#{penawaranConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nomor SO harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerSo.onPenawaranSelect}" update="detil totaljumlah persendiskon diskon dpp is_ppn ppn grandtotal top customer  gudang kepada deliverypoint  syarat sls telpon growl"/>
+            <p:column headerText="Nomor Penawaran" >
+                <h:outputText value="#{penawaran.nomor}" />
+            </p:column>
+            <p:column headerText="Revisi" >
+                <h:outputText value="#{penawaran.revisi}" />
+            </p:column>
+            <p:column headerText="Customer" >
+                <h:outputText value="#{penawaran.customer}" />
+            </p:column>
+            <p:column headerText="Tanggal">
+                <h:outputText value="#{penawaran.tanggal}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="Grand Total">
+                <div style="text-align:right;"><h:outputText value="#{penawaran.grandtotal}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+            </p:column>
+        </p:autoComplete>    
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:inputText id="customer" value="#{controllerSo.item.customer}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerSo.item.referensi}" immediate="true" required="true"/>
+
+        <p:outputLabel for="kepada" value="Contact Person"/>
+        <p:inputText id="kepada" value="#{controllerSo.item.kepada}"/>
+        <p:outputLabel for="tgl_ref" value="Tgl PO"/>
+        <p:calendar pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" id="tgl_ref" value="#{controllerSo.item.tgl_ref}" required="true"/>
+        <p:outputLabel for="telpon" value="Telpon :"/>
+        <p:inputText id="telpon" value="#{controllerSo.item.telpon}"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerSo.item.id_gudang}" >
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="sls"  value="Salesman" />
+        <p:selectOneMenu id="sls"  value="#{controllerSo.item.id_salesman}" required="true">
+            <f:selectItems value="#{options.comboMarketingAll}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="user" value="dibuat Oleh "/>
+        <p:inputText id="user" value="#{controllerSo.item.user}" readonly="true"/>
+        <p:outputLabel for="@next" value="Status"/>
+        <p:selectOneMenu id="status" value="#{controllerSo.item.status}" required="true">
+            <f:selectItem itemLabel="Draft" itemValue="D" />
+            <f:selectItem itemLabel="Send" itemValue="S" />
+            <f:selectItem itemLabel="Packinglist Draft" itemValue="C" />
+            <f:selectItem itemLabel="Packinglist Completed" itemValue="P" />
+            <f:selectItem itemLabel="Partial" itemValue="W" />
+            <f:selectItem itemLabel="Cancel" itemValue="R" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+
+</ui:composition>

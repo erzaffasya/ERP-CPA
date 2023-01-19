@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="IT No"/>
+        <p:inputText id="nomor" value="#{controllerInternalTransfer.item.nomor}"  readonly="true"/>
+        <p:outputLabel for="referensi" value="IO Number"/>
+        <p:inputText id="referensi" value="#{controllerInternalTransfer.item.nomor_io}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal"  value="#{controllerInternalTransfer.item.tanggal}" readonly="true"/>
+        <p:outputLabel for="kontak" value="Contact Person"/>
+        <p:inputText id="kontak" value="#{controllerInternalTransfer.item.nama_penerima}"  />
+        <p:outputLabel for="gudangasal" value="Gudang Asal"/>
+        <p:inputText id="gudangasal" value="#{controllerInternalTransfer.item.gudang_asal}" readonly="true" />
+        <p:outputLabel for="gudangtujuan" value="Gudang Tujuan"/>
+        <p:inputText id="gudangtujuan" value="#{controllerInternalTransfer.item.gudang_tujuan}" readonly="true" />
+        <p:outputLabel for="sipb" value="SIPB No"/>
+        <p:inputText id="sipb" value="#{controllerInternalTransfer.item.sipb}" />
+        <p:outputLabel for="telpon" value="Telpon"/>
+        <p:inputText id="telpon" value="#{controllerInternalTransfer.item.telpon}" readonly="true"/>
+        <p:outputLabel for="tanggalkirim" value="Delivery Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggalkirim"  value="#{controllerInternalTransfer.item.tanggal_kirim}" readonly="true"/>
+        <p:outputLabel for="jamkirim" value="Delivery time"/>
+        <p:inputText id="jamkirim" value="#{controllerInternalTransfer.item.jam_kirim}" readonly="true"/>
+        <p:outputLabel for="driver" value="Driver"/>
+        <p:inputText id="driver" value="#{controllerInternalTransfer.item.driver}" readonly="true"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:outputLabel for="tanggalterima" value="Receive Date" />
+        <p:calendar pattern="dd/MM/yyyy" id="tanggalterima"  value="#{controllerInternalTransfer.item.tanggal_terima}" mask="99/99/9999" required="true" requiredMessage="Tanggal terima harus diisi !!">
+            <p:ajax event="dateSelect" listener="#{controllerInternalTransfer.onTglTerimaSelect}" update="growl tanggalterima" />
+            <p:ajax event="change" listener="#{controllerInternalTransfer.onTglTerimaChange}" update="growl tanggalterima" />
+        </p:calendar>
+        <p:outputLabel for="jamterima" value="Receive time"/>
+        <p:inputText id="jamterima" value="#{controllerInternalTransfer.item.jam_terima}" />
+        </p:panelGrid>
+        <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="@next" value="Receive Note"/>
+        <p:inputText id="keterangan" value="#{controllerInternalTransfer.item.keterangan}" />
+    </p:panelGrid>
+</ui:composition>

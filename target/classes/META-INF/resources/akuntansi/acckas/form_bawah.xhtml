@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="total" value="#{controllerAccPettyCash.item.total}" style="width:100%; text-align:right;" readonly="true" />
+    </p:panelGrid>    
+
+
+</ui:composition>

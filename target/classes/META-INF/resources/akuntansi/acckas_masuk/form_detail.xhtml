@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerAccKas.extend}" update="detil"/>
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerAccKas.dataAccKasDetil}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:column headerText="Keterangan" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.uraian}" id="ouraian"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="uraian" value="#{item.uraian}" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        
+        <p:column headerText="Code" style="width:150px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_account_detail}" id="oid_account" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="id_account" value="#{accountAutoComplete.account}" completeMethod="#{accAutoComplete.completeAccountL4Contains}"
+                                    var="acc" itemLabel="#{acc.id_account}" itemValue="#{acc}" converter="#{accountConverter}"
+                                     scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerAccKas.onAccountSelect(item,ri)}" update="oid_account account oaccount account" />
+                        <p:column headerText="Code" >
+                            <h:outputText  value="#{acc.id_account}" />
+                        </p:column>
+                        <p:column headerText="Code Name">
+                            <h:outputText value="#{acc.account}" ></h:outputText>
+                        </p:column>
+                        <p:column headerText="Parent">
+                            <h:outputText value="#{acc.account_parent}" ></h:outputText>
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Account Name" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.account}" id="oaccount"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="account" value="#{item.account}" readonly="true"/>
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Jumlah" style="width:150px">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.jumlah}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div> </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber id="jumlah" value="#{item.jumlah}" style="width:96%" >
+                        <p:ajax listener="#{controllerAccKas.hitungJumlahTotal()}" update="total" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerAccKas.onDeleteClicked(item)}"  update="detil " />
+            </p:commandButton>
+
+        </p:column>
+
+    </p:dataTable>
+
+</ui:composition>

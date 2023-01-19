@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <p:dataTable id="detil" var="item" value="#{controllerPenerimaan.dataPenerimaanDetailReguler}" reflow="true">
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nm_barang}" />
+        </p:column>
+        <p:column headerText="Qty"  styleClass="rightColumnContent">
+            <h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Satuan" styleClass="centerColumnContent">
+            <h:outputText  value="#{item.satuan}" />
+        </p:column>
+        <p:column headerText="Unit Price"  styleClass="rightColumnContent">
+            <h:outputText value="#{item.harga}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+        <p:column headerText="Amount"  styleClass="rightColumnContent">
+            <h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

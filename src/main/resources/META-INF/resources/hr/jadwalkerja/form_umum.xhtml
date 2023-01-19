@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="1."/>
+        <p:outputLabel for="nama" value="Nama JadwalKerja"/>
+        <h:panelGroup/>
+        <p:inputText id="nama" value="#{controllerJadwalKerja.item.nama}" required="true"/>
+        <p:outputLabel  value="2."/>
+        
+        <p:outputLabel for="atasan" value="JadwalKerja ini dihitung"/>
+        <h:panelGroup/>
+        <p:selectOneButton id="atasan" value="#{controllerJadwalKerja.item.jenis}" >
+            <f:selectItems value="#{controllerJadwalKerja.comboJenis}" />
+        </p:selectOneButton>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <p:outputLabel  value="Dengan jumlah"/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:inputNumber id="nama" value="#{controllerJadwalKerja.item.jumlah}" required="true"/>
+        <p:selectBooleanCheckbox  value="#{controllerJadwalKerja.item.pajak}"  />
+        <p:outputLabel  value="JadwalKerja ini akan kena paja"/>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel  value="3."/>
+        <p:outputLabel for="kepada" value="JadwalKerja ini diberikan kepada"/>
+        <h:panelGroup/>
+        <p:pickList id="kepada" value="#{controllerJadwalKerja.masterJabatans}" var="jabatan" effect="bounce"
+                    itemValue="#{jabatan}" itemLabel="#{jabatan.jabatan}"  showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="#{jabatanConverter}" responsive="true">
+
+            <f:facet name="sourceCaption">Available</f:facet>
+            <f:facet name="targetCaption">Starting</f:facet>
+
+            
+            <p:column style="width:85%;">
+                <h:outputText value="#{jabatan.jabatan}" />
+            </p:column>
+        </p:pickList>
+    </p:panelGrid>
+</ui:composition>

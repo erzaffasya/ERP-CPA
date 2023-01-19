@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+
+
+    <ui:define name="title">Arus Kas</ui:define>
+    <f:metadata>
+        <f:viewParam name="tahun" value="#{controllerNeracaSaldo.tahun}" />
+        <f:viewAction action="#{controllerNeracaSaldo.onLoadArusKas()}" />
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('NERACA')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Arus Kas</h1>
+
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="@next" value="Tahun"/>
+                        <p:inputText value="#{controllerNeracaSaldo.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerNeracaSaldo.onLoadArusKas()}"   icon="ui-icon-search" value="Cari" update="singleDT"/>
+                    </p:panelGrid>
+                    <div class="ui-button-group" style="text-align: right;">
+                        <p:commandButton id="xlsx" ajax="false" value="Excel">  
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="xlsx" target="singleDT" fileName="Neraca" 
+                                         facetFontSize="15"  
+                                         facetFontStyle="BOLD" cellFontColor="#000000" cellFontSize="12"  datasetPadding="1"  
+                                         cellFontStyle="NORMAL"/>  
+                        </p:commandButton>
+                        <p:commandButton action="#{controllerNeracaSaldo.getReport}" value="Neraca Format Baru"  ajax="false" styleClass="ui-button-outlined p-mr-2 p-mb-2"/>
+                        <p:commandButton action="#{controllerNeracaSaldo.getReportNeracaDetail}" value="Neraca Detail"  ajax="false" styleClass="ui-button-outlined p-mr-2 p-mb-2"/>
+                    </div>   
+                    <p:spacer width="100" height="10"/>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerNeracaSaldo.dataAccGlDetail}" >
+                        <p:column headerText="">
+                            <h:outputText value="#{item.account}" />
+                        </p:column>
+                        <p:column   style="text-align:right;" headerText="Amount">
+                            <h:outputText value="#{item.debit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <h:panelGroup/>
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerDecanting.extendTo}"  update="detilTo" />
+        </p:commandButton>
+    </p:panelGrid>
+
+    <p:dataTable id="detilTo" var="itemto" value="#{controllerDecanting.dataDecantingDetailTo}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ro">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ro + 1}" />
+        </p:column>
+        <p:column headerText="Barang Jadi" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{itemto.nama_barang}" id="onama_barangto" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barangto" value="#{brgAutoComplete.barang}" completeMethod="#{brgAutoComplete.completeBarangContains}"
+                                    var="brg" itemLabel="#{brg.nama_barang}" itemValue="#{brg}" converter="#{brgConverter}"
+                                     scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerDecanting.onBrgSelect(itemto,ro)}" update="onama_barangto id_barangto oid_barangto osatuan_kecilto satuan_kecilto osatuan_besarto satuan_besarto" />
+                    <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{brg.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Material Code" >
+                            <h:outputText value="#{brg.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Satuan" >
+                            <h:outputText value="#{brg.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" >
+                            <h:outputText value="#{brg.isi_satuan} #{barang.satuan_kecil}" />
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Kode Barang" style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{itemto.id_barang}" id="oid_barangto"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="id_barangto" value="#{itemto.id_barang}" readonly="true" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        
+        <p:column headerText="Qty Besar" style="width:120px;">
+                  <p:cellEditor>
+                      <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{itemto.qtybesar}" id="oqtytobesar"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qtytobesar" value="#{itemto.qtybesar}" style="width:96%" required="true" >
+                        <p:ajax listener="#{controllerDecanting.onQtyBesarChange(itemto, ro, 'T')}" update="oqtyto qtyto totalbawah" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_besarto" value="#{itemto.satuan_besar}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_besarto" value="#{itemto.satuan_besar}" style="width:96%" readonly="yes"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        
+        <p:column headerText="Qty" style="width:120px;">
+                  <p:cellEditor>
+                      <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{itemto.qty}" id="oqtyto"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qtyto" value="#{itemto.qty}" style="width:96%" required="true" >
+                        <p:ajax listener="#{controllerDecanting.onQtyKecilChange(itemto, ro, 'T')}" update="oqtytobesar qtytobesar totalbawah" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_kecilto" value="#{itemto.satuan_kecil}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_kecilto" value="#{itemto.satuan_kecil}" style="width:96%" readonly="yes"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Packaging" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{itemto.packaging}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="packagingto" value="#{itemto.packaging}" style="width:96%"  />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Batch Number" style="width:120px;">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{itemto.batch}"></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="batchto" value="#{itemto.batch}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerDecanting.onDeleteClickedTo(itemto)}"  update="detilTo " />
+            </p:commandButton>
+
+        </p:column>
+    </p:dataTable>
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-8,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+        <h:outputText value="Flushing" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="totaljumlah" value="#{controllerDecanting.item.flushing}" style="width:100%; text-align:right;">
+            <p:ajax listener="#{controllerDecanting.totalbawah()}" update="totalbawah" />
+        </p:inputNumber>
+        <h:panelGroup />
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="totalbawah" value="#{controllerDecanting.item.totalbawah}" style="width:100%; text-align:right;" readonly="true" />
+        <h:panelGroup />
+        
+    </p:panelGrid>
+</ui:composition>

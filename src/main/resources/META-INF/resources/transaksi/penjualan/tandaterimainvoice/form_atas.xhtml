@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Tanda Terima Invoice</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="nomor" value="Nomor"/>
+        <p:inputText id="nomor" value="#{controllerTandaTerimaInvoice.item.nomor}" readonly="true"/>
+
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar id="tanggal" value="#{controllerTandaTerimaInvoice.item.tanggal}" required="true" requiredMessage="Tanggal harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+            
+        <p:outputLabel for="id_customer" value="Nama Customer :"/>
+        <p:autoComplete required="true"  id="id_customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                        var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                        groupBy="#{customerAutoComplete.getCustomerGroup(customer)}" scrollHeight="250"  requiredMessage="Nama Customer harus diisi !!!" >
+            <p:ajax event="itemSelect" listener="#{controllerTandaTerimaInvoice.onCustomerSelect}" update="detil total"/>
+        </p:autoComplete>   
+        <p:outputLabel for="@next" value="Tanggal Kirim"/>
+        <p:calendar id="tgl_kirim" value="#{controllerTandaTerimaInvoice.item.tgl_kirim}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="@next" value="Pengirim/Courier"/>
+        <p:inputText id="courier" value="#{controllerTandaTerimaInvoice.item.courier}" />
+        <p:outputLabel for="@next" value="No. Resi"/>
+        <p:inputText id="resi" value="#{controllerTandaTerimaInvoice.item.resi}" />
+        <p:outputLabel for="@next" value="Tanggal Terima"/>
+        <p:calendar id="terima" value="#{controllerTandaTerimaInvoice.item.tgl_terima}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+        <p:outputLabel for="@next" value="Penerima"/>
+        <p:inputText id="penerima" value="#{controllerTandaTerimaInvoice.item.penerima}" />
+    </p:panelGrid>
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerTandaTerimaInvoice.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+
+
+</ui:composition>

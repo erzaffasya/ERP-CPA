@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Kas Masuk</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+        <p:outputLabel for="nomor" value="Bank Voucher"/>
+        <p:inputText id="nomor" value="#{controllerAccKas.item.nomor}" readonly="true"/>
+
+        <p:outputLabel for="tanggal" value="Tanggal"/>
+        <p:calendar id="tanggal" value="#{controllerAccKas.item.tanggal}" required="true" requiredMessage="Tanggal harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" >
+            <p:ajax event="dateSelect" listener="#{controllerAccKas.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerAccKas.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel for="kantor" value="Kantor :"/>
+        <p:inputText id="kantor" value="#{controllerAccKas.item.kantor}"/>
+        <p:outputLabel  value="Keterangan"/>
+        <p:inputText id="keterangan" value="#{controllerAccKas.item.uraian}"/>
+        <p:outputLabel for="kepada"  value="Diterima dari"/>
+        <p:inputText id="kepada" value="#{controllerAccKas.item.kepada}" />
+        <p:outputLabel for="account" value="Kas / Bank"/>
+        <p:selectOneMenu id="account" value="#{controllerAccKas.item.id_account}" required="true" disabled="true">
+            <f:selectItems value="#{options.comboKas}" />
+        </p:selectOneMenu>
+
+    </p:panelGrid>
+
+
+
+
+</ui:composition>

@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.profile()}" />
+    </f:metadata>
+    <ui:define name="content">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Profile</h1>
+                            <ui:include src="profile_view.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    </ui:define>
+</ui:composition>

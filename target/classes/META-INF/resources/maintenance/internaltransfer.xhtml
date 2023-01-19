@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Internal Transfer</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerInternalTransfer.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <sec:authorize access="!hasRole('MAINTENANCEINTERNALTRANSFER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton actionListener="#{controllerInternalTransfer.updateMaintenance()}"   icon="ui-icon-update" value="View"  />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Internal Transfer </h1>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerInternalTransfer.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerInternalTransfer.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerInternalTransfer.status}" >
+                            <f:selectItem itemLabel="All" itemValue="" />
+                            <f:selectItem itemLabel="Send" itemValue="S" />
+                            <f:selectItem itemLabel="Receipt" itemValue="R" />
+                            <f:selectItem itemLabel="Cancel" itemValue="C" />
+                        </p:selectOneMenu>        
+                        <p:commandButton actionListener="#{controllerInternalTransfer.onLoadListIn()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerInternalTransfer.dataInternalTransfer}" selectionMode="single" reflow="true"
+                                 selection="#{controllerInternalTransfer.item}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="i">
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{i + 1}" />
+                        </p:column>
+                        <p:column headerText="IT No" sortBy="#{item.nomor}" filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Gudang Asal" sortBy="#{item.gudang_asal}" filterBy="#{item.gudang_asal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang_asal}" />
+                        </p:column>
+                        <p:column headerText="Gudang Tujuan" sortBy="#{item.gudang_tujuan}" filterBy="#{item.gudang_tujuan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang_tujuan}" />
+                        </p:column>
+                        <p:column headerText="Nomor IO" sortBy="#{item.nomor_io}" filterBy="#{item.nomor_io}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor_io}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" >
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}" /> 
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}" />
+                            <h:outputText value="Receipt" rendered="#{item.status eq 'R'}" />
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C' or item.status eq 'X'}" />
+                       </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

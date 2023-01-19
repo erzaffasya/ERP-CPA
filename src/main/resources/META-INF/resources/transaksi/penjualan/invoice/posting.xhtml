@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+    <style type="text/css">
+        .datalist-noborder .ui-widget-content {
+            border: none;
+        }
+    </style>
+    <script type="text/javascript">
+        //<![CDATA[
+        function start() {
+            window['progress'] = setInterval(function () {
+                var pbClient = PF('pbClient'),
+                        oldValue = pbClient.getValue(),
+                        newValue = oldValue + 10;
+
+                pbClient.setValue(pbClient.getValue() + 10);
+
+                if (newValue === 100) {
+                    clearInterval(window['progress']);
+                }
+            }, 1000);
+        }
+
+
+        //]]>
+    </script>
+    <ui:define name="title">Posting</ui:define>
+    <f:metadata>
+
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('POSTINGAR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>POSTING AR</h1>
+
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+                        <p:outputLabel for="bulan" value="Periode"/>
+                        <p:selectOneMenu id="bulan" value="#{controllerPenjualan.bulan}">
+                            <f:selectItems value="#{controllerPenjualan.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerPenjualan.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerPenjualan.postingAll()}"   icon="ui-icon-search" value="Posting" 
+                                         onclick="PF('progressVar').start();"
+                                         />
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+
+                    <p:progressBar id="progressBar"
+                                   ajax="true"
+                                   widgetVar="progressVar" 
+                                   value="#{batchModel.progress}" 
+                                   labelTemplate="{value}%"
+                                   global="false" >
+                        <p:ajax event="complete" listener="#{batchModel.onComplete}" update="growl dl" />
+                    </p:progressBar>     
+                    </p:panelGrid>
+
+                    <p:dataList id="dl" value="#{controllerPenjualan.LMessage}" var="msg" type="ordered" widgetVar="dl">
+                        #{msg}
+                    </p:dataList>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

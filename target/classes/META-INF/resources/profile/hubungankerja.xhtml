@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewAction action="#{controllerHrPegawai.onLoadHubunganKerja()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="card card-w-title">
+                    <div class="ui-g-12 ">
+                        <div class="ui-g-12 ui-lg-12">
+                            <ui:include src="tabmenu.xhtml"/>
+                        </div>    
+                        <div class="ui-g-12 ui-lg-12">
+                            <div class="ui-g-12 ui-lg-1" ></div>
+
+                            <div class="ui-g-12 ui-lg-3">
+                                <ui:include src="leftprofile.xhtml"/>
+                            </div>
+                            <div class="ui-g-12 ui-lg-8">    
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <p:outputLabel  value="No. Induk Karyawan" />
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.nip}"/>
+                                    <p:outputLabel  value="No. Induk Sistem" />
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.id_pegawai}"/>
+                                    <p:outputLabel  value="No. Absensi"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.absen}"/>
+                                    <p:outputLabel  value="Jabatan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.jabatan}" />
+                                    <p:outputLabel  value="Departemen"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.departemen}" />
+                                    <p:outputLabel  value="Lokasi kantor"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.kantor}" />
+                                    <p:outputLabel  value="Coverage Area"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.area}" />
+                                    <p:outputLabel  value="Level"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.level}" />
+                                    <p:outputLabel  value="Golongan"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.golongan}" />
+                                    <p:outputLabel  value="Atasan Langsung"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.nama_atasan}" />
+                                    <p:outputLabel  value="Tanggal bergabung"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.mulai_bekerja}" >
+                                        <f:convertDateTime pattern="dd MMMMM yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel  value="PTKP"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.ptkp}" />
+                                    <p:outputLabel  value="Nomor Rekening Bank"/>
+                                    <p:outputLabel  value="#{controllerHrPegawai.item.nomorrekening}" />
+                                </p:panelGrid>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>

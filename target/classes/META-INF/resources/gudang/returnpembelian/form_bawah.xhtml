@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-10,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="totaljumlah" value="#{controllerPenerimaan.item.total}" style="width:100%; text-align:right;" readonly="true" />
+
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:outputText value="Discount" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="persendiskon" value="#{controllerPenerimaan.item.persendiskon}" style="width:30%"  >
+            <p:ajax listener="#{controllerPenerimaan.hitungDiskon()}" update="diskon dpp ppn grandtotal" />
+        </p:inputNumber>
+        <p:inputNumber id="diskon" value="#{controllerPenerimaan.item.total_discount}" style="width:100%; text-align:right;" >
+            <p:ajax event="change" listener="#{controllerPenerimaan.hitungDpp()}" update="dpp ppn grandtotal" />
+        </p:inputNumber>
+
+        <h:outputText value="Tgl Pengiriman" style="text-align: left"/>
+        <p:calendar id="tgl_pengiriman"  value="#{controllerPenerimaan.item.tgl_pengiriman}"  />
+        <h:outputText value="DPP" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="dpp" value="#{controllerPenerimaan.item.dpp}" style="width:100%" readonly="true" />
+
+        <h:outputText value="Term Of Payment" style="text-align: left;" />
+        <p:inputNumber id="top" value="#{controllerPenerimaan.item.top}" />
+        <h:outputText value="PPN 10%" style="font-weight: bold; text-align:right;"/>
+        <p:selectBooleanCheckbox id="is_ppn" value="#{controllerPenerimaan.item.is_ppn}" >
+            <p:ajax event="change" listener="#{controllerPenerimaan.hitungPpn()}" update="ppn grandtotal" />
+        </p:selectBooleanCheckbox>
+        <p:inputNumber id="ppn" value="#{controllerPenerimaan.item.total_ppn}" style="width:100%" />
+
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:outputText value="Grand Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="grandtotal" value="#{controllerPenerimaan.item.grandtotal}" style="width:100%" readonly="true" />
+    </p:panelGrid>    
+
+
+</ui:composition>

@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerForecast.dataForecastDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;">
+        <p:columnGroup type="header">
+            <p:row>
+                <p:column rowspan="2" headerText="No" />
+                <p:column rowspan="2" headerText="Nama Barang"/>
+                <p:column rowspan="2" headerText="Material Code"/>
+                <p:column colspan="3" headerText="Bulan"/>
+                <p:column rowspan="2" headerText="Total"/>
+                <p:column rowspan="2" headerText="Open Po"/>
+                <p:column rowspan="2" headerText="Satuan"/>
+                <p:column rowspan="2" headerText=""  rendered="#{controllerForecast.item.status eq 'D'}"/>
+            </p:row>
+            <p:row>
+                <p:column  headerText="#{controllerForecast.item.lb1}" />
+                <p:column  headerText="#{controllerForecast.item.lb2}" />
+                <p:column  headerText="#{controllerForecast.item.lb3}" />
+            </p:row>
+        </p:columnGroup>
+        <p:column >
+            <h:outputText value="#{ri + 1}" />
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                    var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                    groupBy="#{barangAutoComplete.getBarangGroup(barang)}" scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerForecast.onBarangSelect(item,ri)}" update="onama_barang id_barang oid_barang osatuan_kecil" />
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_barang}" id="oid_barang"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="id_barang" value="#{item.id_barang}" style="width:96%" readonly="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.bulan1}" ><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="bulan1" value="#{item.bulan1}" style="width:96%" >
+                        <p:ajax listener="#{controllerForecast.onQtyChange(item, ri)}" update="total" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.bulan2}"><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="bulan2" value="#{item.bulan2}" style="width:96%" >
+                        <p:ajax listener="#{controllerForecast.onQtyChange(item, ri)}" update="total" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.bulan3}"><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="bulan3" value="#{item.bulan3}" style="width:96%" >
+                        <p:ajax listener="#{controllerForecast.onQtyChange(item, ri)}" update="total" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <h:outputText value="#{item.total}" id="total"><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column styleClass="rightColumnContent">
+            <h:outputText value="#{item.openpo}" id="openpo"><f:convertNumber pattern="#,##0" /></h:outputText>
+        </p:column>
+        <p:column styleClass="centerColumnContent">
+            <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}"></h:outputText>
+        </p:column>
+        <p:column  rendered="#{controllerForecast.item.status eq 'D'}" styleClass="centerColumnContent">
+            <p:commandButton  icon="fa fa-trash" >
+                <p:ajax  listener="#{controllerForecast.onDeleteClicked(item)}"  update="detil"/>
+            </p:commandButton>
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

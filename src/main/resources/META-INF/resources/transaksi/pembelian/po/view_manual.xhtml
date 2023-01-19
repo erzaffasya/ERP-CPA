@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Purchase Order</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .nba-grid {
+                width: 100%;
+                table-layout: fixed;
+                word-wrap: break-word;
+                border: 0;
+
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPo.item.id}" />
+        <f:viewAction action="#{controllerPo.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./listview.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPo.ubah(controllerPo.item.is_approve,'')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPo.item.director==page.myPegawai.id_pegawai and controllerPo.item.is_checked1 and  controllerPo.item.is_approve ne false }" />
+                            <p:commandButton id="approve" update=":form:display" onclick="PF('dlg3').show();" icon="fa  fa-check-square" value="Approve"
+                                             rendered="#{controllerPo.item.director eq controllerPo.id_pegawai and controllerPo.item.is_checked1 eq true and !controllerPo.item.is_approve eq true}" />
+                            <p:commandButton id="reject" update=":form:display" onclick="PF('dlg4').show();" icon="fa  fa-close" value="Reject"
+                                             rendered="#{controllerPo.item.director eq controllerPo.id_pegawai and controllerPo.item.is_checked1 eq true and (controllerPo.item.is_approve eq true or controllerPo.item.is_approve eq null)}" />
+
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <ui:include src="form_po_atas_manual.xhtml"/>
+                            <ui:include src="form_po_detail_manual.xhtml"/>
+                            <ui:include src="form_po_bawah_manual.xhtml"/>
+                            <ui:include src="view_pesan.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Approve Purchase Order" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <p:editor  id="pesan" widgetVar="editor4" value="#{controllerPo.item.pesan}" height="200" style="margin-bottom:10px" /> 
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerPo.approveAtasan(true)}" onclick="PF('dlg3').hide();" 
+                                 update=":form:growl" value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+            
+            <p:dialog header="Cancel Purchase Order" widgetVar="dlg4" resizable="false" id="rejectpo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <p:editor  id="pesan1" widgetVar="editor5" value="#{controllerPo.item.pesan}" height="200" style="margin-bottom:10px" /> 
+                </h:panelGrid>
+                <p:commandButton id="okreject" actionListener="#{controllerPo.approveAtasan(false)}" onclick="PF('dlg4').hide();" 
+                                 update=":form:growl" value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg4').hide();" value="Cancel"/>
+            </p:dialog>
+            
+        </h:form>
+
+    </ui:define>
+</ui:composition>

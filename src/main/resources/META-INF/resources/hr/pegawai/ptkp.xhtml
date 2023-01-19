@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerHrPegawai.onloadListCountPegawaiPtkp()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./ptkpadd.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerHrPegawai.detailPtkp()}"   icon="ui-icon-update" value="Lihat Detil"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerHrPegawai.item}" target="#{controllerHrPegawai.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>PTKP Status Adjustment</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataPegawaiPtkp}" selectionMode="single" reflow="true"
+                                 selection="#{controllerHrPegawai.pegawaiPtkp}" rowKey="#{item.years}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column headerText="Tahun">
+                            <h:outputText value="#{item.years}" />
+                        </p:column>
+                        <p:column headerText="Jumlah Pegawai">
+                            <h:outputText value="#{item.qty}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            
+            <p:dialog  widgetVar="dlg3" resizable="false" id="studentDlg"
+                       showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus pegawai atas nama :" />
+                    <h:outputText value="#{controllerHrPegawai.item.nama}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerHrPegawai.delete(controllerHrPegawai.item.id_pegawai)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

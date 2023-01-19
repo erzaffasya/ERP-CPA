@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="id_barang" value="Material Code"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="id_barang" value="#{controllerBarang.item.id_barang}" immediate="true"  />
+        </h:panelGroup>
+
+        <p:outputLabel for="nama_barang" value="Nama Produk"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="nama_barang" value="#{controllerBarang.item.nama_barang}" immediate="true" />
+        </h:panelGroup>
+        <p:selectBooleanCheckbox value="#{controllerBarang.item.status}" itemLabel="aktif"  /> 
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="barcode" value="Kode Alias"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="barcode" value="#{controllerBarang.item.barcode}" immediate="true"  />
+        </h:panelGroup>
+        <p:outputLabel for="nama_alias" value="Nama Alias"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="nama_alias" value="#{controllerBarang.item.nama_alias}" immediate="true"  />
+        </h:panelGroup>
+        <p:outputLabel for="id_kategori_barang" value="Type"/>
+        <p:selectOneMenu id="id_kategori_barang" value="#{controllerBarang.item.id_kategori_barang}">
+            <f:selectItems value="#{options.kategoriBarang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="family" value="Family"/>
+        <p:selectOneMenu id="family" value="#{controllerBarang.item.id_family}">
+            <f:selectItems value="#{options.comboFamily}" />
+        </p:selectOneMenu>
+        <h:panelGroup/>    
+        <h:panelGroup/>
+        <h:panelGroup/>
+    </p:panelGrid>  
+    <p:panelGrid  columns="6" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">     
+        <p:outputLabel for="id_satuan_besar" value="Satuan"/>
+        <p:selectOneMenu id="id_satuan_besar" value="#{controllerBarang.item.id_satuan_besar}">
+            <f:selectItems value="#{options.satuanBesar}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="isi_satuan" value="Isi Satuan"/>
+        <p:inputNumber id="isi_satuan" value="#{controllerBarang.item.isi_satuan}" immediate="true"  />
+
+        <p:selectOneMenu id="id_satuan_kecil" value="#{controllerBarang.item.id_satuan_kecil}">
+            <f:selectItems value="#{options.satuan}" />
+        </p:selectOneMenu>
+    </p:panelGrid>  
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="keterangan" value="Keterangan"/>
+        <p:inputTextarea id="keterangan" value="#{controllerBarang.item.keterangan}" rows="3"/>
+    </p:panelGrid>
+
+</ui:composition>

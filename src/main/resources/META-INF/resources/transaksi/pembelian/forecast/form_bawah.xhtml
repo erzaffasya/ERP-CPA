@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;" rendered="#{controllerForecast.item.status eq 'C' or controllerForecast.item.status eq 'R'}">
+    <p:outputLabel  value="Tanggal Cancel"/>
+    <p:inputText id="tglcancel" value="#{controllerForecast.item.tgl_cancel}" />
+    <p:outputLabel  value="Alasan"/>
+        <p:textEditor id="syarat" widgetVar="editor2" value="#{controllerForecast.item.pesan}" height="100" style="margin-bottom:10px" >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <p:outputLabel  value="Cancel By" rendered="#{controllerIntruksiPo.itemForecast.status eq 'C'}"/>
+        <p:outputLabel  value="Reject By" rendered="#{controllerIntruksiPo.itemForecast.status eq 'R'}"/>
+    <p:inputText id="tglcancel" value="#{controllerForecast.item.user_cancel}" />
+    </p:panelGrid>    
+    
+
+</ui:composition>

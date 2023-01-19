@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">Data Produk</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MINMAX')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Min MAx Stok Barang " style="font-size: 24px;"/>
+                        <p:commandButton action="#{controllerBarang.downloadXls}" 
+                                         value="Download Form"  
+                                         ajax="false" 
+                                         />
+
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerBarang.id_gudang}">
+                            <f:selectItem itemLabel="--Pilih Gudang--" itemValue=""/>
+                            <f:selectItems value="#{options.comboGudang}" />
+                            <p:ajax event="change" listener="#{controllerBarang.onLoadListMinMax()}" update="singleDT growl"/>
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerBarang.dataMinMAx}"  reflow="true" tableStyle="table-layout: auto;"
+                                 rowIndexVar="index" editable="true"  widgetVar="cellBarang">
+                        <p:ajax event="rowEdit" listener="#{controllerBarang.onRowEdit}" update=":form:growl"/>
+                        <p:ajax event="rowEditCancel" listener="#{controllerBarang.onRowCancel}" update=":form:growl"/>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Material Code" sortBy="#{item.id_barang}" filterBy="#{item.id_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" sortBy="#{item.nama_barang}" filterBy="#{item.nama_barang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Alias" sortBy="#{item.nama_alias}" filterBy="#{item.nama_alias}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_alias}" />
+                        </p:column>
+                        <p:column headerText="Min" styleClass="rightColumnContent">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{item.min}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber value="#{item.min}" style="width:100%" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Max" styleClass="rightColumnContent">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{item.max}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber value="#{item.max}" style="width:100%" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>    
+                        <p:column headerText="Satuan" sortBy="#{item.satuan_besar}">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column style="width:6rem">
+                            <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:fileUpload fileUploadListener="#{controllerBarang.handleFileUploadXls}" mode="advanced" dragDropSupport="false" id="uploadnya"
+                                  update="growl singleDT" fileLimit="5" sizeLimit="100000000"  allowTypes="/(\.|\/)(gif|jpe?g|png|csv|xls|xlsx)$/" >
+
+                    </p:fileUpload>  
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerPembayaranPiutang.dataPembayaranPiutangDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" reflow="true" tableStyle="table-layout: auto;">
+
+        <f:facet name="header">Daftar Invoice</f:facet>
+        <p:column headerText="No  Invoice" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.no_invoice}" id="oreferensi" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="referensi" value="#{arAutoComplete.accArFaktur}" completeMethod="#{arAutoComplete.completeAccArFakturContains}"
+                                    var="penjualan" itemLabel="#{penjualan.no_invoice}" itemValue="#{penjualan}" converter="#{arConverter}" >
+                        <p:ajax event="itemSelect" listener="#{controllerPembayaranPiutang.onArSelect(item,ri)}" update="oreferensi :form:tb:kantor osaldo saldo obayar bayar invoice odpp dpp oppn ppn :form:tb:total :form:tb:jurnal :form:tb:selisih" />
+                        <p:column headerText="Nomor Invoice" >
+                            <h:outputText value="#{penjualan.no_invoice}" />
+                        </p:column>
+                        <p:column headerText="Ar Number" >
+                            <h:outputText  value="#{penjualan.ar_number}" />
+                        </p:column>
+                        <p:column headerText="Total" >
+                            <h:outputText value="#{penjualan.total}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:autoComplete >    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="No. Ar" >
+            <h:outputText id="invoice" value="#{item.no_penjualan}" />
+        </p:column>
+        <p:column headerText="Saldo" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.jumlah_tagihan}" id="osaldo"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="saldo" value="#{item.jumlah_tagihan}" style="width:96%"  readonly="true">
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="DPP" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.dpp}" id="odpp"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="dpp" value="#{item.dpp}" style="width:96%" required="true">
+                        <p:ajax  listener="#{controllerPembayaranPiutang.hitungTotal(item, ri)}" update="obayar bayar :form:tb:total :form:tb:jurnal :form:tb:selisih" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="PPN" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.ppn}" id="oppn"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="ppn" value="#{item.ppn}" style="width:96%" required="true">
+                        <p:ajax  listener="#{controllerPembayaranPiutang.hitungTotal(item, ri)}" update="obayar bayar :form:tb:total :form:tb:jurnal :form:tb:selisih" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Jumlah Dibayar" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.jumlah_bayar}" id="obayar"><f:convertNumber pattern="#,##0.00" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="bayar" value="#{item.jumlah_bayar}" style="width:96%" readonly="true" required="true">
+                        <p:ajax listener="#{controllerPembayaranPiutang.hitungJumlahTotal()}" update=":form:tb:total :form:tb:jurnal :form:tb:selisih" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Keterangan">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.keterangan}" id="oketerangan"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText  id="saldo" value="#{item.keterangan}" style="width:96%"  />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="centerColumnContent">
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPembayaranPiutang.onDeleteClicked(item)}"  update="detil :form:tb:total :form:tb:jurnal :form:tb:selisih" />
+            </p:commandButton>
+
+        </p:column>
+        
+    </p:dataTable>
+
+</ui:composition>

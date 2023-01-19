@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Invoice Penjualan</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Invoice Number"/>
+        <p:inputText id="nomor" value="#{controllerPenjualan.item.no_penjualan}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerPenjualan.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Invoice Date harus diisi !!" />
+            
+        <p:outputLabel for="nomor_do" value="Do. Number"/>
+        <p:autoComplete    forceSelection="true"   id="nomor_do" multiple="true"   value="#{doAutoComplete.selectedDotbl}" completeMethod="#{doAutoComplete.completeDotblContains}"
+                           var="do" itemLabel="#{do.nomor}" itemValue="#{do}" converter="#{doConverter}"
+                           required="true" disabled="true" rendered="#{controllerPenjualan.item.status eq 'P'}"/>
+            
+        
+        <p:autoComplete    forceSelection="true"   id="nomor_do" multiple="true"   value="#{doAutoComplete.selectedDotbl}" completeMethod="#{doAutoComplete.completeDotblContains}"
+                           var="do" itemLabel="#{do.nomor}" itemValue="#{do}" converter="#{doConverter}"
+                           required="true" rendered="#{controllerPenjualan.item.status ne 'P'}">
+            <p:ajax event="itemSelect" listener="#{controllerPenjualan.onDoSelect}" update="nomor_do growl detil totaljumlah persendiskon diskon dpp is_ppn ppn grandtotal top customer  gudang kode_mata_uang no_po  "/>
+            <p:ajax event="itemUnselect" listener="#{controllerPenjualan.onDoSelect}" update="nomor_do growl detil totaljumlah persendiskon diskon dpp is_ppn ppn grandtotal top customer  gudang kode_mata_uang no_po "/>
+            <p:column headerText="Do Number" >
+                <h:outputText  value="#{do.nomor}" />
+            </p:column>
+            <p:column headerText="Do Date">
+                <h:outputText value="#{do.tanggal}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+            </p:column>
+            <p:column headerText="Customer" >
+                <h:outputText value="#{do.customer}" />
+            </p:column>
+            <p:column headerText="PO Number" >
+                <h:outputText value="#{do.referensi}" />
+            </p:column>
+            <p:column headerText="Total" >
+                <h:outputText value="#{do.grandtotal}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+            </p:column>
+        </p:autoComplete>    
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:inputText id="customer" value="#{controllerPenjualan.item.customer}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerPenjualan.item.referensi}" immediate="true" />
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerPenjualan.item.kode_mata_uang}">
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel for="cn" value="CN Number"/>
+        <p:inputText id="cn" value="#{controllerPenjualan.item.cn}" immediate="true" />
+
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerPenjualan.item.id_gudang}" disabled="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+        <p:outputLabel  value="Term Of Payment" for="top"/>
+        <p:inputNumber id="top" value="#{controllerPenjualan.item.top}" decimalPlaces="0"  required="true"/>
+        <p:outputLabel for="faktur" value="No Faktur Pajak:"/>
+        <p:inputText id="faktur" value="#{controllerPenjualan.item.faktur}" />
+        <p:outputLabel for="cash" value="Cash"/>
+        <p:selectBooleanCheckbox id="cash" value="#{controllerPenjualan.item.is_invoice}" >
+            <p:ajax event="change" listener="#{controllerPenjualan.changeCash()}" update="top" />
+        </p:selectBooleanCheckbox>
+        <p:outputLabel  value="Status"/>
+        <p:selectOneMenu id="status" value="#{controllerPenjualan.item.status}" rendered="#{controllerPenjualan.item.status eq 'P'}" >
+            <f:selectItem itemLabel="Posting" itemValue="P" />
+        </p:selectOneMenu>
+        <p:selectOneMenu id="status" value="#{controllerPenjualan.item.status}" rendered="#{controllerPenjualan.item.status ne 'P'}" >
+            <f:selectItem itemLabel="Draft" itemValue="D" />
+            <f:selectItem itemLabel="Approve" itemValue="A" />
+            <f:selectItem itemLabel="Cancel" itemValue="C" />
+        </p:selectOneMenu>
+    </p:panelGrid>
+</ui:composition>

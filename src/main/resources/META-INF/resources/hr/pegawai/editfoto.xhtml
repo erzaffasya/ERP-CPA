@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pegawai</ui:define>
+    <f:metadata>
+        <f:metadata>
+            <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+            <f:viewAction action="#{controllerHrPegawai.onLoadDataDiri()}" />
+        </f:metadata>
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12  ui-lg-12">
+                                <ui:include src="tabmenu.xhtml"/>
+                            </div>    
+                            <div class="ui-g-12  ui-lg-12">
+                                <div class="ui-g-12  ui-lg-1" ></div>
+                                <div class="ui-g-12  ui-lg-3" >
+                                    <ui:include src="leftprofile.xhtml"/>
+                                    <div style="margin-bottom: 20px;">
+                                        <p:link outcome="/hr/pegawai/editdatapribadi" value="Ubah profil" style="margin-right:20px; margin-bottom: 20px;">
+                                            <f:param name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+                                        </p:link>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12  ui-lg-8">    
+                                    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                        <h1>Form Edit Foto Pegawai</h1>
+                                        <p:fileUpload fileUploadListener="#{controllerHrPegawai.handleFileUpload}" mode="advanced" dragDropSupport="false" 
+                                                      update="growl" sizeLimit="51380224" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /> 
+                                    </p:panelGrid>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

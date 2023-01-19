@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../WEB-INF/template.xhtml">
+
+    
+    <f:metadata>
+        <f:viewAction action="#{controllerPengguna.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PENGGUNA')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerPengguna.update()}"   icon="ui-icon-update" value="Edit" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPengguna.item}" target="#{controllerPengguna.item}" />
+                            </p:commandButton>
+                            <p:commandButton actionListener="#{controllerPengguna.hakAkses()}"   icon="ui-icon-update" value="Hak Akses"  />
+                            <p:commandButton action="#{controllerPengguna.getReportData}" value="Export To Excel"  ajax="false" />
+                            <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerPengguna.update()}"/>
+    <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Username</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        
+                        <p:outputLabel  value="Status"/>
+                        <p:selectOneMenu id="status" value="#{controllerPengguna.status}" >
+                            <p:ajax listener="#{controllerPengguna.onLoadList()}" update="singleDT"/>
+                            <f:selectItem itemLabel="Aktif" itemValue="1"/>
+                            <f:selectItem itemLabel="All" itemValue="A" />
+                            <f:selectItem itemLabel="Non Aktif" itemValue="0" />
+                        </p:selectOneMenu>        
+                        
+                            
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPengguna.dataPengguna}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerPengguna.item}" rowKey="#{item.usernamenya}" paginator="true" rows="50" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerPengguna.update()}" global="false" />
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Usernamenya" sortBy="#{item.usernamenya}"  filterBy="#{item.usernamenya}" filterMatchMode="contains">
+                            <h:outputText value="#{item.usernamenya}" />
+                        </p:column>
+                        <p:column headerText="Nama Pegawai" sortBy="#{item.nama}" filterBy="#{item.nama}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Jabatan" sortBy="#{item.jabatan}" filterBy="#{item.jabatan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Departemen" sortBy="#{item.departemen}" filterBy="#{item.departemen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.departemen}" />
+                        </p:column>
+                        <p:column headerText="Kantor/Cabang" sortBy="#{item.kantor}" filterBy="#{item.kantor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.kantor}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.enabled}" filterBy="#{item.enabled}" filterMatchMode="contains">
+                            <h:outputText value="Aktif" rendered="#{item.enabled eq true}"/>
+                            <h:outputText value="Non Aktif" rendered="#{item.enabled eq false}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Pegawai :" />
+                    <h:outputText value="#{controllerPengguna.item.nama}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPengguna.delete(controllerPengguna.item.usernamenya)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

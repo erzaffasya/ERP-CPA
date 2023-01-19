@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    
+    <ui:define name="title">Data</ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerLabaRugi.tipe}" />
+        <f:viewAction action="#{controllerLabaRugi.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('LABARUGI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerLabaRugi.update()}"   icon="ui-icon-update" value="Edit"  />
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerLabaRugi.item}" target="#{controllerLabaRugi.item}" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Chart Of Account</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Kategori Account"/>
+                        <p:selectOneMenu  value="#{controllerLabaRugi.tipe}">
+                            <f:selectItems value="#{controllerLabaRugi.comboTipeAccount}" />
+                            <p:ajax listener="#{controllerLabaRugi.onLoadList()}" update="singleDT" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>    
+                    <p:dataTable var="item" value="#{controllerLabaRugi.dataAccount}" selectionMode="single" reflow="true" id="singleDT"
+                                 selection="#{controllerLabaRugi.item}" rowKey="#{item.id_account}" paginator="true" rows="100">
+                        <p:column headerText="Kode Account" sortBy="#{item.id_account}" filterBy="#{item.id_account}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_account}" />
+                        </p:column>
+
+                        <p:column headerText="Akun Perkiraan" sortBy="#{item.account}" filterBy="#{item.account}" filterMatchMode="contains">
+                            <h:outputText value="#{item.account}" />
+                        </p:column>
+                        <p:column headerText="Debit" sortBy="#{item.debit}">
+                            <div style="text-align:right;"><h:outputText value="#{item.debit}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Account :" />
+                    <h:outputText value="#{controllerLabaRugi.item.account}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerLabaRugi.delete(controllerLabaRugi.item.id_account)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

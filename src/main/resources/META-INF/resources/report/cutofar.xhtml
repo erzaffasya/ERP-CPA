@@ -1,0 +1,215 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">Cut Off AR</ui:define>
+    <f:metadata>
+        
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerReportAr.cetakumurinvoice()}" disabled="true"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Cut Off AR</h1>
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="bulan" value="Periode"/>
+                        <p:selectOneMenu id="bulan" value="#{controllerReportAr.bulan}">
+                            <f:selectItems value="#{controllerReportAr.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerReportAr.tahun}" maxlength="4" />
+                        <p:commandButton actionListener="#{controllerReportAr.onLoadListCutOff()}"   icon="ui-icon-search" value="Search" update="singleDT"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <p:commandLink id="xlsx" ajax="false"  >  
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50" />
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="xlsx" target="singleDT" fileName="Cut Off AR" 
+                                         orientation="Landscape"  
+                                         facetFontSize="15"  
+                                         facetFontStyle="BOLD" cellFontColor="#000000" cellFontSize="12"  datasetPadding="1"  
+                                         cellFontStyle="NORMAL"/>  
+                        </p:commandLink> 
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportAr.dataAccOsAr}"  rowIndexVar="index"
+                                 selectionMode="single" selection="#{controllerReportAr.item}" rowKey="#{item.customer_code}" >
+                        <p:column style="width:30px;">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column  style="width:100px;" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="Customer" />
+                            </f:facet>
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column   style="width:100px;">
+                            <f:facet name="header">
+                                <h:outputText value="Account Manager" />
+                            </f:facet>
+                            <h:outputText value="#{item.marketing}" />
+                        </p:column>
+                        <p:column   style="width:100px;">
+                            <f:facet name="header">
+                                <h:outputText value="Area" />
+                            </f:facet>
+                            <h:outputText value="#{item.area}" />
+                        </p:column>
+                        <p:column   style="width:100px;" filterBy="#{item.invoice_number}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="No. Invoice"/>
+                            </f:facet>
+                            <h:outputText value="#{item.invoice_number}" />
+                        </p:column>
+                        <p:column   style="width:100px;">
+                            <f:facet name="header">
+                                <h:outputText value="No. Kwitansi" />
+                            </f:facet>
+                            <h:outputText value="#{item.kwitansi}" />
+                        </p:column>
+                        <p:column   style="width:80px;">
+                            <f:facet name="header">
+                                <h:outputText value="Invoice Date" />
+                            </f:facet>
+                            <h:outputText value="#{item.invoice_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column   style="width:100px;">
+                            <f:facet name="header">
+                                <h:outputText value="No. Do" />
+                            </f:facet>
+                            <h:outputText value="#{item.ldo}" />
+                        </p:column>
+                        <p:column  style="width:100px;">
+                            <f:facet name="header">
+                                <h:outputText value="PO" />
+                            </f:facet>
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column  style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="DPP" />
+                            </f:facet>
+                            <h:outputText value="#{item.dpp}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="PPN" />
+                            </f:facet>
+                            <h:outputText value="#{item.ppn}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="Total" />
+                            </f:facet>
+                            <h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  style="text-align: right; width: 60px;">
+                            <f:facet name="header">
+                                <h:outputText value="Top" />
+                            </f:facet>
+                            <h:outputText value="#{item.top}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 80px">
+                            <f:facet name="header">
+                                <h:outputText value="Due Date" />
+                            </f:facet>
+                            <h:outputText value="#{item.duedate}" >
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 60px">
+                            <f:facet name="header">
+                                <h:outputText value="Umur Invoice" />
+                            </f:facet>
+                            <h:outputText value="#{item.umur}" />
+                        </p:column>
+                        <p:column  style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="Payment" />
+                            </f:facet>
+                            <h:outputText value="#{item.payment}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: center; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="Date" />
+                            </f:facet>
+                            <h:outputText value="#{item.payment_date}" >
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column  style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="Os Invoice" />
+                            </f:facet>
+                            <h:outputText value="#{item.os}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column  style="text-align: right; width: 60px">
+                            <f:facet name="header">
+                                <h:outputText value="Overdue" />
+                            </f:facet>
+                            <h:outputText value="#{item.umuroverdue}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="&#60;= 0 Days" />
+                            </f:facet>
+                            <h:outputText value="#{item.day1}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="1-30 Days" />
+                            </f:facet>
+                            <h:outputText value="#{item.day2}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="31-60 Days" />
+                            </f:facet>
+                            <h:outputText value="#{item.day3}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="61-90 Days" />
+                            </f:facet>
+                            <h:outputText value="#{item.day4}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value="91-120 Days" />
+                            </f:facet>
+                            <h:outputText value="#{item.day5}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column   style="text-align: right; width: 100px">
+                            <f:facet name="header">
+                                <h:outputText value=" > 120 Days" />
+                            </f:facet>
+                            <h:outputText value="#{item.day6}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

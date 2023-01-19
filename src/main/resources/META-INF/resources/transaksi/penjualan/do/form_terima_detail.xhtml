@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerDo.dataDoDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+
+        <p:column headerText="Nama Barang" >
+            <h:outputText value="#{item.nama_barang}" id="onama_barang" />
+        </p:column>
+        <p:column headerText="Kode Barang" style="width:100px">
+            <h:outputText value="#{item.id_barang}" id="oid_barang"/>
+        </p:column>
+        <p:column headerText="Dikirim" style="width:80px;">
+            <div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+        </p:column>
+        <p:column headerText="Diterima" style="width:80px;">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty_diterima}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty_diterima" value="#{item.qty_diterima}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Satuan" style="width:100px;">
+               <div style="text-align:center;"> <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText></div>
+        </p:column>
+        <p:column headerText="Keterangan" style="width:250px; ">
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:left;"> <h:outputText id="oketerangan" value="#{item.keterangan}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="keterangan" value="#{item.keterangan}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        
+
+    </p:dataTable>
+
+</ui:composition>

@@ -1,0 +1,191 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="../../WEB-INF/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewAction action="#{controllerPerjalananDinas.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PERJALANANDINAS')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <p:panelGrid id="pnnotifikasi" columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+
+                        <p:dataTable id="notifikasi" value="#{controllerPerjalananDinas.dataNotifikasi}" var="nt" 
+                                     selection="#{controllerPerjalananDinas.LSelectedNotifikasi}" rowKey="#{nt.id}" rendered="#{controllerPerjalananDinas.dataNotifikasi.size() > 0}">
+                            <f:facet name="header">
+                                <div style="text-align: left; font-size: 20px;">Notfikasi untuk diselesaikan</div>
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Pilih semua" style="text-align: left; font-size: 20px; ">
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-11,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                    <h:outputLabel value="#{nt.keterangan}" style="font-size: 16px; "/>
+                                    <p:column>
+                                        <p:commandButton 
+                                            actionListener="#{controllerPerjalananDinas.onDetilSelect(nt.id)}"  
+                                            oncomplete="PF('sidebar5').show()"
+                                            value="Detail" 
+                                            process="@this" 
+                                            update="notifikasi :form:singleDT  :form:detil :form:judul">
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:panelGrid>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+
+                    <h1>List perjalanan dinas</h1>
+                    <p:panelGrid columns="6" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-5,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerPerjalananDinas.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerPerjalananDinas.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <h:panelGroup/>
+                        <p:button href="/hr/perjalanandinas/pengajuan.jsf"  styleClass="teal-btn"  icon="ui-icon-add" value="Ajukan perjalanan dinas"/>
+                        
+                    </p:panelGrid>
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-2,ui-grid-col-5,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Pilih"/>
+                        <p:selectOneMenu id="departemen" value="#{controllerPerjalananDinas.id_departemen}"  style="width: 95%;">
+                            <f:selectItems value="#{controllerPerjalananDinas.comboDepartement}" />
+                        </p:selectOneMenu>
+                        <p:selectOneMenu id="jabatan" value="#{controllerPerjalananDinas.id_jabatan}" style="width: 95%;">
+                            <f:selectItems value="#{controllerPerjalananDinas.comboJabatan}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerPerjalananDinas.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Perjalanan Dinas"/>
+                        </h:commandLink>
+                    </p:panelGrid>
+                    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPerjalananDinas.dataPerjalananDinas}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerPerjalananDinas.item}" rowKey="#{item.id}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+
+                        <p:column headerText="NIK" sortBy="#{item.id_pegawai}" filterBy="#{item.id_pegawai}" filterMatchMode="contains">
+                            <h:outputText value="#{item.id_pegawai}" />
+                        </p:column>
+                        <p:column headerText="Nama" sortBy="#{item.nama_pegawai}"  filterBy="#{item.nama_pegawai}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_pegawai}" />
+                        </p:column>
+                        <p:column headerText="Departemen" sortBy="#{item.departemen}"  filterBy="#{item.departemen}" filterMatchMode="contains">
+                            <h:outputText value="#{item.departemen}" />
+                        </p:column>
+                        <p:column headerText="Jabatan" sortBy="#{item.jabatan}"  filterBy="#{item.jabatan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Perjalanan Dinas" >
+                            <h:outputText value="#{item.tanggal}" />
+                        </p:column>
+                        <p:column headerText="tujuan">
+                            <h:outputText value="#{item.tujuan}" />
+                        </p:column>
+                        <p:column headerText="Alasan">
+                            <h:outputText value="#{item.keterangan}" />
+                        </p:column>
+                        <p:column headerText="Status">
+                            <h:outputText value="#{item.keterangan_status}" />
+                        </p:column>
+                        <p:column exportable="false">
+                            <p:commandButton 
+                                actionListener="#{controllerPerjalananDinas.onDetilSelect(item.id)}"  
+                                oncomplete="PF('sidebar5').show()"
+                                value="Detail" 
+                                process="@this" 
+                                update="singleDT  :form:detil :form:judul">
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <p:sidebar widgetVar="sidebar5" fullScreen="true" baseZIndex="10000" >
+
+                <p:panelGrid id="judul" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                    <h:panelGroup/>
+                    <p:panelGrid id="detil" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                        <p:staticMessage severity="info" summary="#{controllerPerjalananDinas.item.keterangan_status}" />
+                        <h1>Pengajuan perjalanan dinas</h1>
+                        <p:outputLabel  value="Untuk"/>
+                        <p:outputLabel id="untuk"  value="#{controllerPerjalananDinas.item.nama_pegawai}"/>
+                        <p:outputLabel  value="Yang mengajukan "/>
+                        <p:outputLabel id="untuk"  value="#{controllerPerjalananDinas.item.create_by_name}"/>
+                        <p:outputLabel  value="Jabatan"/>
+                        <p:outputLabel  value="#{controllerPerjalananDinas.item.jabatan}"/>
+                        <p:outputLabel  value="Tanggal pengajuan"/>
+                        <p:outputLabel  value="#{controllerPerjalananDinas.item.create_date}"><f:convertDateTime pattern="dd MMMM yyyy" /></p:outputLabel>
+                        <p:outputLabel  value="Tanggal cuti"/>
+                        <p:outputLabel  value="#{controllerPerjalananDinas.item.tanggal}"/>
+                        <p:outputLabel  value="Tujuan"/>
+                        <p:outputLabel  value="#{controllerPerjalananDinas.item.tujuan}"/>
+                        <p:outputLabel  value="Alasan"/>
+                        <p:outputLabel  value="#{controllerPerjalananDinas.item.keterangan}"/>
+                        <p:outputLabel  value="Status"/>
+                        <p:outputLabel  value="#{controllerPerjalananDinas.item.keterangan_status}"/>
+                    </p:panelGrid>
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:dataTable id="detil" var="itm" value="#{controllerPerjalananDinas.dataPerjalananDinasPersetujuan}"  reflow="true" rendered="#{controllerPerjalananDinas.dataPerjalananDinasPersetujuan.size() ne 0}">
+
+                        <p:column headerText="Nama" >
+                            <h:outputText value="#{itm.nama_pegawai}" />
+                        </p:column>
+                        <p:column headerText="Jabatan" >
+                            <h:outputText value="#{itm.jabatan}" />
+                        </p:column>
+                        <p:column headerText="Disetujui" >
+                            <h:outputText  rendered="#{itm.status eq true}"><img src="/img/checked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText  rendered="#{itm.status eq false}"><img src="/img/unchecked.png" style="width: 50%;"/></h:outputText>
+                            <h:outputText  rendered="#{itm.status eq null}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Persetujuan" >
+                            <h:outputText value="#{itm.tgl_persetujuan}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>    
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:panelGrid id="detiltombol" columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; width: 100%">
+                        <c:if test="#{controllerPerjalananDinas.item.status ne 'A' and controllerPerjalananDinas.item.status ne 'R' and controllerPerjalananDinas.item.status ne 'C'}">
+                            <c:if test="#{(controllerPerjalananDinas.item.status eq 'D' and controllerPerjalananDinas.searchPersetujuan(controllerPerjalananDinas.item.id, page.myPegawai.id_pegawai, 1) eq 1) or (controllerPerjalananDinas.item.status eq 'W' and controllerPerjalananDinas.searchPersetujuan(controllerPerjalananDinas.item.id, page.myPegawai.id_pegawai, 2) eq 1)}">
+
+                                <p:commandButton value="Tolak" styleClass="red-btn" style="margin-bottom:10px; width: 150px;">
+                                    <p:ajax  listener="#{controllerPerjalananDinas.persetujuanSelect(false)}"  update="growl :form:singleDT :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()"/>
+                                </p:commandButton>    
+                                <p:commandButton value="Setuju" style="margin-bottom:10px; width: 150px;">
+                                    <p:ajax  listener="#{controllerPerjalananDinas.persetujuanSelect(true)}"  update="growl :form:singleDT :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()"/>
+                                </p:commandButton>    
+                            </c:if>
+                        </c:if>  
+                        <p:commandButton value="Batalkan" styleClass="red-btn" style="margin-bottom:10px; width: 150px;" rendered="#{controllerPerjalananDinas.item.status eq 'D' and controllerPerjalananDinas.item.id_pegawai eq page.myPegawai.id_pegawai}">
+                            <p:ajax  listener="#{controllerPerjalananDinas.declineSelect()}"  update="growl :form:singleDT :form:pnnotifikasi :form:notifikasi"  oncomplete="PF('sidebar5').hide()"/>
+                        </p:commandButton>    
+                        <p:commandButton value="Tutup" style="margin-bottom:10px; width: 150px;">
+                            <p:ajax   oncomplete="PF('sidebar5').hide()" />
+                        </p:commandButton>    
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:sidebar>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

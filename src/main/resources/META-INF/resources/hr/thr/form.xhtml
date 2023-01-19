@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                >
+
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="@next"  value="Keterangan THR" />
+        <p:inputText value="#{controllerThr.item.description}"/> 
+        <p:outputLabel for="@next"  value="Tanggal Bayar THR" />
+        <p:datePicker id="payment_date"  value="#{controllerThr.item.payment_date}" pattern="dd-MM-yyyy" style="width: 100%" required="true"/>
+        <p:outputLabel for="@next"  value="Tanggal Perhitungan THR" />
+        <p:calendar id="thr_date"  value="#{controllerThr.item.thr_date}" pattern="dd-MM-yyyy" style="width: 100%" required="true">
+            <p:ajax event="dateSelect" listener="#{controllerThr.onTglSelect}" update="detil"/>
+            <p:ajax event="change" listener="#{controllerThr.onTglChange}" update="detil"/>
+        </p:calendar>
+        <p:selectBooleanCheckbox  value="#{controllerThr.item.include_thp}" itemLabel="Dibayar pada saat Gajian" style="width: 98%"/>
+        <p:selectBooleanCheckbox  value="#{controllerThr.item.tax}" itemLabel="Tidak kena pajak" style="width: 98%"/>
+    </p:panelGrid>
+    <div style="text-align: right">
+        <h:commandLink  id="xls">
+            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+            <p:dataExporter type="xls" target="detil" fileName="Daftar THR Karyawan"/>
+        </h:commandLink>
+    </div>
+    <p:dataTable id="detil" var="item" value="#{controllerThr.dataThrDetail}" editable="true" 
+                 editMode="cell" widgetVar="cellCars" rowIndexVar="ri" rowKey="#{item.id_pegawai}" selection="#{controllerThr.selectedThrDetail}" >
+
+        <p:column selectionMode="multiple"   style="width:16px;text-align:center" rendered="#{controllerThr.item.status ne 'A'}"/>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama" filterBy="#{item.nama}" filterMatchMode="contains">
+            <h:outputText value="#{item.nama}" />
+        </p:column>
+        <p:column headerText="NIP" filterBy="#{item.nip}" filterMatchMode="contains" >
+            <h:outputText value="#{item.nip}"/>
+        </p:column>
+        <p:column headerText="Jabatan" filterBy="#{item.jabatan}" filterMatchMode="contains">
+            <h:outputText value="#{item.jabatan}"/>
+        </p:column>
+        <p:column headerText="Agama" filterBy="#{item.agama}" filterMatchMode="contains">
+            <h:outputText value="#{item.agama}"/>
+        </p:column>
+        <p:column headerText="Mulai Kerja" filterBy="#{item.mulai_bekerja}" filterMatchMode="contains">
+            <h:outputText value="#{item.mulai_bekerja}"><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+        </p:column>
+        <p:column headerText="Lama Kerja" filterBy="#{item.date_desc}" filterMatchMode="contains">
+            <h:outputText value="#{item.date_desc}"/>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

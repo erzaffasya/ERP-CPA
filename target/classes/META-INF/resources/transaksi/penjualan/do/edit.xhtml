@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Order Penjualan</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerDo.item.nomor}" />
+        <f:viewAction action="#{controllerDo.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('DO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="add.jsf" value="Tambah" icon="ui-icon-plus" rendered="#{page.myGudang != null}"/>
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerDo.cetak()}" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerDo.ubah(controllerDo.item.status)}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerDo.item.status eq 'D' or controllerDo.item.status eq 'S'}"
+                                             />
+                            <p:commandButton id="send"
+                                             actionListener="#{controllerDo.ubah('S')}"
+                                             value="Send" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerDo.item.status eq 'D'}"
+                                             />
+                            <p:commandButton id="reject" update=":form:display" 
+                                             onclick="PF('dlg3').show();" 
+                                             icon="fa  fa-close" value="Cancel"
+                                             rendered="#{controllerDo.item.status ne 'D' and page.myPegawai.id_jabatan_new == 110 and controllerDo.item.status ne 'I' and controllerDo.item.status ne 'C'}"
+                                             />
+
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <ui:include src="form_atas.xhtml"/>
+                            <ui:include src="form_detail.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel DO" widgetVar="dlg3" resizable="false" id="canceldo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                  <p:editor  id="pesan" widgetVar="editor4" value="#{controllerDo.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerDo.ubahStatus('C')}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="@form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

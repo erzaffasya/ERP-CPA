@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Invoice Penjualan</h1>
+    </p:panelGrid>
+    <p:panelGrid id="paneldeskripsi" columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="Invoice Number"/>
+        <p:inputText id="nomor" value="#{controllerPenjualan.item.no_penjualan}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Date"/>
+        <p:calendar pattern="dd/MM/yyyy" id="tanggal" value="#{controllerPenjualan.item.tanggal}" required="true" mask="99/99/9999" maxlength="10"  requiredMessage="Invoice Date harus diisi !!" >
+            <p:ajax event="dateSelect" listener="#{controllerPenjualan.onTglSelect}" update="growl tanggal ppn grandtotal" />
+            <p:ajax event="change" listener="#{controllerPenjualan.onTglChange}" update="growl tanggal ppn grandtotal" />
+        </p:calendar>
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:autoComplete   id="customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                          var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                          scrollHeight="250" required="true" requiredMessage="Nama Customer harus diisi !!!"   >
+            <p:ajax event="itemSelect" listener="#{controllerPenjualan.onCustomerSelect}" update="top" />
+            <p:column headerText="Kode" >
+                <h:outputText value="#{customer.id_kontak}" />
+            </p:column>
+            <p:column headerText="Customer" >
+                <h:outputText value="#{customer.customer}" />
+            </p:column> 
+        </p:autoComplete>   
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerPenjualan.item.referensi}" immediate="true" />
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerPenjualan.item.kode_mata_uang}">
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+
+        <p:outputLabel  value="Term Of Payment"/>
+        <p:inputNumber id="top" value="#{controllerPenjualan.item.top}" decimalPlaces="0"/>
+        <p:outputLabel for="salesman" value="Salesman"/>
+        <p:selectOneMenu id="salesman" value="#{controllerPenjualan.item.id_salesman}"  >
+            <f:selectItems value="#{options.comboMarketingAll}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="faktur" value="No Faktur Pajak:"/>
+        <p:inputText id="faktur" value="#{controllerPenjualan.item.faktur}" />
+        <p:outputLabel for="cash" value="Transfer Bank"/>
+        <p:selectBooleanCheckbox id="isbank" value="#{controllerPenjualan.item.isbank}" >
+            <p:ajax event="change" listener="#{controllerPenjualan.changeIsbank()}" update="paneldeskripsi" />
+        </p:selectBooleanCheckbox>
+        <p:outputLabel id="banklabel"  value="Bank " rendered="#{controllerPenjualan.item.isbank eq true}"/>
+        <p:selectOneMenu id="idbank"  value="#{controllerPenjualan.item.idbank}" rendered="#{controllerPenjualan.item.isbank eq true}">
+            <f:selectItems value="#{controllerBank.allBank}" />
+        </p:selectOneMenu>    
+        <p:outputLabel for="cash" value="Cash"/>
+        <p:selectBooleanCheckbox id="cash" value="#{controllerPenjualan.item.is_invoice}" >
+            <p:ajax event="change" listener="#{controllerPenjualan.changeCash()}" update="top" />
+        </p:selectBooleanCheckbox>
+    </p:panelGrid>
+</ui:composition>

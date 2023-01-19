@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Monitoring SO</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSo.onLoadMonitoringSo()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('MONITORINGSO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Monitoring SO</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Monitoring SO"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerSo.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerSo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerSo.onLoadList()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerSo.dataSo}" selectionMode="single" reflow="true" tableStyle="table-layout: auto;"
+                                 selection="#{controllerSo.item}" rowKey="#{item.nomor}" paginator="true" rows="25" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="No. Sales Order" sortBy="#{item.nomor}"  filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}"  filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Customer"  sortBy="#{item.customer}" filterBy="#{item.customer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="No. PO"  sortBy="#{item.referensi}" filterBy="#{item.referensi}" filterMatchMode="contains">
+                            <h:outputText value="#{item.referensi}" />
+                        </p:column>
+                        <p:column headerText="Gudang"  sortBy="#{item.gudang}" filterBy="#{item.gudang}" filterMatchMode="contains">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Total" sortBy="#{item.grandtotal}" style="text-align: right;"  filterBy="#{item.grandtotal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.grandtotal}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Dibuat oleh" sortBy="#{item.user}" filterBy="#{item.user}" filterMatchMode="contains">
+                            <h:outputText value="#{item.user}" />
+                        </p:column>
+                        <p:column headerText="No. Penawaran" sortBy="#{item.no_penawaran}"   filterBy="#{item.no_penawaran}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_penawaran}" />
+                        </p:column>
+                        <p:column headerText="Sales" sortBy="#{item.salesman}" filterBy="#{item.salesman}" filterMatchMode="contains">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="No. Packinglist" sortBy="#{item.no_pl}"   filterBy="#{item.no_pl}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_pl}" />
+                        </p:column>
+                        <p:column headerText="No. DO" sortBy="#{item.no_do}"  filterBy="#{item.no_do}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_do}" />
+                        </p:column>
+                        <p:column headerText="Tanggal DO Kembali" sortBy="#{item.received_date}"  filterBy="#{item.received_date}" filterMatchMode="contains">
+                            <h:outputText value="#{item.received_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="No. Invoice" sortBy="#{item.no_penjualan}"  filterBy="#{item.no_penjualan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_penjualan}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

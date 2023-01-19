@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Out Standing AR</ui:define>
+    
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('OUTSTANDINGAR')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Out Standing AR</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="@next" value="DSR"/>
+                    <p:selectOneMenu id="sls"  value="#{controllerReportAr.id_dsr}" >
+                            <f:selectItems value="#{options.comboMarketingAll}" />
+                            <p:ajax event="change" listener="#{controllerReportAr.outstandingAr()}" update="singleDT" />
+                    </p:selectOneMenu>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <p:commandLink id="pdf" ajax="false"  >  
+                            <p:graphicImage name="images/pdf.png" library="ultima-layout" width="50"/>
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="pdf" target="singleDT" fileName="UmurInvoice"  
+                                         tableTitle="DAFTAR INVOICE #{controllerReportAr.item.customer}"   orientation="Landscape"  
+                                         facetFontSize="10"  facetFontStyle="BOLD"  
+                                         cellFontSize="8" cellFontStyle="NORMAL" />  
+                        </p:commandLink> 
+                        <p:commandLink id="xlsx" ajax="false"  >  
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50" />
+                            <f:setPropertyActionListener value="true" target="#{exporterController.customExporter}" />  
+                            <pe:exporter type="xlsx" target="singleDT" fileName="Umur Invoice" 
+                                         orientation="Landscape"  
+                                         facetFontSize="15"  
+                                         facetFontStyle="BOLD" cellFontColor="#000000" cellFontSize="12"  datasetPadding="1"  
+                                         cellFontStyle="NORMAL"/>  
+                        </p:commandLink> 
+                    </div>    
+                    <p:dataTable  id="singleDT" var="item" value="#{controllerReportAr.dataAccOsAr}"  rowIndexVar="index"
+                                  tableStyle="table-layout: auto;">
+                                 
+                        
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column  headerText="Customer">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="No. Invoice"  style="width: 150px;">
+                            <h:outputText value="#{item.invoice_number}" />
+                        </p:column>
+                        <p:column  headerText="Invoice Date">
+                            <h:outputText value="#{item.invoice_date}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Due Date">
+                            <h:outputText value="#{item.duedate}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Cabang">
+                            <h:outputText value="#{item.cabang}" />
+                        </p:column>
+                        <p:column  headerText="Nomor PO">
+                            <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column headerText="Umur Invoice (Day)" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.umur}" />
+                        </p:column>
+                        <p:column headerText="Umur Overdue (Day)" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.umuroverdue}" />
+                        </p:column>
+                        <p:column headerText=" &#60;= 0 Days" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.day1}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="1-30 Days" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.day2}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="31-60 Days" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.day3}" style="float: right"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="61-90 Days">
+                            <h:outputText value="#{item.day4}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="91-120 Days" styleClass="rightColumnContent">
+                            
+                            <h:outputText value="#{item.day5}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="> 120 Days" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.day6}"><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="usernamenya" value="User Name"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="usernamenya" value="#{controllerPengguna.item.usernamenya}" immediate="true"  />
+        </h:panelGroup>
+        <p:outputLabel for="passwordnya" value="Password"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="passwordnya" value="#{controllerPengguna.item.passwordnya}" immediate="true"  />
+        </h:panelGroup>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nama" value="Nama"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="nama" value="#{controllerPengguna.item.nama}" immediate="true" />
+        </h:panelGroup>
+        <p:outputLabel for="email" value="E-Mail"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="email" value="#{controllerPengguna.item.email}" immediate="true" />
+        </h:panelGroup>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nip" value="NIP"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="nip" value="#{controllerPengguna.item.nip}" immediate="true"  />
+        </h:panelGroup>
+        <p:outputLabel for="handphone" value="Handphone"/>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="handphone" value="#{controllerPengguna.item.handphone}" immediate="true"  />
+        </h:panelGroup>
+    </p:panelGrid>  
+</ui:composition>

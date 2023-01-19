@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Dashboard</ui:define>
+    <f:metadata>
+        <f:viewAction  action="#{controllerPo.onLoadListAdminDashboard()}" rendered="#{page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}"/>
+        <f:viewAction action="#{controllerPermintaanPembelian.onLoadListDashboard()}" rendered="#{page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}"/>
+        <f:viewAction action="#{controllerProposalAp.onLoadList()}" rendered="#{page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}"/>
+    </f:metadata>
+    <ui:define name="head">
+        <script type="text/javascript">
+            //<![CDATA[
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#FFC107', '#03A9F4'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#EEEEEE',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#212121'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+            //]]>  
+        </script>
+        <style type="text/css">
+            .main-content {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g dashboard">
+
+            <div class="ui-g-12 ui-md-6">
+
+                <p:dataTable id="purchaseorder" var="item" value="#{controllerPo.dataPo}" selectionMode="single" reflow="true" rowIndexVar="index"
+                             selection="#{controllerPo.item}" rowKey="#{item.nomor_po}" 
+                             rendered="#{page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+                    <f:facet name="header">
+                        <h1>Daftar Purchase Order</h1>
+                    </f:facet>
+                    <p:column headerText="PO Number" sortBy="#{item.nomor_po}" style="width:200px;" >
+                        <h:outputText value="#{item.nomor_po}" /><br/>
+                        <h:outputText value="#{item.tanggal}" >
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>    
+                    </p:column>
+                    <p:column headerText="Supplier" >
+                        <h:outputText value="#{item.nama_supplier}" />
+                    </p:column>
+                    <p:column headerText="Gudang" >
+                        <h:outputText value="#{item.gudang}" />
+                    </p:column>
+
+                    <p:column headerText="Total"  style="width:120px;">
+                        <div style="text-align:right;"><h:outputText value="#{item.grandtotal}"  ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                    </p:column>
+
+                    <p:column style="width:30px;">
+                        <p:commandButton  icon="ui-icon-update"  >
+                            <p:ajax  listener="#{controllerPo.viewDashboard(item)}"  />
+                        </p:commandButton>
+
+                    </p:column>
+                </p:dataTable>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+
+                <p:dataTable id="permintaanpembeliaan" var="item" value="#{controllerPermintaanPembelian.dataPermintaanPembelian}" selectionMode="single" reflow="true"
+                             selection="#{controllerPermintaanPembelian.item}" rowKey="#{item.no_pp}" 
+                             rendered="#{page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+                    <f:facet name="header">
+                        <h1>Daftar Permintaan Pembelian</h1>
+                    </f:facet>
+                    <p:column headerText="Nomor PP"  style="width:120px;" rendered="#{item.status_approved ne true}">
+                        <h:outputText value="#{item.no_pp}" /><br/>
+                        <h:outputText value="#{item.tanggal}" >
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>    
+                    </p:column>
+                    <p:column headerText="Dibuat"  style="width:150px;" rendered="#{item.status_approved ne true}">
+                        <h:outputText value="#{item.dibuat_nama}  " /><br/>
+                        <h:outputText value="#{item.kantor} / #{item.departemen}" />
+
+                    </p:column>
+                    <p:column headerText="Keterangan"  rendered="#{item.status_approved ne true}">
+                        <div style="text-align:left;"><h:outputText value="#{item.keterangan}" escape="false"><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                    </p:column>
+                    <p:column style="width:30px;" rendered="#{item.status_approved ne true}">
+                        <p:commandButton  icon="ui-icon-update"  rendered="#{item.status_approved ne true}">
+                            <p:ajax  listener="#{controllerPermintaanPembelian.updateDashboard(item.no_pp)}"  />
+                        </p:commandButton>
+
+                    </p:column>
+                </p:dataTable>
+            </div>
+            <div class="ui-g-12 ui-md-12">
+                <p:dataTable id="singleDT" var="item" value="#{controllerProposalAp.dataAccProposalAp}" selectionMode="single" reflow="true"
+                             selection="#{controllerProposalAp.item}" rowKey="#{item.no_proposal}" paginator="true" rows="25" paginatorPosition="bottom" rendered="#{page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+                    <f:facet name="header">
+                        <h1>Pengajuan Payment Proposal</h1>
+                    </f:facet>
+                    <p:column headerText="Proposal No." sortBy="#{item.no_proposal}" style="width:200px;" filterBy="#{item.no_proposal}" filterMatchMode="contains">
+                        <h:outputText value="#{item.no_proposal}" />
+                    </p:column>
+                    <p:column headerText="Date" sortBy="#{item.tanggal}" style="width:100px;">
+                        <h:outputText value="#{item.tanggal}" >
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>    
+                    </p:column>
+                    <p:column headerText="Status" sortBy="#{item.status}" style="width:50px;">
+                        <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                        <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                        <h:outputText value="Approve" rendered="#{item.status eq 'C'}"/>
+                        <h:outputText value="Old" rendered="#{item.status eq 'O'}"/>
+                    </p:column>
+                    <p:column headerText="Notes" sortBy="#{item.keterangan}" >
+                        <h:outputText value="#{item.keterangan}" />
+                    </p:column>
+                    <p:column style="width:30px;" >
+                        <p:commandButton  icon="ui-icon-update" >
+                            <p:ajax  listener="#{controllerProposalAp.updateDashboard(item.no_proposal)}"  />
+                        </p:commandButton>
+
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

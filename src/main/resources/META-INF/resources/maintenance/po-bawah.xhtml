@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="3" columnClasses="ui-grid-col-10,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="totaljumlah" value="#{controllerPo.item.total}" style="width:100%; text-align:right;" readonly="true" />
+
+        <h:outputText value="Discount" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="persendiskon" value="#{controllerPo.item.persendiskon}" style="width:30%" readonly="true"/>
+        <p:inputNumber id="diskon" value="#{controllerPo.item.total_discount}" style="width:100%; text-align:right;" readonly="true"/>
+        <h:outputText value="DPP" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="dpp" value="#{controllerPo.item.dpp}" style="width:100%" readonly="true" />
+
+        <h:outputText value="PPN 10%" style="font-weight: bold; text-align:right;"/>
+        <p:selectBooleanCheckbox value="#{controllerPo.item.is_ppn}" disabled="true" />
+        <p:inputNumber id="ppn" value="#{controllerPo.item.total_ppn}" style="width:100%" readonly="true"/>
+        <h:outputText value="PPH" style="font-weight: bold; text-align:right;"/>
+        <p:selectBooleanCheckbox value="#{controllerPo.item.is_pph}" disabled="true" />
+        <p:inputNumber id="pph" value="#{controllerPo.item.total_pph}" style="width:100%" readonly="true"/>
+        <h:outputText value="Grand Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="grandtotal" value="#{controllerPo.item.grandtotal}" style="width:100%" readonly="true" />
+    </p:panelGrid>    
+    <p:panelGrid id="tandatangan" columns="4" columnClasses="ui-grid-col-6,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:panelGroup />
+        <h:panelGroup />
+
+        <h:panelGroup />
+        <h:outputText value="Purchasing" />
+        <h:outputText value="Director" />
+        <h:panelGroup />
+
+        <h:panelGroup />
+        <p:selectBooleanButton id="value1" value="#{controllerPo.item.is_purchasing}" onLabel="Approve" offLabel="Reject" rendered="#{controllerPo.item.is_purchasing ne null}" />
+        <h:outputText  rendered="#{controllerPo.item.is_purchasing eq null}" />
+        <p:selectBooleanButton id="value2" value="#{controllerPo.item.is_approve}" onLabel="Approve" offLabel="Reject" rendered="#{controllerPo.item.is_approve ne null}" />
+        <h:outputText  rendered="#{controllerPo.item.is_approve eq null}" />
+        <h:panelGroup />
+        <h:panelGroup />
+        <p:inputText value="#{controllerPo.item.nama_purchasing}" readonly="true"/>
+        <p:inputText value="#{controllerPo.item.nama_director}" readonly="true"/>
+        <h:panelGroup />
+    </p:panelGrid>
+    
+</ui:composition>

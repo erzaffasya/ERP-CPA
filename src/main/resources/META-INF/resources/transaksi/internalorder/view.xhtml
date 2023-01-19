@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">InternalOrder</ui:define>
+    <ui:define name="head">
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerInternalOrder.item.nomor_io}" />
+        <f:viewAction action="#{controllerInternalOrder.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./listviewgudang.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:commandButton id="createIT"
+                                             actionListener="#{controllerInternalOrder.createIT()}"
+                                             value="Create IT" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerInternalOrder.pegawai.id_departemen_new eq 107 and controllerInternalOrder.item.status eq 'A'}"
+                                             />
+                            <p:commandButton id="approve"
+                                             actionListener="#{controllerInternalOrder.approveStatus('A')}"
+                                             value="Approve" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerInternalOrder.item.approve == controllerInternalOrder.pegawai.id_pegawai and controllerInternalOrder.item.status eq 'F'}"
+                                             />
+                            <p:commandButton id="reject"
+                                             actionListener="#{controllerInternalOrder.approveStatus('R')}"
+                                             value="Reject" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerInternalOrder.item.approve == controllerInternalOrder.pegawai.id_pegawai and controllerInternalOrder.item.status eq 'F'}"
+                                             />
+                            <p:commandButton id="cl" update=":form:display" 
+                                             onclick="PF('dlg3').show();" 
+                                             icon="fa  fa-close" value="Cancel"
+                                             rendered="#{controllerInternalOrder.item.status eq 'A' and controllerInternalOrder.pegawai.id_jabatan_new == 110 }"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Internal Order  </h1>
+                            <ui:include src="view_atas.xhtml"/>
+                            <ui:include src="view_detail.xhtml"/>
+                            <ui:include src="form_bawah.xhtml"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Cancel Internal Order" widgetVar="dlg3" resizable="false" id="canceldo"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                    <p:editor  id="pesan" widgetVar="editor4" value="#{controllerInternalOrder.item.pesan}" 
+                               height="200" style="margin-bottom:10px"  
+                               />
+                </h:panelGrid>
+                <p:commandButton id="ok" actionListener="#{controllerInternalOrder.ubahStatus('X')}" 
+                                 onclick="PF('dlg3').hide();" 
+                                 process="@form"
+                                 update="@form :form:growl" 
+                                 value="Submit"/>
+                <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

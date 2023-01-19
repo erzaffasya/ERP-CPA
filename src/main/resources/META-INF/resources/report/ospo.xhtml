@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Outstanding PO</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPo.selectOutstandingPo()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('OSPO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Outstanding PO</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="singleDT" fileName="OutstandingPO"/>
+                        </h:commandLink>
+                    </div>  
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerPo.id_gudang}">
+                            <f:selectItems value="#{options.comboGudang}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <p:outputLabel for="suppliernya" value="Supplier"/>
+                        <p:selectOneMenu id="suppliernya" value="#{controllerPo.suppliernya}">
+                            <f:selectItems value="#{options.supplierOsPo}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <p:commandButton ajax="true" actionListener="#{controllerPo.selectOutstandingPo()}"   icon="ui-icon-search" value="Search" update="singleDT"  />
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPo.dataPoDetail}"  rowIndexVar="index" paginator="true" rows="50" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+                                  
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2"   headerText="No." />
+                                <p:column rowspan="2"   headerText="Product" sortBy="#{item.nama_barang}" filterBy="#{item.nama_barang}" filterMatchMode="contains"/>
+                                <p:column rowspan="2"   headerText="PO Date"/>
+                                <p:column rowspan="2"  headerText="PO No." sortBy="#{item.nomor_po}" filterBy="#{item.nomor_po}" filterMatchMode="contains"/>
+                                <p:column colspan="3"  headerText="QTY" />
+                                <p:column rowspan="2"   headerText="Satuan"/>
+                                <p:column colspan="3"  headerText="QTY" />
+                                <p:column rowspan="2"   headerText="Kemasan"/>
+                                <p:column rowspan="2"  headerText="Gudang"/>
+                                <p:column rowspan="2"  headerText="Supplier"/>
+                            </p:row>
+                            <p:row>
+                                <p:column  headerText="Order"/>
+                                <p:column  headerText="Supplied" />
+                                <p:column  headerText="O/S"/>
+                                <p:column  headerText="Order"/>
+                                <p:column  headerText="Supplied"/>
+                                <p:column  headerText="O/S"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Product">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        
+                        <p:column headerText="PO Date">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="PO No." rendered="#{page.myPegawai.id_jabatan eq 10 or page.myPegawai.id_jabatan eq 8}">
+                            <p:commandLink actionListener="#{controllerPo.updatebyNumber(item.nomor_po)}" ajax="false" >
+                                <h:outputText value="#{item.nomor_po}" />
+                            </p:commandLink>
+                        </p:column>
+                        <p:column headerText="PO No." rendered="#{page.myPegawai.id_jabatan ne 10 and page.myPegawai.id_jabatan ne 8}">
+                                <h:outputText value="#{item.nomor_po}" />
+                        </p:column>
+                        <p:column headerText="Order"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.qty}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Supplied" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.diambil}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column  headerText="OS"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.sisa}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Satuan">
+                            <h:outputText value="#{item.satuan_kecil}" />
+                        </p:column>
+                        <p:column headerText="Order" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.qtybesar}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Supplied" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.diambilbesar}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="OS"   styleClass="rightColumnContent">
+                            <h:outputText value="#{item.sisabesar}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Kemasan"  styleClass="centerColumnContent">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Gudang"  sortBy="#{item.gudang}">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Supplier" sortBy="#{item.nama_supplier}">
+                            <h:outputText value="#{item.nama_supplier}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

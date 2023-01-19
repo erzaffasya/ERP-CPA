@@ -1,0 +1,190 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Outstanding PO</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerSo.outStandingSo()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('OUTSTANDINGSO')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Outstanding SO</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="OutstandingPO"/>
+                        </h:commandLink>
+                    </div>  
+                    <p:panelGrid columns="5" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Periode"/>
+                        <p:calendar id="awal" value="#{controllerSo.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:outputLabel  value="S/d"/>
+                        <p:calendar id="akhir" value="#{controllerSo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    </p:panelGrid>    
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="@next" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerSo.id_gudang}">
+                            <f:selectItem itemLabel="Semua Gudang" itemValue=""/>
+                            <f:selectItems value="#{options.comboGudang}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup/>
+                        <p:outputLabel for="@next" value="Customer"/>
+                        <p:autoComplete   id="customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                                          var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                                          scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerSo.onCustomerSelect}"/>
+                        </p:autoComplete>   
+                        <h:panelGroup/>
+                        <p:commandButton actionListener="#{controllerSo.outStandingSo()}" icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerSo.dataSoDetail}"  rowIndexVar="index" paginator="true" rows="50" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2"   headerText="No." />
+                                <p:column rowspan="2"  headerText="Gudang" />
+                                <p:column rowspan="2"  headerText="Customer"/>
+                                <p:column rowspan="2"  headerText="No. Penawaran"/>
+                                <p:column rowspan="2"   headerText="Tgl. Sales Order"/>
+                                <p:column rowspan="2"  headerText="No. Sales Order" sortBy="#{item.nomor}" filterBy="#{item.nomor}" filterMatchMode="contains"/>
+                                <p:column rowspan="2"  headerText="No. PO" sortBy="#{item.referensi}" filterBy="#{item.referensi}" filterMatchMode="contains"/>
+                                <p:column rowspan="2"   headerText="Product"/>
+                                <p:column rowspan="2"   headerText="Material Code"/>
+                                <p:column rowspan="2"   headerText="Total"/>
+                                <p:column colspan="3"  headerText="QTY" />
+                                <p:column rowspan="2"   headerText="Satuan"/>
+                                <p:column colspan="3"  headerText="QTY" />
+                                <p:column rowspan="2"   headerText="Kemasan"/>
+                                <p:column rowspan="2"   headerText="No.Picking List"/>
+                                <p:column rowspan="2"   headerText="Tanggal DO"/>
+                                <p:column rowspan="2"   headerText="No.DO"/>
+                                <p:column rowspan="2"   headerText="Tgl. Di Terima"/>
+                                <p:column rowspan="2"   headerText="dibuat Oleh"/>
+                                <p:column rowspan="2"   headerText="Nama Sales"/>
+                                <p:column rowspan="2"   headerText="No.Invoice"/>
+                            </p:row>
+                            <p:row>
+                                <p:column  headerText="Order"/>
+                                <p:column  headerText="Supplied" />
+                                <p:column  headerText="O/S"/>
+                                <p:column  headerText="Order"/>
+                                <p:column  headerText="Supplied"/>
+                                <p:column  headerText="O/S"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Gudang">
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Customer">
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="No. Penawaran">
+                            <h:outputText value="#{item.no_penawaran}" />
+                        </p:column>
+                        
+                        <p:column headerText="Tgl. Sales Order">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="No. Sales Order" sortBy="#{item.nomor}" filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="No. PO" sortBy="#{item.referensi}" filterBy="#{item.referensi}" filterMatchMode="contains">
+                            <h:outputText value="#{item.referensi}" />
+                        </p:column>
+                        <p:column headerText="Product">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Material Code">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Total"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.total}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Order"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.qty_kecil}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column  headerText="Supplied" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.diambil * item.isi_satuan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="O/S"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.sisa * item.isi_satuan}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Satuan">
+                            <h:outputText value="#{item.satuan_kecil}" />
+                        </p:column>
+                        <p:column headerText="Order"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.qty}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Supplied"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.diambil}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column   styleClass="rightColumnContent">
+                            <h:outputText value="#{item.sisa}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Kemasan">
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="No. Pickinglist">
+                            <h:outputText value="#{item.no_pl}" />
+                        </p:column>
+                        <p:column headerText="Tanggal DO">
+                            <h:outputText value="#{item.tgl_do}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="No.DO">
+                            <h:outputText value="#{item.no_do}" />
+                        </p:column>
+                        <p:column headerText="Tgl. Di Terima">
+                            <h:outputText value="#{item.received_date}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="dibuat Oleh">
+                            <h:outputText value="#{item.user}" />
+                        </p:column>
+                        <p:column headerText="Nama Sales">
+                            <h:outputText value="#{item.salesman}" />
+                        </p:column>
+                        <p:column headerText="No. Invoice">
+                            <h:outputText value="#{item.no_penjualan}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

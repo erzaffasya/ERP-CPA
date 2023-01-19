@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Input  Purchase Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="id_supplier" value="Nama Supplier :"/>
+        <p:autoComplete required="true"  id="id_supplier" value="#{supplierAutoComplete.supplier}" completeMethod="#{supplierAutoComplete.completeSupplierContains}"
+                        var="supplier" itemLabel="#{supplier.supplier}" itemValue="#{supplier}" converter="#{supplierConverter}"
+                        groupBy="#{supplierAutoComplete.getSupplierGroup(supplier)}" scrollHeight="250"  requiredMessage="Nama Supplier harus diisi !!!" >
+            <p:ajax event="itemSelect" listener="#{controllerPo.onSupplierRegulerSelect}" update="attention  telpon email top  kontak nomor" />
+        </p:autoComplete>
+        <p:outputLabel for="nomor" value="PO No."/>
+        <p:inputText id="nomor" value="#{controllerPo.item.nomor_po}" readonly="true"/>
+        <p:outputLabel for="kontak" value="Kontak Person"/>
+        <p:selectOneMenu id="kontak" value="#{controllerPo.item.kontak}">
+            <f:selectItems value="#{options.comboKontakSupplier}" />
+            <p:ajax listener="#{controllerPo.onKontakSelect}" update="attention hp" />
+        </p:selectOneMenu>
+        <p:outputLabel for="tanggal" value="PO Date"/>
+        <p:calendar id="tanggal" value="#{controllerPo.item.tanggal}" required="true" requiredMessage="PO Date harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" >
+        <p:ajax event="dateSelect" listener="#{controllerPo.onTglSelect}" update="growl tanggal" />
+            <p:ajax event="change" listener="#{controllerPo.onTglChange}" update="growl tanggal" />
+        </p:calendar>
+        <p:outputLabel  value="Attention"/>
+        <p:inputText id="attention"  value="#{controllerPo.item.kepada}"   />
+        <p:outputLabel for="deliverytime" value="Delivery Time"/>
+        <p:inputText id="deliverytime" value="#{controllerPo.item.deliverytime}"   />
+        <p:outputLabel  value="Telpon"/>
+        <p:inputText id="telpon" value="#{controllerPo.item.telpon}"/>
+        <p:outputLabel for="kode_mata_uang" value="Curreny"/>
+        <p:selectOneMenu id="kode_mata_uang" value="#{controllerPo.item.kode_mata_uang}">
+            <f:selectItems value="#{options.mataUang}" />
+        </p:selectOneMenu>
+        <p:outputLabel  value="Hp"/>
+        <p:inputText id="hp"  value="#{controllerPo.item.hp}"   />
+        <p:outputLabel for="top" value="Term Of Payment"/>
+        <p:inputNumber id="top" value="#{controllerPo.item.top}" decimalPlaces="0"/>
+        <p:outputLabel  value="Email"/>
+        <p:inputText id="email" value="#{controllerPo.item.email}"/>
+        <p:outputLabel  value="Quotation No."/>
+        <p:inputText  value="#{controllerPo.item.referensi}"/>
+        <p:outputLabel for="no_pp" value="PP. Number"/>
+        <p:inputText id="no_pp" value="#{controllerPo.item.no_pp}" required="true" readonly="true"/>
+        <p:outputLabel  value="Quotation Date"/>
+        <p:calendar  value="#{controllerPo.item.tanggal_referensi}"  />
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" 
+                 layout="grid" 
+                 styleClass="ui-panelgrid-blank form-group" 
+                 style="border:0px none; background-color:transparent; text-align: left;" 
+                 rendered="#{!controllerPo.item.is_approve eq true}">
+        <p:outputLabel  value="Keterangan"/>
+        <p:textEditor id="alamat" widgetVar="editor5" value="#{controllerPo.item.keterangan}" height="100" style="margin-bottom:10px" >
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>    
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris">
+            <p:ajax  listener="#{controllerPo.extendreguler()}" update="detilreguler" />
+        </p:commandButton>
+    </p:panelGrid>
+
+
+</ui:composition>

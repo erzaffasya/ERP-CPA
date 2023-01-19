@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+        <p:outputLabel for="nama" value="Jabatan"/>
+        <p:inputText id="nama" value="#{controllerHrJabatan.item.jabatan}" required="true"/>
+        <p:outputLabel for="atasan" value="Atasan Langsung"/>
+        <p:selectOneMenu id="atasan" value="#{controllerHrJabatan.item.atasan}">
+            <f:selectItems value="#{controllerHrJabatan.comboJabatan}" />
+        </p:selectOneMenu>
+        <p:outputLabel  value="Head Departement"/>
+        <p:selectBooleanCheckbox  value="#{controllerHrJabatan.item.headdepartemen}" />
+    </p:panelGrid>
+</ui:composition>

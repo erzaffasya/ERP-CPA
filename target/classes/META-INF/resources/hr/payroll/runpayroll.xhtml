@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                >
+
+
+    <ui:define name="title">Run Payroll</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .myTable thead {
+                display:none;
+            }
+            .noBorders thead th,
+            .noBorders tbody,
+            .noBorders tr, 
+            .noBorders td {
+                background: none !important;
+                border: none !important;
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPayroll.initItem()}" />
+    </f:metadata>       
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('RUNPYAROLL')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <c:choose>
+            <c:when test="${page.myPegawai.id_jabatan_new eq 100 or page.myPegawai.id_jabatan_new eq 101}">
+                <h:form id="form" prependId="false">
+                    <script type="text/javascript">
+                        function handleLoginRequest(xhr, status, args) {
+                            if (args.validationFailed || !args.loggedIn) {
+                                PF('dlg').jq.effect("shake", {times: 5}, 100);
+                            } else {
+                                PF('dlg').hide();
+                                $('#loginLink').fadeOut();
+                            }
+                        }
+                    </script>
+                    
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Run Payroll</h1>
+
+                            <p:panelGrid id="panel1" columns="3" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:outputLabel for="bulan" value="Periode" rendered="#{controllerPayroll.loggedIn eq true}"/>
+                                <p:selectOneMenu id="bulan" value="#{controllerPayroll.bulan}" rendered="#{controllerPayroll.loggedIn eq true}">
+                                    <f:selectItems value="#{options.comboBulan}" />
+                                    <p:ajax event="change" listener="#{controllerPayroll.onPeriodeChange()}" update="panel1 panel2  keterangan"/> 
+                                </p:selectOneMenu>
+                                <p:inputText value="#{controllerPayroll.tahun}" maxlength="4" rendered="#{controllerPayroll.loggedIn eq true}">
+                                    <p:ajax event="change" listener="#{controllerPayroll.onPeriodeChange()}" update="panel1 panel2   keterangan"/> 
+                                </p:inputText>
+
+                            </p:panelGrid>
+                            <p:panelGrid id="panel2" columns="3" columnClasses="ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:commandButton actionListener="#{controllerPayroll.tambah('i')}" id="run" update="run run1"   icon="ui-icon-flash-on" value="Jalankan Payroll"  rendered="#{controllerPayroll.item eq null and controllerPayroll.loggedIn eq true and controllerPayroll.hitung eq 0}"/>
+                                <p:commandButton id="run1" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-flash-on" value="Jalankan Payroll" rendered="#{controllerPayroll.item ne null and controllerPayroll.loggedIn eq true and controllerPayroll.hitung eq 0}"/>
+                                <p:staticMessage severity="warn" summary="#{controllerPayroll.keterangan}" rendered="#{controllerPayroll.keterangan ne null}" id="keterangan"/>
+                            </p:panelGrid>
+                            
+                            <p:messages id="messages" showDetail="true" closable="true">
+                                <p:autoUpdate />
+                            </p:messages>
+
+                        </div>
+                    </div> 
+
+                    <p:dialog  widgetVar="dlg3" resizable="false" id="studentDlg"
+                               showEffect="fade" hideEffect="explode" modal="true">
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                            <h:outputText value="Payrol Periode #{controllerPayroll.bulan} #{controllerPayroll.tahun} sudah ada" />
+                            <h:outputText value="Klik submit untuk menimpa data yang sudah ada Klik Cancel untuk batal" style="font-weight:bold"/>                                               
+                            <p:commandButton id="deleteButton" actionListener="#{controllerPayroll.tambah('u')}" onclick="PF('dlg3').hide();" value="Submit"/>
+                            <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+
+                    <p:dialog header="Login" widgetVar="dlg" resizable="false" modal="true" visible="true" >
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="pinnya" value="PIN" />
+                            <p:password id="pinnya" value="#{controllerPayroll.pinnya}" required="true" label="pin" />
+                            <f:facet name="footer">
+                                <p:commandButton value="Login" update="panel1 panel2 messages" action="#{controllerPayroll.initItem()}"
+                                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+                            </f:facet> 
+                        </h:panelGrid>
+                    </p:dialog>  
+                </h:form>
+            </c:when>
+            <c:otherwise>
+                <ui:insert name="metadata"/>
+                <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+            </c:otherwise>
+        </c:choose>
+    </ui:define>
+
+</ui:composition>

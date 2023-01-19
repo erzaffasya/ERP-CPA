@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Account Payable</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .nba-grid {
+                width: 100%;
+                table-layout: fixed;
+                word-wrap: break-word;
+                border: 0;
+
+            }
+        </style>
+
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerPenerimaan.item.no_penerimaan}" />
+        <f:viewAction action="#{controllerPenerimaan.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('AP')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="formA" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./list.jsf" value="Daftar" icon="ui-icon-plus" />
+                            <p:button href="./add.jsf" value="Tambah" icon="ui-icon-plus" />
+                            <p:commandButton  value="Cetak" icon="ui-icon-print" actionListener="#{controllerPenerimaan.cetak()}" />
+                            <p:commandButton id="simpan"
+                                             actionListener="#{controllerPenerimaan.ubah('D')}"
+                                             value="Simpan" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPenerimaan.item.status eq 'D'}"
+                                             />
+                            <p:commandButton id="approve"
+                                             actionListener="#{controllerPenerimaan.ubah('A')}"
+                                             value="Approve" 
+                                             ajax="true"
+                                             process="@form"
+                                             update="@form"
+                                             icon="fa  fa-floppy-o"
+                                             rendered="#{controllerPenerimaan.item.status eq 'D'}"
+                                             />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Edit  Account Payable</h1>
+                            <p:tabView id="tb" >
+                                <p:tab  title="Umum">    
+                                    <ui:include src="form_atas_reguler.xhtml"/>
+                                    <ui:include src="form_detail_reguler.xhtml"/>
+                                    <ui:include src="form_bawah_reguler.xhtml"/>
+                                </p:tab>
+                                <p:tab  title="Jurnal">    
+                                    <ui:include src="form_jurnal_reguler.xhtml"/>
+                                </p:tab>
+                            </p:tabView>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

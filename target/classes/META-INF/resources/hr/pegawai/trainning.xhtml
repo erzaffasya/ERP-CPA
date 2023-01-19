@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerHrPegawai.item.id_pegawai}" />
+        <f:viewAction action="#{controllerHrPegawai.onLoadListTrainning()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEGAWAI')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form >
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12 ui-lg-12">
+                                <ui:include src="tabmenu.xhtml" />
+                            </div>
+                            <div class="ui-g-12 ui-lg-12">
+
+                                <div class="ui-g-12 ui-lg-3" style="margin-bottom: 20px;">
+                                    <ui:include src="leftprofile.xhtml"/>
+                                </div>
+                                <div class="ui-g-12 ui-lg-9">    
+                                    <div class="ui-g-6 ui-lg-2">
+                                        <p:button href="./tambahtrainning.jsf?id=#{controllerHrPegawai.item.id_pegawai}"   icon="ui-icon-add" value="Tambah trainning"  />  
+                                    </div>
+                                    <div class="ui-g-12 ui-lg-12">
+
+                                        <p:dataTable id="singleDT" var="item" value="#{controllerHrPegawai.dataTrainning}" sortBy="#{item.id}" reflow="true"  
+                                                     rowIndexVar="index">
+                                            <p:column headerText="Tahun" >
+                                                <h:outputText value="#{item.tahun}"/>
+                                            </p:column>
+                                            <p:column headerText="Deskripsi" >
+                                                <h:outputText value="#{item.deskripsi}"/>
+                                            </p:column>
+                                            <p:column headerText="No. Sertifikat" >
+                                                <h:outputText value="#{item.no_sertifikat}"/>
+                                            </p:column>
+                                            <p:column headerText="Tgl Expire">
+                                                <h:outputText value="#{item.tgl_expire}" >
+                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                </h:outputText>    
+                                            </p:column>
+                                            <p:column >
+                                                <div class="ui-g-12">
+                                                    <div class="ui-g-6 ui-lg-6">
+                                                        <p:commandButton actionListener="#{controllerHrPegawai.updateTrainning(item.id)}"   icon="ui-icon-update" value="Edit"  />
+                                                    </div>
+                                                    <div class="ui-g-6 ui-lg-6">
+                                                        <p:commandButton  icon="fa fa-trash" value="Hapus"  >
+                                                            <p:ajax  listener="#{controllerHrPegawai.onDeleteTrainningClicked(item.id)}"  update="singleDT" process="@form"/>
+                                                        </p:commandButton>
+                                                    </div>
+                                                </div>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

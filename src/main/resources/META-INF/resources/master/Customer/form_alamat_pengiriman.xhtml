@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="alamat" value="Alamat"/>
+        <p:textEditor id="alamat" widgetVar="editor4" value="#{controllerCustomer.itempengiriman.alamat}" height="100" style="margin-bottom:10px" placeholder="Masukan Alamat disini">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        <p:outputLabel for="utama" value="Default"/>
+        <p:selectBooleanCheckbox id="utama" value="#{controllerCustomer.itempengiriman.utama}" />
+    </p:panelGrid>
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton  actionListener="#{controllerCustomer.extend()}" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" 
+                          value="Tambah Baris" process="@this alamat utama" update="detil alamat utama" />
+    </p:panelGrid>
+
+    <p:dataTable id="detil" var="item"  value="#{controllerCustomer.dataCustomerPengiriman}"  editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+        <f:facet name="header">Daftar Alamat Pengiriman</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Alamat" >
+            <h:outputText value="#{item.alamat}" escape="false"/> 
+        </p:column>
+        <p:column headerText="Default" style="width: 120px;">
+            <h:outputText value="#{item.utama}" />
+        </p:column>
+        <p:column style="width:100px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerCustomer.onDeleteClicked(item)}"  update="detil" />
+            </p:commandButton>
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerCustomer.onEditClicked(item,ri)}"  update="detil :formA:tb:alamat :formA:tb:utama" />
+            </p:commandButton>
+
+        </p:column>
+    </p:dataTable>
+</ui:composition>

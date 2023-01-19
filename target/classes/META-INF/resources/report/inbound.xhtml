@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Inbound Data</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerReportOutbound.onLoadListIn()}" /> 
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INBOUND')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Inbound Data</h1>
+                            <div style="text-align: right">
+                                <h:commandLink  id="xls">
+                                    <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                    <p:dataExporter type="xls" target="singleDT" fileName="Inbound Data"/>
+                                </h:commandLink>
+                            </div>
+
+
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Periode" for="awal"/>
+                                <p:calendar id="awal" value="#{controllerReportOutbound.awal}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                                <p:outputLabel  value="S/d" for="akhir"/>
+                                <p:calendar id="akhir" value="#{controllerReportOutbound.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                                <p:outputLabel  value="Gudang"/>
+                                <p:selectOneMenu id="gudang" value="#{controllerReportOutbound.id_gudang}" >
+                                    <f:selectItems value="#{options.comboGudang}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel  value="Product"/>
+                                <p:autoComplete  id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                                 var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                                 scrollHeight="250" dropdown="true" style="width: 500;">
+                                    <p:ajax  event="itemSelect" listener="#{controllerReportOutbound.onBarangSelect()}" />    
+                                    <p:column headerText="Nama Barang" >
+                                        <h:outputText value="#{barang.nama_barang}" />
+                                    </p:column>
+                                    <p:column headerText="Nama Alias" >
+                                        <h:outputText value="#{barang.nama_alias}" />
+                                    </p:column>
+                                    <p:column headerText="Material Code" >
+                                        <h:outputText value="#{barang.id_barang}" />
+                                    </p:column>
+                                    <p:column headerText="Satuan" >
+                                        <h:outputText value="#{barang.satuan_besar}" />
+                                    </p:column>
+                                    <p:column headerText="Isi Satuan" >
+                                        <h:outputText value="#{barang.isi_satuan} #{barang.satuan_kecil}" />
+                                    </p:column>
+
+                                </p:autoComplete>  
+                            </p:panelGrid>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:commandButton actionListener="#{controllerReportOutbound.onLoadListIn()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                            </p:panelGrid>
+
+
+                            <p:dataTable id="singleDT" var="item" value="#{controllerReportOutbound.dataOutbound}"  rowIndexVar="index"
+                                         paginator="true" rows="50" paginatorPosition="bottom" tableStyle="table-layout: auto;">
+                                <p:column headerText="No">
+                                    <h:outputText 
+                                        value="#{index + 1}" />
+                                </p:column>
+                                <p:column headerText="Date">
+                                    <h:outputText value="#{item.tanggal}">
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Material Code" sortBy="#{item.id_barang}"  filterBy="#{item.id_barang}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.id_barang}" />
+                                </p:column>
+                                <p:column headerText="Product" sortBy="#{item.nama_barang}"  filterBy="#{item.nama_barang}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.nama_barang}" />
+                                </p:column>
+                                <p:column  headerText="Nomor">
+                                    <h:outputText value="#{item.numbernya}" />
+                                </p:column>
+                                <p:column  headerText="Referensi">
+                                    <h:outputText value="#{item.po}" />
+                                </p:column>
+                                <p:column  headerText="Gudang">
+                                    <h:outputText value="#{item.gudang}" />
+                                </p:column>
+                                <p:column  headerText="From">
+                                    <h:outputText value="#{item.tujuan}" />
+                                </p:column>
+                                <p:column headerText="Do No.">
+                                    <h:outputText value="#{item.no_do}" />
+                                </p:column>
+                                <p:column  headerText="Qty" styleClass="rightColumnContent" >
+                                    <h:outputText value="#{item.qty}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="Ltr/Kg" styleClass="rightColumnContent" >
+                                    <h:outputText value="#{item.qty_kecil}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                </p:column>
+                                <p:column headerText="Status">
+                                    <h:outputText value="Received" rendered="#{item.statuspenerimaan eq true and item.jenis eq 'P'}"/>
+                                    <h:outputText value="Canceled" rendered="#{item.statuspenerimaan eq null and item.jenis eq 'P'}"/>
+                                    <h:outputText value="Received" rendered="#{item.statusit eq 'R' and item.jenis eq 'I'}"/>
+                                    <h:outputText value="Send" rendered="#{item.statusit eq 'S' and item.jenis eq 'I'}"/>
+                                </p:column>
+                                
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

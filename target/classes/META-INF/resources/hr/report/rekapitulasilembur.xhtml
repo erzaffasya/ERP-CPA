@@ -1,0 +1,255 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerRekapitulasiLembur.item.id_pegawai}" />
+        <f:viewParam name="tanggal" value="#{controllerRekapitulasiLembur.datestart}" >
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </f:viewParam>
+        <f:viewAction action="#{controllerRekapitulasiLembur.rekapitulasiLembur()}" />
+    </f:metadata>
+    <ui:define name="title">Rekapitualasi Lembur Karyawan</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-fluid" id="report">
+                <div class="ui-g">
+                    <div class="card card-w-title">
+                        <div class="ui-g-12">
+                            <div class="ui-g-12  ui-lg-12">
+                                <div class="card card-w-title">
+                                    <h1>Pencarian</h1>
+                                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:autoComplete    id="nama" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                                               var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                                               scrollHeight="250" required="true" requiredMessage="Silahkan pilih nama pegawai !!!"   >
+                                                <p:ajax event="itemSelect" listener="#{controllerRekapitulasiLembur.onPegawaiSelect}" />
+                                            </p:autoComplete>
+                                            <label>Nama Pegawai</label>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield" >
+                                            <p:datePicker id="month" view="month" value="#{controllerRekapitulasiLembur.datestart}" pattern="MMM yyyy" yearNavigator="true" yearRange="2000:2030" />
+                                            <label>Periode</label>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:commandButton id="cari"
+                                             actionListener="#{controllerRekapitulasiLembur.search()}"
+                                             value="Cari" 
+                                             icon="fa  fa-floppy-o" style="width: 100px;"/>
+                                        </h:panelGroup>
+
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12  ui-lg-12">
+                                <h1>Rekapitulasi Kerja Lembur Karyawan</h1>
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Name" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.itemPegawai.nama}" />
+                                </div>
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Nominal Upah" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.nominalupah}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                </div>
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">    
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="NIK" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.itemPegawai.nip}" />
+                                </div>
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Start Date" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.tglstart}" >
+                                        <f:convertDateTime pattern="dd MMMM yyyy" />
+                                    </h:outputText>    
+                                </div>
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">    
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Jabatan" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.itemPegawai.jabatan}" />
+                                </div>
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Rate/Hour" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.rate}" ><f:convertNumber pattern="#,##0.00" /></h:outputText>
+                                </div>
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">    
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Departemen" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.itemPegawai.departemen}" />
+                                </div>
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="PPH 21" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-4">
+                                    <h:outputText value="" />
+                                </div>
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">    
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Area Kerja" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-10">
+                                    <h:outputText value="" />
+                                </div>
+
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">    
+                                <div class="ui-g-11  ui-lg-1">
+                                    <h:outputText value="Periode Lembur" />
+                                </div>
+                                <div class="ui-g-1  ui-lg-1" style="text-align: right;">
+                                    <h:outputText value=":" />
+                                </div>
+                                <div class="ui-g-12  ui-lg-10">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.tglstart}" >
+                                        <f:convertDateTime pattern="dd MMMM yyyy" />
+                                    </h:outputText>
+                                    S/D
+                                    <h:outputText value="#{controllerRekapitulasiLembur.dateend}" >
+                                        <f:convertDateTime pattern="dd MMMM yyyy" />
+                                    </h:outputText>    
+                                </div>
+
+
+
+                            </div>
+                            <div class="ui-g-12  ui-lg-12">
+                                <p:dataTable id="singleDT" var="item" value="#{controllerRekapitulasiLembur.dataAbsen}" rowIndexVar="index" reflow="true">
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column rowspan="2" headerText="No" />
+                                            <p:column rowspan="2" headerText="Hari" />
+                                            <p:column rowspan="2" headerText="Tanggal" />
+                                            <p:column rowspan="2" headerText="Jam...s/d" />
+                                            <p:column rowspan="2" headerText="Total" />
+                                            <p:column colspan="8" headerText="Kalkulasi Lembur" />
+                                            <p:column rowspan="2" headerText="Total Jam Lembur" />
+                                            <p:column rowspan="2" headerText="Keterangan Kerja Lembur" />
+                                        </p:row>
+                                        <p:row>
+                                            <p:column colspan="2" headerText="X 1.5" />
+                                            <p:column colspan="2" headerText="X 2" />
+                                            <p:column colspan="2" headerText="X 3" />
+                                            <p:column colspan="2" headerText="X 4" />
+                                        </p:row>
+
+                                    </p:columnGroup>   
+                                    <p:column><h:outputText value="#{index + 1}" /></p:column>           
+                                    <p:column headerText="Hari" >
+                                        <h:outputText value="#{item.hari}" />
+                                    </p:column>
+                                    <p:column headerText="Tanggal" >
+                                        <h:outputText value="#{item.tanggal}" >
+                                            <f:convertDateTime pattern="dd MMMM yyyy" />
+                                        </h:outputText>    
+                                    </p:column>
+
+                                    <p:column >
+                                        <h:outputText value="#{item.hourbefore} #{item.hourafter}" />
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.overtime}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.x1}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.jx1}"  ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.x2}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.jx2}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.x3}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.jx3}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.x4}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.jx4}"  ><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:outputText value="#{item.tx}"  ><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                                    </p:column>
+                                    <p:column >
+                                        <h:outputText value="#{item.keterangan}" />
+                                    </p:column>
+
+                                </p:dataTable>
+
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-6,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+                                    <h:outputText value="#{controllerRekapitulasiLembur.totalhour}" style="text-align: right; font-weight: bold;"><f:convertNumber pattern="#,##0" /></h:outputText>
+                                    <h:outputText value="Total Jam" style="font-weight: bold; text-align:right;"/>
+                                    <h:outputText value="#{controllerRekapitulasiLembur.totallembur}" style="text-align: right; font-weight: bold;"><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-10,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+                                    <h:outputText value="Total Rupiah" style="font-weight: bold; text-align:right;"/>
+                                    <h:outputText value="#{controllerRekapitulasiLembur.totalupah}" style="text-align: right; font-weight: bold;"><f:convertNumber pattern="#,##0.0" /></h:outputText>
+                                </p:panelGrid>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

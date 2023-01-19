@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris" rendered="#{!controllerSaldoawal.item.status eq true}">
+            <p:ajax  listener="#{controllerSaldoawal.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+    <p:remoteCommand name="refreshFooter" update=":form:detil:jumlah"/>
+    <p:dataTable id="detil" var="item" value="#{controllerSaldoawal.dataSaldoawalDetail}" editable="true" editMode="cell" widgetVar="cellCars1" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:column style="width: 40px">
+            <f:facet name="header">
+                <h:outputText value="No" />
+            </f:facet>
+            <h:outputText 
+                value="#{ri + 1}" />
+        </p:column>
+        <p:column headerText="Nama Barang" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama_barang}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                    var="barang" itemLabel="#{barang.nama_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                    groupBy="#{barangAutoComplete.getBarangGroup(barang)}" scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerSaldoawal.onBarangSelect(item,ri,'F')}" update="onama_barang id_barang oid_barang osatuan_kecil satuan_kecil osatuan_besar satuan_besar" />
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{barang.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Material Code" >
+                            <h:outputText value="#{barang.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{barang.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Satuan" >
+                            <h:outputText value="#{barang.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" >
+                            <h:outputText value="#{barang.isi_satuan} #{barang.satuan_kecil}" />
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column headerText="Kode Barang" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_barang}" id="oid_barang"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="id_barang" value="#{item.id_barang}" readonly="true" rendered="#{!controllerSaldoawal.item.status eq true}"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Qty Besar" style="width:120px;" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText id="oqtybesar" value="#{item.qtybesar}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qtybesar" value="#{item.qtybesar}" style="width:96%" required="true" rendered="#{!controllerSaldoawal.item.status eq true}">
+                        <p:ajax listener="#{controllerSaldoawal.onQtyBesarChange(item, ri)}" update="oqty qty  total ototal " oncomplete="refreshFooter();" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan Besar" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_besar" value="#{item.satuan_besar}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_besar" value="#{item.satuan_besar}" style="width:96%" readonly="true" rendered="#{!controllerSaldoawal.item.status eq true}"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Qty Kecil"  >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty}" id="oqty"><f:convertNumber pattern="#,##0.00" id="oqty"/></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" required="true" rendered="#{!controllerSaldoawal.item.status eq true}">
+                        <p:ajax listener="#{controllerSaldoawal.onQtyKecilChange(item, ri)}" update="oqtybesar qtybesar total ototal " oncomplete="refreshFooter();" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Satuan Kecil" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"> <h:outputText id="osatuan_kecil" value="#{item.satuan_kecil}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="satuan_kecil" value="#{item.satuan_kecil}" style="width:96%" readonly="true" rendered="#{!controllerSaldoawal.item.status eq true}"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="HPP"  >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.hpp}" id="ohpp"><f:convertNumber pattern="#,##0.00" id="oqty"/></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="hpp" value="#{item.hpp}" style="width:96%" required="true" rendered="#{!controllerSaldoawal.item.status eq true}">
+                        <p:ajax partialSubmit="true" process="@this"  listener="#{controllerSaldoawal.onHppChange(item, ri)}" update="ototal total " oncomplete="refreshFooter();" />
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Total" >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.total}" id="ototal"><f:convertNumber pattern="#,##0.00" id="oqty"/></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="total" value="#{item.total}" style="width:96%" rendered="#{!controllerSaldoawal.item.status eq true}">
+                    </p:inputNumber>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column style="width:32px" rendered="#{!controllerSaldoawal.item.status eq true}" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerSaldoawal.onDeleteClicked(item)}"  update="detil " />
+            </p:commandButton>
+
+        </p:column>
+        <f:facet name="footer">  
+            <div style="text-align:right; font-size: 14pt;">
+                Total :
+                <h:outputText id="jumlah" value="#{controllerSaldoawal.item.jumlah}">
+                <f:convertNumber pattern="#,##0.00" />
+                
+            </h:outputText>
+                
+            </div>    
+        </f:facet>
+    </p:dataTable>
+
+</ui:composition>

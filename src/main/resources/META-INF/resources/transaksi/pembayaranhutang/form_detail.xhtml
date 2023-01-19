@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:dataTable id="detil" var="item" value="#{controllerPembayaranHutang.dataPembayaranHutangDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri" tableStyle="table-layout: auto;" reflow="true">
+
+        <f:facet name="header">Daftar Invoice</f:facet>
+        <p:column headerText="AP Number" >
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.no_penerimaan}" id="nomor" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="referensi" value="#{proposalAutoComplete.accProposalApDetail}" completeMethod="#{proposalAutoComplete.completeAccProposalApDetailContains}"
+                                    var="pr" itemLabel="#{pr.ap_number}" itemValue="#{pr}" converter="#{proposalConverter}" >
+                        <p:ajax event="itemSelect" listener="#{controllerPembayaranHutang.onProposalSelect(item,ri)}" update="nomor invoice  saldo obayar bayar :form:tb:total :form:tb:jurnal :form:tb:selisih" />
+                        <p:column headerText="AP Number" >
+                            <h:outputText  value="#{pr.ap_number}" />
+                        </p:column>
+                        <p:column headerText="No. Invoice">
+                            <h:outputText value="#{pr.no_invoice}" ></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Total" >
+                            <h:outputText value="#{pr.total}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:autoComplete >    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Invoice" >
+            <h:outputText value="#{item.referensi}" id="invoice"/>
+        </p:column>
+        <p:column headerText="Saldo" styleClass="rightColumnContent">
+            <div style="text-align:right;">
+                <h:outputText value="#{item.jumlah_tagihan}" id="saldo"><f:convertNumber pattern="#,##0.000" /></h:outputText>
+            </div>
+        </p:column>
+        <p:column headerText="Discount" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.jumlah_discount}" id="odiskon"><f:convertNumber pattern="#,##0" /></h:outputText></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="discount" value="#{item.jumlah_discount}" style="width:96%" required="true">
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column headerText="Jumlah Dibayar" styleClass="rightColumnContent">
+            <p:cellEditor>
+                <f:facet name="output">
+                    <h:outputText value="#{item.jumlah_bayar}" id="obayar">
+                        <f:convertNumber pattern="#,##0.000" />
+                    </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="bayar" value="#{item.jumlah_bayar}" style="width:96%" required="true">
+                        <p:ajax listener="#{controllerPembayaranHutang.hitungJumlahTotal()}" update=":form:tb:total :form:tb:jurnal :form:tb:selisih" />
+                    </p:inputNumber>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column styleClass="centerColumnContent">
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPembayaranHutang.onDeleteClicked(item)}"  update="detil :form:tb:total :form:tb:jurnal :form:tb:selisih" />
+            </p:commandButton>
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

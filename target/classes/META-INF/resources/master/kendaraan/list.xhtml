@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerKendaraan.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Kendaraan</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KENDARAAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar >
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerKendaraan.update()}"   icon="ui-icon-update" value="Edit"  id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerKendaraan.item}" target="#{controllerKendaraan.item}" />
+                            </p:commandButton>
+                            
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerKendaraan.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Kendaraan</h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerKendaraan.dataKendaraan}" selectionMode="single" reflow="true"
+                                 selection="#{controllerKendaraan.item}" rowKey="#{item.id}" paginator="true" rows="10" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerKendaraan.update()}" global="false" />
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Jenis Kendaraan" sortBy="#{item.jenis}" filterBy="#{item.jenis}" filterMatchMode="contains">
+                            <h:outputText value="#{item.jenis}" />
+                        </p:column>
+                        <p:column headerText="No BPKB" sortBy="#{item.no_bpkb}" filterBy="#{item.no_bpkb}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_bpkb}" />
+                        </p:column>
+                        <p:column headerText="No STNK" sortBy="#{item.no_stnk}" filterBy="#{item.no_stnk}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_stnk}" />
+                        </p:column>
+                        <p:column headerText="No Uji" sortBy="#{item.no_uji}" filterBy="#{item.no_uji}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_uji}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Jatuh Tempo" sortBy="#{item.tgl_jatuh_tempo}" filterBy="#{item.tgl_jatuh_tempo}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tgl_jatuh_tempo}" />
+                        </p:column>
+                        <p:column headerText="No Rangka" sortBy="#{item.no_rangka}" filterBy="#{item.no_rangka}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_rangka}" />
+                        </p:column>
+                        <p:column headerText="No Mesin" sortBy="#{item.no_mesin}" filterBy="#{item.no_mesin}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_mesin}" />
+                        </p:column>
+                        <p:column headerText="Merk" sortBy="#{item.merk}" filterBy="#{item.merk}" filterMatchMode="contains">
+                            <h:outputText value="#{item.merk}" />
+                        </p:column>
+                        <p:column headerText="Tahun Perakitan" sortBy="#{item.thn_perakitan}" filterBy="#{item.thn_perakitan}" filterMatchMode="contains">
+                            <h:outputText value="#{item.thn_perakitan}" />
+                        </p:column>
+                        <p:column headerText="Tahun Pembelian" sortBy="#{item.thn_pembelian}" filterBy="#{item.thn_pembelian}" filterMatchMode="contains">
+                            <h:outputText value="#{item.thn_pembelian}" />
+                        </p:column>
+                        <p:column headerText="Warna" sortBy="#{item.warna}" filterBy="#{item.warna}" filterMatchMode="contains">
+                            <h:outputText value="#{item.warna}" />
+                        </p:column>
+                        <p:column headerText="No Armada" sortBy="#{item.no_armada}" filterBy="#{item.no_armada}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_armada}" />
+                        </p:column>
+                        <p:column headerText="Odometer" sortBy="#{item.odometer}" filterBy="#{item.odometer}" filterMatchMode="contains">
+                            <h:outputText value="#{item.odometer}" />
+                        </p:column>
+                        <p:column headerText="No GPS" sortBy="#{item.no_gps}" filterBy="#{item.no_gps}" filterMatchMode="contains">
+                            <h:outputText value="#{item.no_gps}" />
+                        </p:column>
+                        <p:column headerText="Nama Driver" sortBy="#{item.nama_driver}" filterBy="#{item.nama_driver}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nama_driver}" />
+                        </p:column>
+                        <p:column headerText="Foto Unit" sortBy="#{item.foto_unit}" filterBy="#{item.foto_unit}" filterMatchMode="contains">
+                            <h:outputText value="#{item.foto_unit}" />
+                        </p:column>
+
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Student Detail" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Kendaraan Nopol" />
+                    <h:outputText value="#{controllerKendaraan.item.nopol}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerKendaraan.delete(controllerKendaraan.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:singleDT" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+    id="btn-edit"/>
+    
+    <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerKendaraan.update()}"/>
+    <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+    
+    <p:ajax event="rowDblselect" listener="#{controllerKendaraan.update()}" global="false" />
+    
+</ui:composition>

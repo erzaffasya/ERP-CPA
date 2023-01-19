@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">LIST OS DO</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerDo.onLoadListOsDoCabang()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('LISTOSDOCABANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>LIST OS DO</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="Daftar DO"/>
+                        </h:commandLink>
+                    </div>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-4,ui-grid-col-1,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel  value="Batas Tanggal"/>
+                        <p:calendar id="akhir" value="#{controllerDo.akhir}"  pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                        <p:commandButton actionListener="#{controllerDo.onLoadListOsDo()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerDo.dataDoDetail}"
+                                  rowKey="#{item.nomor}"  rowIndexVar="ri">
+                        <p:column style="width: 40px">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{ri + 1}" />
+                        </p:column>
+                        <p:column headerText="No. DO" >
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Nomor SO" >
+                            <h:outputText value="#{item.no_so}" />
+                        </p:column>
+                        <p:column headerText="Nomor PO" >
+                            <h:outputText value="#{item.po}" />
+                        </p:column>
+                        <p:column headerText="Customer" >
+                            <h:outputText value="#{item.customer}" />
+                        </p:column>
+                        <p:column headerText="Gudang" >
+                            <h:outputText value="#{item.gudang}" />
+                        </p:column>
+                        <p:column headerText="Barang" >
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Qty" style="text-align: right;">
+                            <h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Satuan" >
+                            <h:outputText value="#{item.satuan_besar}" />
+                        </p:column>
+                        <p:column headerText="Status" >
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Send" rendered="#{item.status eq 'S'}"/>
+                            <h:outputText value="Received" rendered="#{item.status eq 'R'}"/>
+                            <h:outputText value="Invoice" rendered="#{item.status eq 'I'}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

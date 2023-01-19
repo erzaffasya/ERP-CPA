@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Stok Opname</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .old {
+                background-color: #fca752 !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .red-row {
+                background-color: red !important;
+                background-image: none !important;
+                color: #000000 !important;
+            }
+            .noBorders tr, .noBorders td {
+                background: none !important;
+                border: none !important;
+            }
+        </style>
+    </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerStokOpname.itemso.id}" />
+        <f:viewAction action="#{controllerStokOpname.onLoad()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('STOKOPNAMEAPPROVE')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <ui:include src="form.xhtml"/>
+                            <p:panelGrid columns="6" columnClasses="ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                                <p:commandButton id="hapus" update=":form:display" 
+                                                     onclick="PF('dlg4').show();" 
+                                                     class="red-btn"
+                                                     icon="fa  fa-close" value="Hapus"
+                                                     rendered="#{controllerStokOpname.itemso.status eq 'D' || controllerStokOpname.itemso.status eq 'U'}"
+                                                     />
+                            <p:commandButton id="onUpload" value="Upload Ulang"  icon="fa  fa-floppy-o" rendered="#{controllerStokOpname.itemso.status eq 'U' and controllerStokOpname.itemso.isupload ne true}">
+                                <p:ajax  listener="#{controllerStokOpname.onIsUpload(controllerStokOpname.itemso.id,true)}" update="growl  onUpload"/>
+                            </p:commandButton>    
+                            <p:commandButton id="approve" value="Approve"  icon="fa  fa-floppy-o" rendered="#{controllerStokOpname.itemso.status eq 'U' and controllerStokOpname.itemso.isupload ne true}">
+                                <p:ajax  listener="#{controllerStokOpname.onApprove(controllerStokOpname.itemso.id)}" update="growl"/>
+                            </p:commandButton>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Hapus Stok Opname" widgetVar="dlg4" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Stok Opname Nomor :" rendered="#{controllerStokOpname.itemso.status eq 'D' || controllerStokOpname.itemso.status eq 'U'}"/>
+                    <h:outputText value="#{controllerStokOpname.itemso.nomor}" style="font-weight:bold" rendered="#{controllerStokOpname.itemso.status eq 'D' || controllerStokOpname.itemso.status eq 'U'}"/>
+                    <p:commandButton id="deleteButton" actionListener="#{controllerStokOpname.delete(controllerStokOpname.itemso.id,controllerStokOpname.itemso.id_gudang)}" onclick="PF('dlg4').hide();" 
+                                      value="Delete" rendered="#{controllerStokOpname.itemso.status eq 'D' || controllerStokOpname.itemso.status eq 'U'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerStokOpname.itemso.status eq 'D' || controllerStokOpname.itemso.status eq 'U'}"/>
+
+                    <h:outputText value="Anda tidak dapat menghaous Stok Opname ini !!" rendered="#{controllerStokOpname.itemso.status eq 'A' || controllerStokOpname.itemso.status eq 'P'}"/>
+                    <p:commandButton id="cancel" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerStokOpname.itemso.status eq 'A' || controllerStokOpname.itemso.status eq 'P'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

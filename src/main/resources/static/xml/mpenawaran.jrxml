@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mpenawaran" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6758133c-3ce2-439c-ac78-b38bd44092ab">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomor" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\jasamedika\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_barang" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from penawaran where nomor=$P{nomor}]]>
+	</queryString>
+	<field name="nomor" class="java.lang.String"/>
+	<field name="tanggal" class="java.sql.Date"/>
+	<field name="id_customer" class="java.lang.String"/>
+	<field name="kepada" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="kode_user" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="total_ppn" class="java.math.BigDecimal"/>
+	<field name="is_ppn" class="java.lang.String"/>
+	<field name="id_perusahaan" class="java.lang.String"/>
+	<field name="total_discount" class="java.math.BigDecimal"/>
+	<field name="id_term" class="java.lang.String"/>
+	<field name="id_salesman" class="java.lang.String"/>
+	<field name="kode_mata_uang" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="tipe_diskon" class="java.lang.String">
+		<fieldDescription><![CDATA[1- persen
+2- nilai diskon dari satuan
+3- nilai diskon dari total]]></fieldDescription>
+	</field>
+	<field name="nilai_harga" class="java.lang.String">
+		<fieldDescription><![CDATA[1- exclusive (belum termasuk pajak)
+2- inclusive  (sudah termasuk pajak)
+
+diambil dari profil organisasi]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String"/>
+	<field name="id_gudang" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="0" width="100" height="20" uuid="53cf7d1e-b781-406f-9d11-00df1240d0bf"/>
+				<text><![CDATA[Penawaran]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="152" splitType="Stretch">
+			<staticText>
+				<reportElement x="30" y="9" width="100" height="20" uuid="4b45cbb6-0597-4280-ae95-3eb3632a7bd9"/>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[nomor]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="9" width="100" height="20" uuid="3cb2b069-705d-4d9d-800b-564b7237aaad"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="30" y="36" width="100" height="20" uuid="ce352ffb-0563-4537-819a-acc30b3c50c1"/>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[tanggal]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="36" width="100" height="20" uuid="cc12de96-8afe-4234-8794-4efe6d318923"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{tanggal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="30" y="56" width="100" height="20" uuid="73e6aaf5-1e66-48ad-b3be-7c8763a5f3e7"/>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[id_customer]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="56" width="100" height="20" uuid="1485cf59-3465-49a0-a075-b40edd3beced"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{id_customer}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="30" y="76" width="525" height="37" uuid="bf9db4d3-75cd-4d73-a4ee-a559ffaad4a8"/>
+				<subreportParameter name="id_barang">
+					<subreportParameterExpression><![CDATA[$P{id_barang}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="no_penawaran">
+					<subreportParameterExpression><![CDATA[$F{nomor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "mpenawaran-detail.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="30" y="123" width="100" height="20" uuid="3ee5979f-8e8b-4e60-aa1a-33a5ab34878f"/>
+				<text><![CDATA[Deliverry Point : ]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

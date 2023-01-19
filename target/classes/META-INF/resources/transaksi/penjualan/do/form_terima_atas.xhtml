@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <h1>Form Receipt  Delivery Order</h1>
+    </p:panelGrid>
+    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+        <p:outputLabel for="nomor" value="No. DO."/>
+        <p:inputText id="nomor" value="#{controllerDo.item.nomor}" readonly="true"/>
+        <p:outputLabel for="tanggal" value="Tgl DO"/>
+        <p:inputText  id="tanggal" value="#{controllerDo.item.tanggal}" readonly="true"><f:convertDateTime pattern="dd-MM-yyyy"/>  
+        </p:inputText>
+        <p:outputLabel  value="Picking List No."/>
+        <p:inputText value="#{controllerDo.item.no_pl}" readonly="true" />
+        <p:outputLabel for="customer" value="Customer :"/>
+        <p:inputText id="customer" value="#{controllerDo.item.customer}" readonly="true"/>
+        <p:outputLabel for="no_po" value="PO No."/>
+        <p:inputText id="no_po" value="#{controllerDo.item.referensi}" readonly="true"/>
+        <p:outputLabel for="gudang" value="Gudang"/>
+        <p:selectOneMenu id="gudang" value="#{controllerDo.item.id_gudang}" disabled="true">
+            <f:selectItems value="#{options.comboGudang}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="cp" value="Contact Person"/>
+        <p:inputText id="cp" value="#{controllerDo.item.kepada}" readonly="true"/>
+        <p:outputLabel for="telpon" value="Telpon No."/>
+        <p:inputText id="telpon" value="#{controllerDo.item.telpon}" readonly="true"/>
+        <p:outputLabel for="rn" value="Nama Penerima"/>
+        <p:inputText id="rn" value="#{controllerDo.item.received_name}" required="true"/>
+        <p:outputLabel for="receivedate" value="Receive Date"/>
+        <p:calendar pattern="dd-MM-yyyy" id="receivedate" value="#{controllerDo.item.received_date}" required="true" mask="99-99-9999" maxlength="10"  requiredMessage="Received Date harus diisi !!" />
+        <p:outputLabel for="tglsampai" value="Tgl.Sampai Tujuan"/>
+        <p:calendar pattern="dd-MM-yyyy" id="tglsampai" value="#{controllerDo.item.tgl_sampai}"  mask="99-99-9999" maxlength="10"  requiredMessage="Received Date harus diisi !!" />
+        <p:outputLabel for="@next" value="Biaya Pengiriman"/>
+        <p:inputNumber value="#{controllerDo.item.shippingcosts}" required="true" emptyValue="empty" requiredMessage="Biaya pengiriman harus diisi !!"/>
+        <p:outputLabel for="alamat" value="Delivery Addres"/>
+        <p:textEditor id="alamat" widgetVar="editor2" value="#{controllerDo.item.alamat}" height="100" style="margin-bottom:10px" readonly="true">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+            </f:facet>
+        </p:textEditor>
+        
+        <p:outputLabel for="@next" value="Return Date"/>
+        <p:calendar pattern="dd-MM-yyyy" id="returndate" value="#{controllerDo.item.return_date}"  mask="99-99-9999" maxlength="10" />
+    </p:panelGrid>
+
+</ui:composition>

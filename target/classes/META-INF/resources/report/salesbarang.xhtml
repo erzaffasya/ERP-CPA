@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Sales Report</ui:define>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PENJUALANBARANG')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Penjualan Barang Customer</h1>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel for="id_customer" value="Nama Customer :"/>
+                        <p:autoComplete   id="id_customer" value="#{customerAutoComplete.customer}" completeMethod="#{customerAutoComplete.completeCustomerContains}"
+                                          var="customer" itemLabel="#{customer.customer}" itemValue="#{customer}" converter="#{customerConverter}"
+                                          scrollHeight="250" size="50">
+
+                            <p:ajax event="itemSelect" listener="#{controllerSalesReport.onCustomerSelect()}" update="salesBarang" />
+                            <p:column headerText="Kode" >
+                                <h:outputText value="#{customer.id_kontak}" />
+                            </p:column>
+                            <p:column headerText="Customer" >
+                                <h:outputText value="#{customer.customer}" />
+                            </p:column> 
+                        </p:autoComplete>  
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="salesBarang" fileName="Penjualan Barang Customer"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="salesBarang" var="item" value="#{controllerSalesReport.dataPenjualanDetail}">
+                        <f:facet name="header">
+                            <h:outputText>My Header</h:outputText>
+                        </f:facet>
+                        <h:outputText value="Your value" />
+                        <p:column headerText="Material Code" style="width: 150px;">
+                            <h:outputText value="#{item.id_barang}" />
+                        </p:column>
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

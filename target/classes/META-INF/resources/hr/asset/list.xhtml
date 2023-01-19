@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../../WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{controllerAsset.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="title">Data</ui:define>
+
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('ASSET')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:button href="./add.jsf"   icon="ui-icon-add" value="Tambah Asset Baru"  />
+                            <p:commandButton actionListener="#{controllerAsset.update()}"   icon="ui-icon-update" value="Edit" id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerAsset.item}" target="#{controllerAsset.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+    <p:hotkey bind="return"   actionListener="#{controllerAsset.update()}"/>
+    <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Asset</h1>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                            <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                            <p:dataExporter type="xls" target="singleDT" fileName="DaftarAsset"/>
+                        </h:commandLink>
+                    </div>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerAsset.dataAsset}" selectionMode="single" reflow="true"
+                                 selection="#{controllerAsset.item}" rowKey="#{item.id}" paginator="true" rows="100" paginatorPosition="bottom" rowIndexVar="index">
+                        <p:ajax event="rowDblselect" listener="#{controllerAsset.update()}" global="false" />
+                        <p:column headerText="Nama Pegawai">
+                            <h:outputText value="#{item.nama}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Pinjam">
+                             <h:outputText value="#{item.tanggal_pinjam}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Serial Number">
+                            <h:outputText value="#{item.id_asset}" />
+                        </p:column>
+                        <p:column headerText="Deskripsi">
+                            <h:outputText value="#{item.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Tanggal Kembali">
+                             <h:outputText value="#{item.tanggal_kembali}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog  widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus pinjaman an " />
+                    <h:outputText value="#{controllerAsset.item.nama}" style="font-weight:bold"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerAsset.delete(controllerAsset.item.id)}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

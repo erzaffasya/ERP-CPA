@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <p:panelGrid columns="6" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-5,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+
+        <p:outputLabel  value="Validity Of Price"/>
+        <p:inputNumber id="pov" value="#{controllerPenawaran.item.pov}" decimalPlaces="0"/>
+        <h:panelGroup />
+        <h:outputText value="Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="totaljumlah" value="#{controllerPenawaran.item.total}" style="width:100%; text-align:right;" readonly="true" />
+
+        <p:outputLabel  value="Term Of Payment"/>
+        <p:selectOneMenu id="carabayar" value="#{controllerPenawaran.item.carabayar}">
+            <f:selectItem itemLabel="COD" itemValue="A" />
+            <f:selectItem itemLabel="CBD" itemValue="B" />
+            <f:selectItem itemLabel="Invoice" itemValue="C" />
+            <p:ajax  update="top" listener="#{controllerPenawaran.onTop()}"/>
+        </p:selectOneMenu>
+        <h:panelGroup id="top" >
+            <p:inputNumber  value="#{controllerPenawaran.item.top}" decimalPlaces="0" rendered="#{controllerPenawaran.item.carabayar eq 'C'}" readonly="true"/>
+        </h:panelGroup>
+        
+        <h:outputText value="Discount" style="font-weight: bold; text-align:right;"/>
+        <p:inputNumber id="persendiskon" value="#{controllerPenawaran.item.persendiskon}" style="width:30%"  >
+            <p:ajax listener="#{controllerPenawaran.hitungDiskon()}" update="diskon dpp ppn grandtotal" />
+        </p:inputNumber>
+        <p:inputNumber id="diskon" value="#{controllerPenawaran.item.total_discount}" style="width:100%; text-align:right;" >
+            <p:ajax event="change" listener="#{controllerPenawaran.hitungDpp()}" update="dpp ppn grandtotal" />
+        </p:inputNumber>
+
+        <p:outputLabel  value="Certificate from Shell"/>
+        <p:selectBooleanCheckbox id="crt" value="#{controllerPenawaran.item.certificate}"/>
+        <h:panelGroup />
+        <h:outputText value="Total Setelah Discount" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="dpp" value="#{controllerPenawaran.item.dpp}" style="width:100%" readonly="true" />
+
+        <p:outputLabel  value="Virtual Bank"/>
+        <p:selectBooleanCheckbox id="virtual" value="#{controllerPenawaran.item.jenis_bank}"/>
+        <h:panelGroup />
+        <h:outputText value="PPN 10%" style="font-weight: bold; text-align:right;"/>
+        <p:selectBooleanCheckbox value="#{controllerPenawaran.item.is_ppn}" >
+            <p:ajax event="change" listener="#{controllerPenawaran.hitungPpn()}" update="ppn grandtotal" />
+        </p:selectBooleanCheckbox>
+        <p:inputNumber id="ppn" value="#{controllerPenawaran.item.total_ppn}" style="width:100%" />
+
+    </p:panelGrid>    
+    <p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: right;">
+        <p:outputLabel  value="Delivery Point"/>
+        <p:textEditor widgetVar="editor3" value="#{controllerPenawaran.item.deliverypoint}" height="100" style="margin-bottom:10px" placeholder="Enter your content">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+        <h:outputText value="Grand Total" style="font-weight: bold; text-align:right;"/>
+        <h:panelGroup />
+        <p:inputNumber id="grandtotal" value="#{controllerPenawaran.item.grandtotal}" style="width:100%" readonly="true" />
+
+
+    </p:panelGrid>    
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent; text-align: left;">
+        <h:panelGroup />
+        <p:outputLabel  value="Syarat Lain"/>
+        <h:panelGroup />
+        <p:textEditor widgetVar="editor2" value="#{controllerPenawaran.item.syarat}" height="100" style="margin-bottom:10px" placeholder="Enter your content">
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+
+            </f:facet>
+        </p:textEditor>
+    </p:panelGrid>    
+
+
+</ui:composition>

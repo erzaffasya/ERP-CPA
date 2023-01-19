@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-lg-8">
+            <!-- Left Side -->
+            <div class="card card-w-title">
+                <h1>Data pribadi</h1>
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                    <p:outputLabel for="nama" value="Nama Lengkap"/>
+                    <p:inputText id="nama" value="#{controllerHrPegawai.item.nama}" required="true"/>
+                    <p:outputLabel for="nama_panggilan" value="Nama Panggilan"/>
+                    <p:inputText id="nama_panggilan" value="#{controllerHrPegawai.item.nama_panggilan}" required="true"/>
+                    <p:outputLabel for="tempat_lahir" value="Tempat Lahir"/>
+                    <p:inputText id="tempat_lahir" value="#{controllerHrPegawai.item.tempat_lahir}" required="true"/>
+                    <p:outputLabel for="tanggal_lahir" value="Tanggal_lahir"/>
+                    <p:calendar id="tanggal_lahir" value="#{controllerHrPegawai.item.tanggal_lahir}" required="true" requiredMessage="Tanggal lahir harus diisi !!" pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                    <p:outputLabel for="nik_ktp" value="NIK KTP"/>
+                    <p:inputText id="nik_ktp" value="#{controllerHrPegawai.item.nik_ktp}"/>
+                    <p:outputLabel for="gender" value="Gender"/>
+                    <p:selectOneMenu id="gender" value="#{controllerHrPegawai.item.jenis_kelamin}">
+                        <f:selectItems value="#{options.jenisKelamin}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="status_pernikahan" value="Status Pernikahan"/>
+                    <p:selectOneMenu id="status_pernikahan" value="#{controllerHrPegawai.item.status_pernikahan}">
+                        <f:selectItems value="#{options.statusPernikahan}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="agama" value="Agama"/>
+                    <p:selectOneMenu id="agama" value="#{controllerHrPegawai.item.id_agama}">
+                        <f:selectItems value="#{options.comboAgama}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="golongan_darah" value="Golongan darah"/>
+                    <p:selectOneMenu id="golongan_darah" value="#{controllerHrPegawai.item.golongan_darah}">
+                        <f:selectItems value="#{options.comboGolonganDarah}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="tinggi_badan" value="Tinggi badan"/>
+                    <p:inputText id="tinggi_badan" value="#{controllerHrPegawai.item.tinggi_badan}" />
+                    <p:outputLabel for="berat_badan" value="Berat badan"/>
+                    <p:inputText id="berat_badan" value="#{controllerHrPegawai.item.berat_badan}" />
+                    <p:outputLabel for="anak_ke" value="Anak ke"/>
+                    <p:inputText id="anak_ke" value="#{controllerHrPegawai.item.anak_ke}" />
+                    <p:outputLabel  value="Aktif"/>
+                    <p:selectBooleanCheckbox  value="#{controllerHrPegawai.item.status}" />
+                </p:panelGrid>
+            </div>
+        </div>
+
+        <div class="ui-g-12 ui-lg-4">
+            <div class="card card-w-title">
+                <h3>Hubungan Kerja</h3>        
+                <p:panelGrid id="umum" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="nik" value="Kode"/>
+                    <p:inputText id="nik" value="#{controllerHrPegawai.item.id_pegawai}" required="true"/>
+                    <p:outputLabel for="nip" value="NIK Karyawan"/>
+                    <p:inputText id="nip" value="#{controllerHrPegawai.item.nip}" required="true"/>
+                    <p:outputLabel for="statuskaryawan" value="Status"/>
+                    <p:selectOneMenu id="statuskaryawan" value="#{controllerHrPegawai.item.statuskaryawan}" required="true">
+                        <f:selectItem itemLabel="Pilih status karyawan" itemValue="" />
+                        <f:selectItems value="#{options.comboStatusKaryawan}" />
+                        <p:ajax event="change"   update="waktukerja"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="mulai_bekerja"  value="Tanggal bergabung"/>
+                    <p:calendar id="mulai_bekerja" value="#{controllerHrPegawai.item.mulai_bekerja}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" />
+                </p:panelGrid>
+                <p:panelGrid id="waktukerja" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">    
+                    <ui:remove>
+                        <p:outputLabel for="pkwt_akhir" id="lpkwt_akhir" value="Tanggal berakhir" rendered="#{controllerHrPegawai.item.statuskaryawan eq '2'}"/>
+                        <p:calendar id="pkwt_akhir" value="#{controllerHrPegawai.item.pkwt_akhir}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.item.statuskaryawan eq '2'}"/>
+                    </ui:remove>
+                    <p:outputLabel for="probation_akhir" id="lprobation_akhir"  value="Tanggal berakhir" rendered="#{controllerHrPegawai.item.statuskaryawan eq '3'}"/>
+                    <p:calendar id="probation_akhir" value="#{controllerHrPegawai.item.probation_akhir}"   pattern="dd/MM/yyyy" mask="99/99/9999" maxlength="10" rendered="#{controllerHrPegawai.item.statuskaryawan eq '3'}"/>
+                </p:panelGrid>
+                <p:panelGrid  columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <p:outputLabel for="absensi"  value="No. Absensi"/>
+                    <p:inputNumber id="absensi" value="#{controllerHrPegawai.item.absen}" required="true" decimalPlaces="0"/>
+                    <p:outputLabel for="jabatan" value="Jabatan"/>
+                    <p:selectOneMenu id="jabatan" value="#{controllerHrPegawai.item.id_jabatan_new}" required="true">
+                        <f:selectItems value="#{controllerHrJabatan.comboJabatan}" />
+                        <p:ajax event="change" listener="#{controllerHrPegawai.onSelectJabatan()}"  update="level golongan"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="level" value="Level"/>
+                    <p:inputText id="level" value="#{controllerHrPegawai.item.level}" readonly="true"/>
+                    <p:outputLabel for="golongan" value="Golongan"/>
+                    <p:inputText id="golongan" value="#{controllerHrPegawai.item.golongan}" readonly="true"/>
+                    <p:outputLabel for="departemen" value="Departemen"/>
+                    <p:selectOneMenu id="departemen" value="#{controllerHrPegawai.item.id_departemen_new}" required="true">
+                        <f:selectItems value="#{controllerHrDepartemen.comboParent}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="kantor" value="Kantor"/>
+                    <p:selectOneMenu id="kantor" value="#{controllerHrPegawai.item.id_kantor_new}" required="true">
+                        <f:selectItems value="#{options.comboKantor}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="@next" value="Atasan langsung"/>
+                    <p:autoComplete   id="atasanlangsung" value="#{pegawaiAutoComplete.pegawai}" completeMethod="#{pegawaiAutoComplete.completePegawaiContains}"
+                                      var="pegawai" itemLabel="#{pegawai.nama}" itemValue="#{pegawai}" converter="#{pegawaiConverter}"
+                                      scrollHeight="250" required="true" requiredMessage="Atasan langsung harus diisi !!!"   >
+                        <p:ajax event="itemSelect" listener="#{controllerHrPegawai.onAtasanSelect}" />
+                    </p:autoComplete>
+                    <p:outputLabel for="@next" value="Nomor Rekening Bank"/>
+                    <p:inputText id="nomorrekening" value="#{controllerHrPegawai.item.nomorrekening}" />
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+
+
+</ui:composition>

@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            td.rightColumnContent{
+                text-align: right;
+            }
+            td.centerColumnContent{
+                text-align: center;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">Mutasi Barang</ui:define>
+    <f:metadata>
+        <f:viewParam name="bulan" value="#{controllerReportMutasi.bulan}" />
+        <f:viewParam name="gudang" value="#{controllerReportMutasi.gudang}" />
+        <f:viewParam name="tahun" value="#{controllerReportMutasi.tahun}" />
+        <f:viewParam name="id_barang" value="#{controllerReportMutasi.id_barang}" />
+        <f:viewAction action="#{controllerReportMutasi.onLoadListKartuStok()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('KARTUSTOK')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Kartu Stok</h1>
+                    
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="nama_barang" value="Barang"/>
+                        <p:autoComplete  id="nama_barang" value="#{barangAutoComplete.barang}" completeMethod="#{barangAutoComplete.completeBarangContains}"
+                                         var="barang" itemLabel="#{barang.id_barang}" itemValue="#{barang}" converter="#{barangConverter}"
+                                         groupBy="#{barangAutoComplete.getBarangGroup(barang)}" scrollHeight="250" >
+                            <p:ajax  event="itemSelect" listener="#{controllerReportMutasi.onBarangSelect()}" update="barang "  
+                                     />
+                            <p:column headerText="Nama Barang" >
+                                <h:outputText value="#{barang.nama_barang}" />
+                            </p:column>
+                            <p:column headerText="Nama Alias" >
+                                <h:outputText value="#{barang.nama_alias}" />
+                            </p:column>
+                            <p:column headerText="Material Code" >
+                                <h:outputText value="#{barang.id_barang}" />
+                            </p:column>
+                            <p:column headerText="Satuan" >
+                                <h:outputText value="#{barang.satuan_besar}" />
+                            </p:column>
+                            <p:column headerText="Isi Satuan" >
+                                <h:outputText value="#{barang.isi_satuan} #{barang.satuan_kecil}" />
+                            </p:column>
+                        </p:autoComplete> 
+                        <h:outputText value="#{controllerReportMutasi.barang}" id="barang" />
+                    </p:panelGrid>
+                    
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; ">
+                        <p:outputLabel for="gudang" value="Gudang"/>
+                        <p:selectOneMenu id="gudang" value="#{controllerReportMutasi.gudang}">
+                            <f:selectItems value="#{options.comboGudang}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup />
+                        <p:outputLabel for="bulan" value="Periode"/>
+                        <p:selectOneMenu id="bulan" value="#{controllerReportMutasi.bulan}">
+                            <f:selectItems value="#{controllerReportMutasi.comboBulan}" />
+                        </p:selectOneMenu>
+                        <p:inputText value="#{controllerReportMutasi.tahun}" maxlength="4" />
+                        <p:commandButton ajax="true" actionListener="#{controllerReportMutasi.searchKartuStok()}"   icon="ui-icon-search" value="Search" update="singleDT growl"/>
+                    </p:panelGrid>
+                    <div style="text-align: right">
+                        <h:commandLink  id="xls">
+                                <p:graphicImage name="images/xls.png" library="ultima-layout" width="50"/>
+                                <p:dataExporter type="xls" target="singleDT" fileName="KartuStok"/>
+                        </h:commandLink>
+                    </div>    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportMutasi.dataKartuStok}"  rowIndexVar="index" tableStyle="table-layout: auto;"
+                                 paginator="true" rows="50" paginatorPosition="bottom">
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="Jenis" >
+                            <h:outputText value="#{item.judul}" />
+                        </p:column>
+                        <p:column headerText="Tanggal"  >
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Nomor">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Keterangan"  >
+                            <h:outputText value="#{item.dari}" escape="false"/>
+                        </p:column>
+                        <p:column headerText="Masuk" styleClass="rightColumnContent">
+                            <h:outputText value="#{item.debit}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Keluar"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.kredit}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="Stok Akhir"  styleClass="rightColumnContent">
+                            <h:outputText value="#{item.saldo_akhir}" ><f:convertNumber pattern="#,##0" /></h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

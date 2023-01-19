@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:outputLabel for="@next" value="Kategori"/>
+        <p:selectOneMenu id="bagian2" value="#{controllerIndicator.item.id_category}"  required="true">
+            <f:selectItem  itemLabel="Pilih Kategori" itemValue=""/>
+            <f:selectItems value="#{options.optionKpiCategory}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="@next" value="Indicator"/>
+        <p:inputText id="indicator" value="#{controllerIndicator.item.indicator}" required="true"/>
+        <p:outputLabel for="@next" value="Bukti"/>
+        <p:inputText id="evidence" value="#{controllerIndicator.item.evidence}" required="true"/>
+        <p:outputLabel for="@next" value="Ukuran"/>
+        <p:selectOneMenu id="unit" value="#{controllerIndicator.item.id_unit}"  required="true">
+            <f:selectItem  itemLabel="Pilih Ukuran" itemValue=""/>
+            <f:selectItems value="#{options.optionKpiUnit}" />
+        </p:selectOneMenu>
+        <p:outputLabel for="@next" value="Bobot(%)"/>
+        <p:inputNumber id="bobot" value="#{controllerIndicator.item.bobot}" decimalPlaces="0" required="true"/>
+        <p:outputLabel for="@next" value="Target(%)"/>
+        <p:inputNumber id="target" value="#{controllerIndicator.item.target}" decimalPlaces="0" required="true"/>
+    </p:panelGrid>
+
+</ui:composition>

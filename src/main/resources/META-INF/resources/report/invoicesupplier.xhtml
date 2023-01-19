@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Umur Invoice Per Customer </ui:define>
+    <f:metadata>
+        <f:viewParam name="id" value="#{controllerReportAp.item.vendor_code}" />
+        <f:viewAction action="#{controllerReportAp.onLoadListInvoiceSupplier()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('INVOICESUPPLIER')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form" prependId="false">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>DAFTAR INVOICE #{controllerReportAp.item.supplier} </h1>
+                    <p:dataTable id="singleDT" var="item" value="#{controllerReportAp.dataAccOsAp}"  rowIndexVar="index"
+                                  paginator="true" rows="100" paginatorPosition="bottom" 
+                                   >
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="No." style="width:50px;"/>
+                                <p:column headerText="Invoice No." style="width:100px;"/>
+                                <p:column headerText="Receive Date." style="width:100px;"/>
+                                <p:column headerText="Umur Invoice (Day)" style="width:100px;"/>
+                                <p:column headerText="1-30 Days" style="width:100px;"/>
+                                <p:column headerText="31-60 Days" style="width:100px;"/>
+                                <p:column headerText="61-90 Days" style="width:100px;"/>
+                                <p:column headerText="91-120 Days" style="width:100px;"/>
+                                <p:column headerText="> 120 Days" style="width:100px;"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column style="width:50px;">
+                            <f:facet name="header">
+                                <h:outputText value="No" />
+                            </f:facet>
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.ap_number}" >
+                            <h:outputText value="#{item.ap_number}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.ap_date}" >
+                            <h:outputText value="#{item.ap_date}" ><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
+                        </p:column>
+                        <p:column  sortBy="#{item.umur}" >
+                            <h:outputText value="#{item.umur}" />
+                        </p:column>
+                        <p:column  sortBy="#{item.day1}" >
+                            <div style="text-align: right;"><h:outputText value="#{item.day1}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column  sortBy="#{item.day2}" style="width:100px;">
+                            <div style="text-align: right;"><h:outputText value="#{item.day2}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column  sortBy="#{item.day3}" style="width:100px;">
+                            <div style="text-align: right;"><h:outputText value="#{item.day3}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column  sortBy="#{item.day4}" style="width:100px;">
+                            <div style="text-align: right;"><h:outputText value="#{item.day4}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                        <p:column  sortBy="#{item.day5}" style="width:100px;">
+                            <div style="text-align: right;"><h:outputText value="#{item.day5}" ><f:convertNumber pattern="#,##0.00" /></h:outputText></div>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
