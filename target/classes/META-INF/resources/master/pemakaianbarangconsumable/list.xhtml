@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">Daftar Pemakaian Barang</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{controllerPemakaianBarangConsumable.onLoadList()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <sec:authorize access="!hasRole('PEMAKAIAN')">
+            <ui:insert name="metadata"/>
+            <f:event type="preRenderView" listener="#{page.tidakBoleh()}" /> 
+        </sec:authorize>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+            <div class="ui-g" >
+                <div class="ui-g-12" >
+                    <p:toolbar id="tbar">
+                        <f:facet name="left" >
+                            <p:commandButton   icon="ui-icon-search" value="View"  />
+                            <p:button href="add.jsf"   icon="ui-icon-add" value="Tambah"  />
+                            <p:commandButton actionListener="#{controllerPemakaianBarangConsumable.update()}"   icon="ui-icon-update" value="Edit"  id="btn-edit"/>
+                            <p:commandButton id="hapustButton" update=":form:display" onclick="PF('dlg3').show();" icon="ui-icon-delete" value="Hapus">
+                                <f:setPropertyActionListener value="#{controllerPemakaianBarangConsumable.item}" target="#{controllerPemakaianBarangConsumable.item}" />
+                            </p:commandButton>
+                            <h:outputScript library="js" name="common.js" />
+                            <p:hotkey bind="return"   actionListener="#{controllerPemakaianBarangConsumable.update()}"/>
+                            <p:hotkey bind="ctrl+d" handler="deleteRecord();return false;" />
+                        </f:facet>
+                    </p:toolbar>
+                    <p:sticky target="tbar" />
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Daftar Pemakaian Barang Consumable </h1>
+               
+                    
+                    <p:dataTable id="singleDT" var="item" value="#{controllerPemakaianBarangConsumable.dataPemakaianBarangConsumable}" selectionMode="single" reflow="true"
+                                 selection="#{controllerPemakaianBarangConsumable.item}" rowKey="#{item.id}" paginator="true" rows="25" paginatorPosition="bottom">
+                        <p:ajax event="rowDblselect" listener="#{controllerPemakaianBarangConsumable.update()}" global="false" />
+                        <p:column headerText="Nomor" sortBy="#{item.nomor}" style="width:250px;" filterBy="#{item.nomor}" filterMatchMode="contains">
+                            <h:outputText value="#{item.nomor}" />
+                        </p:column>
+                        <p:column headerText="Tanggal" sortBy="#{item.tanggal}" style="width:120px;" filterBy="#{item.tanggal}" filterMatchMode="contains">
+                            <h:outputText value="#{item.tanggal}" >
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>    
+                        </p:column>
+                        <p:column headerText="Keterangan" sortBy="#{item.keterangan}" filterBy="#{item.keterangan}" filterMatchMode="contains" style="width:150px;">
+                            <h:outputText escape="false" value="#{item.keterangan}" />
+                        </p:column>
+                        <p:column headerText="Gudang" sortBy="#{item.nama_gudang}" filterBy="#{item.nama_gudang}" filterMatchMode="contains" style="width:150px;">
+                            <h:outputText value="#{item.nama_gudang}" />
+                        </p:column>
+                        <p:column headerText="Status" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="contains">
+                            <h:outputText value="Draft" rendered="#{item.status eq 'D'}"/>
+                            <h:outputText value="Approve" rendered="#{item.status eq 'A'}"/>
+                            <h:outputText value="Cancel" rendered="#{item.status eq 'C'}"/>
+                            <h:outputText value="Posting" rendered="#{item.status eq 'P'}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+            <p:dialog header="Pemakaian Barang" widgetVar="dlg3" resizable="false" id="studentDlg"
+                      showEffect="fade" hideEffect="explode" modal="true">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+
+                    <h:outputText value="Apakah Anda Yakin akan Menghapus Pemakaian Barang Nomor :" rendered="#{controllerPemakaianBarangConsumable.item.status eq 'D'}"/>
+                    <h:outputText value="#{controllerPemakaianBarangConsumable.item.nomor}" style="font-weight:bold" rendered="#{controllerPemakaianBarangConsumable.item.status eq 'D'}"/>                                               
+                    <p:commandButton id="deleteButton" actionListener="#{controllerPemakaianBarangConsumable.delete()}" onclick="PF('dlg3').hide();" 
+                                     update=":form:growl" value="Delete" rendered="#{controllerPemakaianBarangConsumable.item.status eq 'D'}"/>
+                    <p:commandButton id="cancelButton" onclick="PF('dlg3').hide();" value="Cancel" rendered="#{controllerPemakaianBarangConsumable.item.status eq 'D'}"/>
+
+                    <h:outputText style="font-weight:bold; color: red;" value="Anda Tidak Dapat menghapus  Pemakaian Nomor : #{controllerPemakaianBarangConsumable.item.nomor}" rendered="#{controllerPemakaianBarangConsumable.item.status ne 'D'}"/>
+                    <p:commandButton id="odButton" onclick="PF('dlg3').hide();" value="OK" rendered="#{controllerPemakaianBarangConsumable.item.status ne 'D'}"/>
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -15,6 +15,7 @@
  */
 package net.sra.prime.ultima.entity;
 
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,16 +27,21 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 @Getter
 @Setter
-public class BarangConsumable {
+public class PemakaianBarangConsumable implements java.io.Serializable  {
+    
     private Integer id;
-    private String nama_barang;
-    private String material_code;
-    private String part_number;
-    private String id_kategori_barang_consumable;
-    private String nama_kategori;
-    private String id_satuan_kecil; 
-    private String nama_satuan_kecil;
-    private String kemasan;
-    private String nama_kemasan;
-    private Integer isi_satuan;  
+    private String nomor;
+    private Date tanggal;
+    private String keterangan;
+    private String id_gudang;
+    private Character status;
+    private String created_by;
+    private Date created_date;
+    private Date modified_date;
+    private String modified_by;
+    
+    
+    private String nama_gudang;
+    private String created_name;
+    private String modified_name;
 }

@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+        <p:commandButton type="button" styleClass="indigo-btn" icon="fa  fa-bars"  style="margin-bottom:10px;" value="Tambah Baris" rendered="#{controllerPemakaianBarangConsumable.item.status ne 'A'}">
+            <p:ajax  listener="#{controllerPemakaianBarangConsumable.extend}"  update="detil" />
+        </p:commandButton>
+    </p:panelGrid>
+    <p:dataTable id="detil" var="item" value="#{controllerPemakaianBarangConsumable.dataPemakaianBarangConsumableDetail}" editable="true" editMode="cell" widgetVar="cellCars" rowIndexVar="ri">
+
+        <f:facet name="header">Daftar Barang</f:facet>
+        <p:columnGroup type="header">
+            <p:row>
+                <p:column  headerText="Product"  style="width:500px;"/>
+                <p:column  headerText="Material Code" style="width:120px;" />
+                <p:column  headerText="Qty " />
+                <p:column  headerText="Satuan" style="width:80px;"/>
+                <p:column  headerText="Notes" />
+                <p:column  headerText="" style="width:50px;" />
+            </p:row>
+
+        </p:columnGroup>
+        <p:column  style="width:500px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.nama_barang_consumable}" id="onama_barang" /></f:facet>
+                <f:facet name="input">
+                    <p:autoComplete id="nama_barang" value="#{barangConsumableAutoComplete.barangConsumable}" completeMethod="#{barangConsumableAutoComplete.completeBarangContains}"
+                                    var="barangConsumable" itemLabel="#{barangConsumable.nama_barang}" itemValue="#{barangConsumable}" converter="#{barangConsumableConverter}"
+                                    groupBy="#{barangConsumableAutoComplete.getBarangGroup(barangConsumable)}" scrollHeight="250" >
+                        <p:ajax event="itemSelect" listener="#{controllerPemakaianBarangConsumable.onBarangSelect(item,ri)}" update="onama_barang id_barang oid_barang onama_satuan nama_satuan" />
+                        <p:column headerText="Nama Barang" >
+                            <h:outputText value="#{barangConsumable.nama_barang}" />
+                        </p:column>
+                        <p:column headerText="Material Code" >
+                            <h:outputText value="#{barangConsumable.material_code}" />
+                        </p:column>
+                        <p:column headerText="Satuan" >
+                            <h:outputText value="#{barangConsumable.nama_satuan_kecil}" />
+                        </p:column>
+                        <p:column headerText="Isi Satuan" >
+                            <h:outputText value="#{barangConsumable.isi_satuan} #{barangConsumable.nama_satuan_kecil}" />
+                        </p:column>
+                    </p:autoComplete>    
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+
+        <p:column  style="width:100px">
+            <p:cellEditor>
+                <f:facet name="output"><h:outputText value="#{item.id_barang_consumable}" id="oid_barang"/></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="id_barang" value="#{item.id_barang_consumable}" readonly="true"/>
+                </f:facet>
+
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:right;"><h:outputText value="#{item.qty}"><f:convertNumber pattern="#,##0.00" /></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputNumber  id="qty" value="#{item.qty}" style="width:96%" required="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:center;"><h:outputText value="#{item.nama_satuan}" id="onama_satuan"/></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="nama_satuan" value="#{item.nama_satuan}" readonly="true"/>
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+        <p:column >
+            <p:cellEditor>
+                <f:facet name="output"><div style="text-align:left;"> <h:outputText id="onote" value="#{item.note}"></h:outputText></div></f:facet>
+                <f:facet name="input">
+                    <p:inputText id="note" value="#{item.note}" style="width:96%" />
+                </f:facet>
+            </p:cellEditor>
+        </p:column>
+    
+        <p:column style="width:32px" >
+            <p:commandButton  icon="fa fa-trash"  >
+                <p:ajax  listener="#{controllerPemakaianBarangConsumable.onDeleteClicked(item)}"  update="detil" />
+            </p:commandButton>
+        </p:column>
+
+
+    </p:dataTable>
+
+
+
+
+</ui:composition>

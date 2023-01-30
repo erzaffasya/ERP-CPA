@@ -26,16 +26,17 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 @Getter
 @Setter
-public class BarangConsumable {
-    private Integer id;
-    private String nama_barang;
-    private String material_code;
-    private String part_number;
-    private String id_kategori_barang_consumable;
-    private String nama_kategori;
-    private String id_satuan_kecil; 
-    private String nama_satuan_kecil;
-    private String kemasan;
-    private String nama_kemasan;
-    private Integer isi_satuan;  
+public class PemakaianBarangConsumableDetail implements java.io.Serializable  {
+    
+    private Integer id;    
+    private Integer id_barang_consumable;
+    private Double qty;
+    private Integer urut;
+    private String note;
+    private Integer id_kendaraan;
+
+    private String nama_kendaraan;
+    private String nama_satuan;
+    private String nama_barang_consumable;
+    private String satuan;
 }

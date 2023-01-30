@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 JoinFaces.
+ * Copyright 2017 JoinFaces.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,40 @@
  */
 package net.sra.prime.ultima.entity;
 
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
  *
- * @author erza
+ * @author Hairian
  */
 @Mapper
 @Getter
 @Setter
-public class BarangConsumable {
-    private Integer id;
+
+public class StokBarangConsumable implements java.io.Serializable {
+    
+    private String id_gudang;
+    private String id_barang;
+    private Double stok;
+    private Date tanggal;
+    private Double hpp;
+    private String batch;
+    private Double id_stok;
     private String nama_barang;
-    private String material_code;
-    private String part_number;
-    private String id_kategori_barang_consumable;
-    private String nama_kategori;
-    private String id_satuan_kecil; 
-    private String nama_satuan_kecil;
-    private String kemasan;
-    private String nama_kemasan;
-    private Integer isi_satuan;  
+    private String reff;
+    private String kategori_barang;
+    private String satuan_besar;
+    private String satuan_kecil;
+    private Double isi_satuan;
+    private Double stokbesar;
+    private Double stokkecil;
+    private Double persediaan;
+    private Double total;
+    private Boolean penampung;
+    private String id_satuan_besar;
+    private String id_kategori;
+    private Integer id_stokopname;
 }
